@@ -9,8 +9,8 @@ Esta aplicación desarrollada con Java usando JavaFX como interfaz gráfica prop
 **Determinación de Aprobado:** Determina si un alumno está aprobado basado en sus notas.  
 ## Instrucciones de instalación
 **Clona** o **descarga** el repositorio en tu máquina local.  
+Asegúrate de tener instalado **Java** en tu sistema.  
 Abre el proyecto en tu **entorno de desarrollo preferido**.  
-Abre una **terminal** y navega hasta el directorio del proyecto.  
 Ejecuta la aplicación y sigue las **instrucciones** específicas de cada función.  
 ## Contribución
 **¡Se aceptan contribuciones!** Si encuentras algún **problema**, tienes **sugerencias** de mejoras o deseas **contribuir** con código, no dudes en abrir un **issue** o enviar un **pull request**.
