@@ -36,6 +36,12 @@ class FormatoTest {
     }
 
     @Test
+    void cero_negativo_se_muestra_como_cero() {
+        assertEquals("0", Formato.numero(-0.0));
+        assertEquals("000", soloDigitos(Formato.dosDecimales(-0.0)));
+    }
+
+    @Test
     void entero_grande_con_separador_de_miles() {
         String s = Formato.enteroGrande(new BigInteger("1000000"));
         assertEquals("1000000", soloDigitos(s));
