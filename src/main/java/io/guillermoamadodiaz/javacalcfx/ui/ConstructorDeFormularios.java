@@ -4,6 +4,7 @@ import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -11,10 +12,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 /**
  * Construye y muestra la pantalla de formulario genérica que comparten todas las
@@ -96,6 +100,7 @@ public final class ConstructorDeFormularios {
         resultado.getStyleClass().add("resultado");
 
         SeccionPasos seccion = pasos == null ? null : new SeccionPasos();
+        BotonCopiar copiar = new BotonCopiar(resultado);
 
         Button calcular = new Button(Textos.get("form.calcular"));
         calcular.setDefaultButton(true); // permite pulsar Enter
@@ -107,6 +112,7 @@ public final class ConstructorDeFormularios {
             if (seccion != null) {
                 seccion.ocultar();
             }
+            copiar.ocultar();
             calculos.ejecutar(
                     () -> calculo.apply(valores),
                     () -> {
@@ -116,8 +122,11 @@ public final class ConstructorDeFormularios {
                     texto -> {
                         calcular.setDisable(false);
                         resultado.setText(texto);
-                        if (seccion != null && !texto.isBlank()) {
-                            seccion.preparar(() -> pasos.apply(valores));
+                        if (!texto.isBlank()) {
+                            copiar.mostrar();
+                            if (seccion != null) {
+                                seccion.preparar(() -> pasos.apply(valores));
+                            }
                         }
                     },
                     mensaje -> {
@@ -131,7 +140,7 @@ public final class ConstructorDeFormularios {
 
         pantalla.getChildren().addAll(encabezado, instruccion);
         pantalla.getChildren().addAll(campos);
-        pantalla.getChildren().addAll(calcular, resultado);
+        pantalla.getChildren().addAll(calcular, resultado, copiar.boton);
         if (seccion != null) {
             pantalla.getChildren().addAll(seccion.boton, seccion.detalle);
         }
@@ -183,6 +192,40 @@ public final class ConstructorDeFormularios {
             detalle.setVisible(visible);
             detalle.setManaged(visible);
             boton.setText(Textos.get(visible ? "form.pasos.ocultar" : "form.pasos.mostrar"));
+        }
+    }
+
+    /** Botón «Copiar»: copia el texto del resultado al portapapeles del sistema. */
+    private static final class BotonCopiar {
+
+        private final Button boton;
+
+        BotonCopiar(Label resultado) {
+            boton = Botones.crear(
+                    Textos.get("form.copiar"), Textos.get("form.copiar.tooltip"), () -> copiar(resultado));
+            ocultar();
+        }
+
+        void ocultar() {
+            boton.setVisible(false);
+            boton.setManaged(false);
+        }
+
+        void mostrar() {
+            boton.setVisible(true);
+            boton.setManaged(true);
+            boton.setText(Textos.get("form.copiar"));
+        }
+
+        private void copiar(Label resultado) {
+            ClipboardContent contenido = new ClipboardContent();
+            contenido.putString(resultado.getText() == null ? "" : resultado.getText());
+            Clipboard.getSystemClipboard().setContent(contenido);
+
+            boton.setText(Textos.get("form.copiar.hecho"));
+            PauseTransition volver = new PauseTransition(Duration.seconds(1.5));
+            volver.setOnFinished(e -> boton.setText(Textos.get("form.copiar")));
+            volver.play();
         }
     }
 }

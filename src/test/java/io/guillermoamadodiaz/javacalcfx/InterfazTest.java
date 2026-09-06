@@ -1,5 +1,6 @@
 package io.guillermoamadodiaz.javacalcfx;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.LabeledMatchers.hasText;
@@ -13,6 +14,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.prefs.Preferences;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.Clipboard;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.AfterAll;
@@ -117,6 +119,23 @@ class InterfazTest extends ApplicationTest {
         clickOn("Mostrar pasos");
         String pasos = lookup(".pasos").queryAs(Label.class).getText();
         assertTrue(pasos.contains("h = √(9 + 16)"), "esperaba el desarrollo de Pitágoras, era: " + pasos);
+    }
+
+    @Test
+    void el_boton_copiar_pone_el_resultado_en_el_portapapeles() throws TimeoutException {
+        clickOn("Calcular Teorema de Pitágoras");
+        clickOn(lookup(".text-field").nth(0).queryAs(TextField.class)).write("3");
+        clickOn(lookup(".text-field").nth(1).queryAs(TextField.class)).write("4");
+        clickOn("Calcular");
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> textoResultado().contains("Hipotenusa"));
+
+        String esperado = textoResultado();
+        clickOn("Copiar");
+        WaitForAsyncUtils.waitForFxEvents();
+
+        final String[] enPortapapeles = new String[1];
+        interact(() -> enPortapapeles[0] = Clipboard.getSystemClipboard().getString());
+        assertEquals(esperado, enPortapapeles[0]);
     }
 
     @Test

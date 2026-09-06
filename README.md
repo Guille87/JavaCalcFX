@@ -63,7 +63,9 @@ Aspectos transversales a todas las pantallas:
   El botón «Calcular» se deshabilita mientras dura, la etiqueta muestra
   «Calculando…» y al navegar a otra pantalla el cálculo en curso se cancela.
 - **Teclado**: pulsar <kbd>Enter</kbd> en cualquier campo equivale a pulsar
-  «Calcular».
+  «Calcular»; <kbd>Esc</kbd> vuelve al menú.
+- **Copiar**: tras un cálculo, un botón «Copiar» pone el resultado en el
+  portapapeles.
 - **Formato numérico legible**: los decimales se muestran con
   `#,##0.####` en lugar de la representación cruda de `double`.
 - **Idioma**: español o inglés, seleccionable desde el menú; la elección se
@@ -211,7 +213,9 @@ paquete raíz (la `Application` y su catálogo de pantallas).
     `cancelar()` lo interrumpe y `cerrar()` (desde `Application.stop()`) apaga el
     ejecutor. Solo hay un cálculo a la vez.
   - `ConstructorDeFormularios` — arma la pantalla de formulario genérica (dentro de
-    un `ScrollPane`, con el foco en el primer campo).
+    un `ScrollPane`, con el foco en el primer campo). Tras un cálculo correcto
+    ofrece un botón «Copiar» (resultado al portapapeles) y, si la pantalla lo
+    aporta, «Mostrar pasos».
   - `MensajesDeError` — función pura `Throwable → String` (probada con tests).
   - `Formato` — formateo numérico puro y seguro entre hilos, con `Locale.ROOT`
     (punto decimal) para no depender del idioma del sistema (probado con tests).
