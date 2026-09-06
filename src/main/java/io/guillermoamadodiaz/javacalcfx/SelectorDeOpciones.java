@@ -65,8 +65,8 @@ public class SelectorDeOpciones extends Application {
 
         mostrarMenu();
         escenario.setScene(escena);
-        escenario.setMinWidth(560);
-        escenario.setMinHeight(440);
+        escenario.setMinWidth(655);
+        escenario.setMinHeight(490);
         escenario.show();
     }
 
