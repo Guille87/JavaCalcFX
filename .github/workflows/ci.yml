@@ -5,8 +5,11 @@ on:
     branches: ["**"]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
-  test:
+  formato:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -21,5 +24,63 @@ jobs:
       - name: Comprobar formato
         run: mvn -B --no-transfer-progress spotless:check
 
+  test:
+    needs: formato
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    strategy:
+      fail-fast: false
+      matrix:
+        java: ["17", "21"]
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Configurar JDK ${{ matrix.java }}
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: maven
+
       - name: Ejecutar tests
         run: mvn -B --no-transfer-progress clean test
+
+      - name: Guardar el informe de cobertura (HTML)
+        if: ${{ matrix.java == '17' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: cobertura-html
+          path: target/site/jacoco/
+
+      - name: Comentar la cobertura en la PR
+        if: ${{ matrix.java == '17' && github.event_name == 'pull_request' }}
+        uses: madrapps/jacoco-report@v1.7.2
+        with:
+          paths: ${{ github.workspace }}/target/site/jacoco/jacoco.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: Cobertura
+          update-comment: true
+
+      - name: Generar el badge de cobertura
+        if: ${{ matrix.java == '17' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        uses: cicirello/jacoco-badge-generator@v2
+        with:
+          jacoco-csv-file: target/site/jacoco/jacoco.csv
+          badges-directory: .github/badges
+          generate-coverage-badge: true
+          coverage-badge-filename: jacoco.svg
+
+      - name: Publicar el badge si ha cambiado
+        if: ${{ matrix.java == '17' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: |
+          if git diff --quiet -- .github/badges/jacoco.svg; then
+            echo "El badge no ha cambiado."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/badges/jacoco.svg
+          git commit -m "docs: actualiza el badge de cobertura [skip ci]"
+          git push
