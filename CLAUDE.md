@@ -7,10 +7,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Run the app: `mvn clean javafx:run`
 - Debug (attach on `localhost:8000`, JVM suspends until attached): `mvn clean javafx:run@debug`
 - Run tests: `mvn clean test`
-- Single test class / method: `mvn test -Dtest=CalculadoraTest` or `-Dtest=CalculadoraTest#terna_3_4_5`.
-  `CalculadoraTest` groups cases in `@Nested` classes (`TrianguloRectangulo`, `AreaCilindro`,
-  `AnioBisiesto`, `Factorial`, `Multiplos`, `Notas`), so a nested method needs the enclosing
-  class: `-Dtest='CalculadoraTest$Factorial#rechaza_negativos'`.
+- Single test class / method: `mvn test -Dtest=FormatoTest` or `-Dtest=FormatoTest#numero_entero_sin_decimales`.
+  Every method in `CalculadoraTest` lives in a `@Nested` class (`TrianguloRectangulo`,
+  `AreaCilindro`, `AnioBisiesto`, `Factorial`, `Multiplos`, `Notas`), so selecting one needs
+  the enclosing class: `-Dtest='CalculadoraTest$Factorial#rechaza_negativos'`.
   Other test classes: `i18n/TextosTest`, `i18n/IdiomaTest`, in `ui` `FormatoTest`,
   `MensajesDeErrorTest`, `EntradaTest`, `FiltroNumericoTest`, and `InterfazTest` (TestFX).
 - `InterfazTest` drives the real UI. It runs headless via Monocle (surefire `argLine` in the
@@ -76,9 +76,10 @@ its screen catalog).
   aborts promptly.
 
 To add a calculator: add a pure method to `Calculadora` (with a test); add its strings to
-both `messages*.properties`; add a `pantallaX()` that calls `formularios.mostrar(titulo,
-instrucciones, prompts, FiltroNumerico.Tipo, calculo)` with everything resolved via
-`Textos.get(...)`; and a `Botones.crear(...)` entry in `mostrarMenu()`.
+both `messages*.properties` (including `menu.boton.<clave>` and `.tooltip`); add a
+`pantallaX()` that calls `formularios.mostrar(titulo, instrucciones, prompts,
+FiltroNumerico.Tipo, calculo)` with everything resolved via `Textos.get(...)`; and a
+`botonMenu("<clave>", this::pantallaX)` entry in `mostrarMenu()`.
 
 Identifiers and comments are in Spanish (keep that convention); user-visible strings live in
 `messages*.properties`. `TextosTest` guards that the two bundles have identical keys and
