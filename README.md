@@ -19,7 +19,6 @@ error legible) en la misma pantalla.
 - [Estructura del proyecto](#estructura-del-proyecto)
 - [Detalles de cada cálculo](#detalles-de-cada-cálculo)
 - [Cómo añadir una calculadora nueva](#cómo-añadir-una-calculadora-nueva)
-- [Limitaciones conocidas y mejoras futuras](#limitaciones-conocidas-y-mejoras-futuras)
 - [Contribución](#contribución)
 - [Licencia y contacto](#licencia-y-contacto)
 
@@ -114,6 +113,13 @@ apuntar a un método anidado hay que nombrar la clase que lo contiene:
 mvn test -Dtest='CalculadoraTest$Factorial#rechaza_negativos'
 ```
 
+Los tests de interfaz (`InterfazTest`, con TestFX) corren **sin pantalla**
+mediante Monocle; no hace falta configurar nada. Para verlos con ventana:
+
+```bash
+mvn test -Pheaded -Dtest=InterfazTest
+```
+
 ---
 
 ## Arquitectura
@@ -160,7 +166,7 @@ incluido).
 
 ```
 JavaCalcFX/
-├── pom.xml                     Java 17, JavaFX 17.0.13, JUnit 5, surefire
+├── pom.xml                     Java 17, JavaFX 17.0.13, JUnit 5, TestFX + Monocle
 ├── nbactions.xml               acciones «run» / «debug» para NetBeans
 ├── LICENSE                     MIT
 ├── CLAUDE.md                   guía para agentes de IA
@@ -179,6 +185,7 @@ JavaCalcFX/
     │       ├── styles.css
     │       └── i18n/messages[_en].properties
     └── test/java/io/guillermoamadodiaz/javacalcfx/
+        ├── InterfazTest.java                    TestFX: navegación y mensajes en pantalla
         ├── calc/CalculadoraTest.java            JUnit 5, casos parametrizados y @Nested
         ├── i18n/{Textos,Idioma}Test.java
         └── ui/{Formato,MensajesDeError,Entrada,FiltroNumerico}Test.java
@@ -220,12 +227,6 @@ distinto de `0` es múltiplo de `0`; por eso `esMultiplo(a, 0)` es `true` solo s
    título, las instrucciones, los `prompts`, el `Tipo` de campo y la función de
    presentación (todo vía `Textos.get(...)`).
 4. Añade una entrada `botonMenu("<clave>", this::pantallaX)` en `mostrarMenu()`.
-
----
-
-## Limitaciones conocidas y mejoras futuras
-
-1. Tests de interfaz con TestFX (navegación, mensajes de error en pantalla).
 
 ---
 

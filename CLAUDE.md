@@ -11,11 +11,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   `CalculadoraTest` groups cases in `@Nested` classes (`TrianguloRectangulo`, `AreaCilindro`,
   `AnioBisiesto`, `Factorial`, `Multiplos`, `Notas`), so a nested method needs the enclosing
   class: `-Dtest='CalculadoraTest$Factorial#rechaza_negativos'`.
-  Other test classes: `i18n/TextosTest`, `i18n/IdiomaTest`, and in `ui` `FormatoTest`,
-  `MensajesDeErrorTest`, `EntradaTest`, `FiltroNumericoTest`.
+  Other test classes: `i18n/TextosTest`, `i18n/IdiomaTest`, in `ui` `FormatoTest`,
+  `MensajesDeErrorTest`, `EntradaTest`, `FiltroNumericoTest`, and `InterfazTest` (TestFX).
+- `InterfazTest` drives the real UI. It runs headless via Monocle (surefire `argLine` in the
+  POM, plus `useModulePath=false` so TestFX isn't on the module path); `mvn test -Pheaded`
+  shows a window. No display or xvfb needed in CI.
 
 No linter is configured. `.github/workflows/ci.yml` runs `mvn -B clean test` on JDK 17 for
-every push and pull request.
+every push and pull request (the UI tests run there headless too).
 
 ## Requirements
 
@@ -80,5 +83,3 @@ instrucciones, prompts, FiltroNumerico.Tipo, calculo)` with everything resolved 
 Identifiers and comments are in Spanish (keep that convention); user-visible strings live in
 `messages*.properties`. `TextosTest` guards that the two bundles have identical keys and
 that every parametrized value is a valid `MessageFormat` pattern.
-
-Open improvements (not yet applied): TestFX UI tests.
