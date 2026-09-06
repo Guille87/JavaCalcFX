@@ -46,10 +46,14 @@ Un mini-commit por calculadora.
 - [ ] Si el menú pasa de ~8 botones → **agrupar por categorías** (cambio
       localizado en `mostrarMenu`).
 
-## Fase 3 · Calidad medible
+## Fase 3 · Calidad y modernización
 
 - [ ] **JaCoCo**: informe de cobertura + badge (opcional: umbral que rompa el build).
-- [ ] **Matriz de CI**: JDK 17 y 21 (confirmar Monocle en 21).
+- [ ] **Migrar a JavaFX 21 LTS**: `javafx.version` a `21.0.x` y
+      `openjfx-monocle` a `21.0.2` (el JDK puede seguir en 17; JavaFX 21 lo
+      admite). Quitar el `ignore` de Dependabot para `org.openjfx`. No ir a
+      25/26: no hay Monocle para esas y la CI tendría que pasar a `xvfb`.
+- [ ] **Matriz de CI**: JDK 17 y 21.
 - [ ] Opcional: **SpotBugs** o **Error Prone** como check.
 
 ## Fase 4 · Distribución (Windows)
