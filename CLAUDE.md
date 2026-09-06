@@ -41,8 +41,9 @@ its screen catalog).
   negatives, Newton-refined so exact roots come out exact), `mcd`, `mcm` (`Math.absExact`
   / `multiplyExact` guarded), `analizarPrimalidad` (trial division to √n, interruptible;
   returns the smallest proper divisor for composites), `convertirBase` (base inferred from
-  a `0b`/`0o`/`0x` prefix)). Returns immutable records (`Triangulo`, `EcuacionCuadratica`
-  with `Raiz`, `Primalidad`, `ConversionBase`). Invalid input throws
+  a `0b`/`0o`/`0x` prefix), `porcentajeDe`, `reglaDeTres`). Returns immutable records
+  (`Triangulo`, `EcuacionCuadratica` with `Raiz`, `Primalidad`, `ConversionBase`). Invalid
+  input throws
   `IllegalArgumentException` whose message comes from `Textos`. Unit-tested by
   `CalculadoraTest`.
 - **`i18n/`** — `Textos` reads the `messages*.properties` files directly (not via

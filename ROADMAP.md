@@ -43,7 +43,8 @@ Un mini-commit por calculadora.
 - [x] ¿Es primo? (da un divisor y la factorización si es compuesto)
 - [x] Conversor de bases (bin/oct/hex/dec; la base de entrada se infiere del
       prefijo 0b/0o/0x)
-- [ ] Porcentajes / regla de tres
+- [x] Porcentaje (X % de una cantidad) y regla de tres directa (pantallas
+      separadas, categoría «Proporciones y porcentajes»)
 - [ ] IMC
 - [x] **Menú agrupado por categorías** (Geometría · Aritmética · Potencias y
       ecuaciones · Otros). El catálogo es una lista de `Categoria` en

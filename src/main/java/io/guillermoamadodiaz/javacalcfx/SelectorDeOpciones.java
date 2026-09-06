@@ -122,6 +122,11 @@ public class SelectorDeOpciones extends Application {
                                 new EntradaMenu("raiz", this::pantallaRaiz),
                                 new EntradaMenu("cuadratica", this::pantallaCuadratica))),
                 new Categoria(
+                        "proporciones",
+                        List.of(
+                                new EntradaMenu("porcentaje", this::pantallaPorcentaje),
+                                new EntradaMenu("regladetres", this::pantallaReglaDeTres))),
+                new Categoria(
                         "otros",
                         List.of(
                                 new EntradaMenu("bisiesto", this::pantallaBisiesto),
@@ -407,6 +412,45 @@ public class SelectorDeOpciones extends Application {
                 valores -> {
                     Calculadora.ConversionBase c = Calculadora.convertirBase(valores.get(0));
                     return Textos.get("base.resultado", c.binario(), c.octal(), c.decimal(), c.hexadecimal());
+                });
+    }
+
+    private void pantallaPorcentaje() {
+        formularios.mostrar(
+                Textos.get("porcentaje.titulo"),
+                Textos.get("porcentaje.instrucciones"),
+                List.of(Textos.get("porcentaje.campo.porcentaje"), Textos.get("porcentaje.campo.cantidad")),
+                FiltroNumerico.Tipo.DECIMAL,
+                valores -> {
+                    double porcentaje = Entrada.doble(valores.get(0));
+                    double cantidad = Entrada.doble(valores.get(1));
+                    return Textos.get(
+                            "porcentaje.resultado",
+                            Formato.numero(porcentaje),
+                            Formato.numero(cantidad),
+                            Formato.numero(Calculadora.porcentajeDe(porcentaje, cantidad)));
+                });
+    }
+
+    private void pantallaReglaDeTres() {
+        formularios.mostrar(
+                Textos.get("regladetres.titulo"),
+                Textos.get("regladetres.instrucciones"),
+                List.of(
+                        Textos.get("regladetres.campo.a"),
+                        Textos.get("regladetres.campo.b"),
+                        Textos.get("regladetres.campo.c")),
+                FiltroNumerico.Tipo.DECIMAL,
+                valores -> {
+                    double a = Entrada.doble(valores.get(0));
+                    double b = Entrada.doble(valores.get(1));
+                    double c = Entrada.doble(valores.get(2));
+                    return Textos.get(
+                            "regladetres.resultado",
+                            Formato.numero(a),
+                            Formato.numero(b),
+                            Formato.numero(c),
+                            Formato.numero(Calculadora.reglaDeTres(a, b, c)));
                 });
     }
 

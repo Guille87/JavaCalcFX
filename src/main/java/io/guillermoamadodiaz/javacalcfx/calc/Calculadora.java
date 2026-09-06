@@ -202,6 +202,33 @@ public final class Calculadora {
                 Long.toString(valor, 16).toUpperCase());
     }
 
+    /**
+     * El {@code porcentaje}% de {@code cantidad}.
+     *
+     * @throws IllegalArgumentException si algún argumento no es finito
+     */
+    public static double porcentajeDe(double porcentaje, double cantidad) {
+        exigirFinito(porcentaje, Textos.get("calc.nombre.porcentaje"));
+        exigirFinito(cantidad, Textos.get("calc.nombre.cantidad"));
+        return porcentaje / 100.0 * cantidad;
+    }
+
+    /**
+     * Regla de tres directa: si {@code a} corresponde a {@code b}, entonces
+     * {@code c} corresponde a {@code c · b / a}.
+     *
+     * @throws IllegalArgumentException si {@code a} es 0 o algún argumento no es finito
+     */
+    public static double reglaDeTres(double a, double b, double c) {
+        exigirFinito(a, "a");
+        exigirFinito(b, "b");
+        exigirFinito(c, "c");
+        if (a == 0.0) {
+            throw new IllegalArgumentException(Textos.get("calc.regladetres.a.cero"));
+        }
+        return c * b / a;
+    }
+
     /** Nota mínima y máxima admitidas por {@link #media(double...)}. */
     public static final double NOTA_MINIMA = 0.0;
 
