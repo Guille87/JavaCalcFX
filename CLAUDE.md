@@ -52,7 +52,8 @@ its screen catalog).
   - `ConstructorDeFormularios` — builds the generic form screen (bold header, wrapped
     instructions, one `TextField` per prompt with its `FiltroNumerico`, Enter-default
     «Calcular», wrapped result label, «Volver» that also fires on Esc via a `KEY_PRESSED`
-    filter on the screen root).
+    filter on the screen root). Wrapped in a transparent `ScrollPane` so a small window
+    scrolls instead of clipping.
   - `MensajesDeError` — pure `Throwable → String` mapping (`NumberFormatException` /
     `IllegalArgumentException` / `ArithmeticException` / cancellation). Unit-tested.
   - `Formato` — pure number-to-text formatting (thread-safe: a fresh `DecimalFormat` per
@@ -61,12 +62,13 @@ its screen catalog).
   - `FiltroNumerico` — installs a `TextFormatter` that keeps fields to numeric text while
     typing, in two variants (`Tipo.ENTERO` / `Tipo.DECIMAL`); `esValido` is a pure prefix
     check. Unit-tested. Each `pantallaX()` passes the `Tipo` for its fields.
-  - `Botones` — button factory.
+  - `Botones` — button factory (`crear(texto, accion)` / `crear(texto, tooltip, accion)`).
 - **`SelectorDeOpciones.java`** — thin `Application`: wires `Navegador` + `CalculosAsync` +
-  `ConstructorDeFormularios`, loads `styles.css`, builds the menu (title, 6-button grid, and
-  a top-right language `ComboBox` that calls `Textos.seleccionar(...)` and rebuilds the
-  menu), and defines one `pantallaX()` per calculator (each declares its title, prompts,
-  field `Tipo` and display function). `stop()` delegates to `calculos.cerrar()`.
+  `ConstructorDeFormularios`, loads `styles.css`, sets a minimum window size, builds the
+  menu (title, 6-button grid via `botonMenu(clave, accion)` with per-button tooltips, and a
+  top-right language `ComboBox` that calls `Textos.seleccionar(...)` and rebuilds the menu),
+  and defines one `pantallaX()` per calculator (each declares its title, prompts, field
+  `Tipo` and display function). `stop()` delegates to `calculos.cerrar()`.
 - `Calculadora.factorial` polls `Thread.isInterrupted()` so a cancelled long computation
   aborts promptly.
 

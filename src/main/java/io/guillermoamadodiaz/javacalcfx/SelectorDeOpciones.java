@@ -65,6 +65,8 @@ public class SelectorDeOpciones extends Application {
 
         mostrarMenu();
         escenario.setScene(escena);
+        escenario.setMinWidth(560);
+        escenario.setMinHeight(440);
         escenario.show();
     }
 
@@ -87,12 +89,12 @@ public class SelectorDeOpciones extends Application {
         botonera.setAlignment(Pos.CENTER);
 
         Button[] botones = {
-            Botones.crear(Textos.get("menu.boton.pitagoras"), this::pantallaPitagoras),
-            Botones.crear(Textos.get("menu.boton.cilindro"), this::pantallaCilindro),
-            Botones.crear(Textos.get("menu.boton.bisiesto"), this::pantallaBisiesto),
-            Botones.crear(Textos.get("menu.boton.factorial"), this::pantallaFactorial),
-            Botones.crear(Textos.get("menu.boton.multiplo"), this::pantallaMultiplo),
-            Botones.crear(Textos.get("menu.boton.aprobado"), this::pantallaAprobado),
+            botonMenu("pitagoras", this::pantallaPitagoras),
+            botonMenu("cilindro", this::pantallaCilindro),
+            botonMenu("bisiesto", this::pantallaBisiesto),
+            botonMenu("factorial", this::pantallaFactorial),
+            botonMenu("multiplo", this::pantallaMultiplo),
+            botonMenu("aprobado", this::pantallaAprobado),
         };
         for (int i = 0; i < botones.length; i++) {
             botones[i].setPrefWidth(ANCHO_BOTON_MENU);
@@ -106,6 +108,14 @@ public class SelectorDeOpciones extends Application {
         BorderPane menu = new BorderPane(centro);
         menu.setTop(barraDeIdioma());
         navegador.mostrar(menu);
+    }
+
+    /** Botón del menú a partir de su clave: usa {@code menu.boton.<clave>[.tooltip]}. */
+    private Button botonMenu(String clave, Runnable accion) {
+        return Botones.crear(
+                Textos.get("menu.boton." + clave),
+                Textos.get("menu.boton." + clave + ".tooltip"),
+                accion);
     }
 
     /** Selector de idioma alineado arriba a la derecha del menú. */
