@@ -36,7 +36,7 @@ Patrón por cada una: método puro en `Calculadora` + test + textos `es`/`en`
 (incluido `menu.boton.<clave>` y `.tooltip`) + `pantallaX()` + `botonMenu`.
 Un mini-commit por calculadora.
 
-- [ ] Ecuación de 2.º grado
+- [x] Ecuación de 2.º grado
 - [ ] Raíz cuadrada / potencia
 - [ ] MCD y MCM
 - [ ] ¿Es primo?

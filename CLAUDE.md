@@ -12,7 +12,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   `AreaCilindro`, `AnioBisiesto`, `Factorial`, `Multiplos`, `Notas`), so selecting one needs
   the enclosing class: `-Dtest='CalculadoraTest$Factorial#rechaza_negativos'`.
   Other test classes: `i18n/TextosTest`, `i18n/IdiomaTest`, in `ui` `FormatoTest`,
-  `MensajesDeErrorTest`, `EntradaTest`, `FiltroNumericoTest`, and `InterfazTest` (TestFX).
+  `MensajesDeErrorTest`, `EntradaTest`, `FiltroNumericoTest`, `EstadoVentanaTest`, and
+  `InterfazTest` (TestFX).
 - `InterfazTest` drives the real UI. It runs headless via Monocle (surefire `argLine` in the
   POM, plus `useModulePath=false` so TestFX isn't on the module path); `mvn test -Pheaded`
   shows a window. No display or xvfb needed in CI.
@@ -35,9 +36,10 @@ its screen catalog).
 
 - **`calc/Calculadora.java`** — all mathematics as static, JavaFX-free, precondition-checked
   functions (`resolverTrianguloRectangulo`, `areaCilindro`, `esBisiesto`, `factorial`,
-  `esMultiplo`, `media` (grades in `[NOTA_MINIMA, NOTA_MAXIMA]` = 0..10), `estaAprobado`).
-  Invalid input throws `IllegalArgumentException` whose message comes from `Textos`.
-  Unit-tested by `CalculadoraTest`.
+  `esMultiplo`, `media` (grades in `[NOTA_MINIMA, NOTA_MAXIMA]` = 0..10), `estaAprobado`,
+  `resolverEcuacionCuadratica`). Returns immutable records (`Triangulo`, `EcuacionCuadratica`
+  with `Raiz`). Invalid input throws `IllegalArgumentException` whose message comes from
+  `Textos`. Unit-tested by `CalculadoraTest`.
 - **`i18n/`** — `Textos` reads the `messages*.properties` files directly (not via
   `ResourceBundle`, whose lookup mixes in `Locale.getDefault()` and would return the wrong
   language on a machine whose default locale differs): `messages.properties` is Spanish and
@@ -74,11 +76,11 @@ its screen catalog).
     off every screen. Pure checks (`tamanoValido`, `puntoVisible`) are unit-tested.
 - **`SelectorDeOpciones.java`** — thin `Application`: wires `Navegador` + `CalculosAsync` +
   `ConstructorDeFormularios`, loads `styles.css` and the window icons (`resources/.../icons/`),
-  sets a minimum window size, builds the menu (title, 6-button grid via `botonMenu(clave,
-  accion)` with per-button tooltips, and a top-right language `ComboBox` that calls
-  `Textos.seleccionar(...)` and rebuilds the menu),
-  and defines one `pantallaX()` per calculator (each declares its title, prompts, field
-  `Tipo` and display function). `stop()` delegates to `calculos.cerrar()`.
+  sets a minimum window size, builds the menu (title, a grid of `botonMenu(clave, accion)`
+  buttons with per-button tooltips, and a top-right language `ComboBox` that calls
+  `Textos.seleccionar(...)` and rebuilds the menu), and defines one `pantallaX()` per
+  calculator (each declares its title, prompts, field `Tipo` and display function).
+  `stop()` delegates to `calculos.cerrar()`.
 - `Calculadora.factorial` polls `Thread.isInterrupted()` so a cancelled long computation
   aborts promptly.
 

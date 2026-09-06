@@ -1,6 +1,8 @@
 package io.guillermoamadodiaz.javacalcfx;
 
 import io.guillermoamadodiaz.javacalcfx.calc.Calculadora;
+import io.guillermoamadodiaz.javacalcfx.calc.Calculadora.EcuacionCuadratica;
+import io.guillermoamadodiaz.javacalcfx.calc.Calculadora.Raiz;
 import io.guillermoamadodiaz.javacalcfx.calc.Calculadora.Triangulo;
 import io.guillermoamadodiaz.javacalcfx.i18n.Idioma;
 import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
@@ -106,6 +108,7 @@ public class SelectorDeOpciones extends Application {
             botonMenu("factorial", this::pantallaFactorial),
             botonMenu("multiplo", this::pantallaMultiplo),
             botonMenu("aprobado", this::pantallaAprobado),
+            botonMenu("cuadratica", this::pantallaCuadratica),
         };
         for (int i = 0; i < botones.length; i++) {
             botones[i].setPrefWidth(ANCHO_BOTON_MENU);
@@ -241,6 +244,36 @@ public class SelectorDeOpciones extends Application {
                             : "aprobado.resultado.suspendido";
                     return Textos.get(clave, Formato.dosDecimales(media));
                 });
+    }
+
+    private void pantallaCuadratica() {
+        formularios.mostrar(
+                Textos.get("cuadratica.titulo"),
+                Textos.get("cuadratica.instrucciones"),
+                List.of(
+                        Textos.get("cuadratica.campo.a"),
+                        Textos.get("cuadratica.campo.b"),
+                        Textos.get("cuadratica.campo.c")),
+                FiltroNumerico.Tipo.DECIMAL,
+                valores -> {
+                    EcuacionCuadratica e = Calculadora.resolverEcuacionCuadratica(
+                            Entrada.doble(valores.get(0)),
+                            Entrada.doble(valores.get(1)),
+                            Entrada.doble(valores.get(2)));
+                    if (e.tieneRaizDoble()) {
+                        return Textos.get("cuadratica.resultado.doble", Formato.numero(e.x1().real()));
+                    }
+                    return Textos.get("cuadratica.resultado", formatoRaiz(e.x1()), formatoRaiz(e.x2()));
+                });
+    }
+
+    /** Formatea una raíz real como número y una compleja como {@code a + b i}. */
+    private static String formatoRaiz(Raiz raiz) {
+        if (raiz.esReal()) {
+            return Formato.numero(raiz.real());
+        }
+        String signo = raiz.imaginaria() < 0 ? " - " : " + ";
+        return Formato.numero(raiz.real()) + signo + Formato.numero(Math.abs(raiz.imaginaria())) + "i";
     }
 
     public static void main(String[] args) {

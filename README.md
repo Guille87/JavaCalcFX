@@ -3,8 +3,8 @@
 [![CI](https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml/badge.svg)](https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Aplicación de escritorio escrita en **Java 17** con **JavaFX 17** que reúne seis
-calculadoras matemáticas de uso frecuente tras un menú común. Cada herramienta
+Aplicación de escritorio escrita en **Java 17** con **JavaFX 17** que reúne
+varias calculadoras matemáticas de uso frecuente tras un menú común. Cada herramienta
 valida los datos de entrada, ejecuta el cálculo fuera del hilo de la interfaz
 para que la ventana nunca se congele y muestra el resultado (o un mensaje de
 error legible) en la misma pantalla.
@@ -41,6 +41,7 @@ error legible) en la misma pantalla.
 | **Factorial** | Un entero entre `0` y `100 000` | `n!` con separadores de miles |
 | **Múltiplo** | Dos enteros `a` y `b` | Si `a` es múltiplo de `b` |
 | **Aprobado** | Cinco notas del alumno entre `0` y `10` | «Aprobado» / «Suspendido» y la nota media (aprueba con media ≥ 5) |
+| **Ecuación de 2.º grado** | Los coeficientes `a` (≠ 0), `b` y `c` de `ax² + bx + c = 0` | Las dos raíces (reales, doble o complejas conjugadas) |
 
 Aspectos transversales a todas las pantallas:
 
@@ -63,7 +64,7 @@ Aspectos transversales a todas las pantallas:
 
 ## Flujo
 
-Menú de 6 botones ⇄ pantalla de formulario (instrucciones · campos · «Calcular» +
+Menú de calculadoras ⇄ pantalla de formulario (instrucciones · campos · «Calcular» +
 resultado · «Volver»). La raíz de la escena es un único contenedor que siempre
 muestra **una** pantalla; `mostrar(...)` la intercambia.
 
@@ -140,8 +141,8 @@ paquete raíz (la `Application` y su catálogo de pantallas).
 - **`calc/Calculadora.java`** — toda la aritmética como métodos `static` sin
   ninguna dependencia de JavaFX. Cada método comprueba sus precondiciones y, ante
   una entrada inválida, lanza `IllegalArgumentException` con un mensaje apto para
-  el usuario. `resolverTrianguloRectangulo` devuelve un `record Triangulo`
-  inmutable. Es la capa cubierta por tests unitarios.
+  el usuario. Devuelve `record`s inmutables (`Triangulo`, `EcuacionCuadratica`).
+  Es la capa cubierta por tests unitarios.
 - **`i18n/`** — `Textos` lee los ficheros `messages*.properties` (español de
   base, inglés encima) y resuelve claves con sustitución de parámetros vía
   `MessageFormat`; `Idioma` es el enum del selector. El idioma se elige desde el
@@ -153,14 +154,17 @@ paquete raíz (la `Application` y su catálogo de pantallas).
     `Task` actual. `ejecutar(...)` lanza el trabajo fuera del hilo de JavaFX,
     `cancelar()` lo interrumpe y `cerrar()` (desde `Application.stop()`) apaga el
     ejecutor. Solo hay un cálculo a la vez.
-  - `ConstructorDeFormularios` — arma la pantalla de formulario genérica.
+  - `ConstructorDeFormularios` — arma la pantalla de formulario genérica (dentro de
+    un `ScrollPane`, con el foco en el primer campo).
   - `MensajesDeError` — función pura `Throwable → String` (probada con tests).
   - `Formato` — formateo numérico puro y seguro entre hilos (probado con tests).
   - `Entrada` — único punto de parseo de texto a número (probado con tests).
+  - `FiltroNumerico` — `TextFormatter` entero/decimal por campo (probado con tests).
+  - `EstadoVentana` — persiste tamaño y posición de la ventana (probado con tests).
   - `Botones` — fábrica de botones.
 - **`SelectorDeOpciones.java`** — `Application` mínima: conecta las piezas de `ui`,
-  carga `styles.css`, construye el menú de 6 botones y define un `pantallaX()` por
-  calculadora (cada uno solo declara los campos y la función de presentación).
+  carga `styles.css` y los iconos, y define un `pantallaX()` + entrada de menú por
+  calculadora (cada uno declara título, campos, tipo y función de presentación).
 
 `Calculadora.factorial` consulta `Thread.isInterrupted()` para abortar pronto un
 cómputo largo ya cancelado.
