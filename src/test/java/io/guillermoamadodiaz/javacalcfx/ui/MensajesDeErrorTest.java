@@ -3,11 +3,26 @@ package io.guillermoamadodiaz.javacalcfx.ui;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Locale;
 import java.util.concurrent.CancellationException;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
+
 class MensajesDeErrorTest {
+
+    @BeforeAll
+    static void fijarIdioma() {
+        Textos.usarIdioma(Locale.forLanguageTag("es"));
+    }
+
+    @AfterAll
+    static void restaurarIdioma() {
+        Textos.usarIdioma(Locale.getDefault());
+    }
 
     @Test
     void cancelacion_no_produce_mensaje() {

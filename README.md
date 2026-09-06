@@ -116,15 +116,18 @@ mvn test -Dtest='CalculadoraTest$Factorial#rechaza_negativos'
 
 ## Arquitectura
 
-El proyecto se organiza en tres paquetes: `calc` (dominio puro), `ui`
-(infraestructura de interfaz reutilizable) y el paquete raíz (la `Application` y
-su catálogo de pantallas).
+El proyecto se organiza en cuatro paquetes: `calc` (dominio puro), `i18n`
+(textos traducibles), `ui` (infraestructura de interfaz reutilizable) y el
+paquete raíz (la `Application` y su catálogo de pantallas).
 
 - **`calc/Calculadora.java`** — toda la aritmética como métodos `static` sin
   ninguna dependencia de JavaFX. Cada método comprueba sus precondiciones y, ante
   una entrada inválida, lanza `IllegalArgumentException` con un mensaje apto para
   el usuario. `resolverTrianguloRectangulo` devuelve un `record Triangulo`
   inmutable. Es la capa cubierta por tests unitarios.
+- **`i18n/Textos.java`** — carga el `ResourceBundle` `messages` según el idioma
+  del sistema (español de base, inglés disponible) y resuelve claves, con
+  sustitución de parámetros vía `MessageFormat`.
 - **`ui/`** — piezas pequeñas con una sola responsabilidad:
   - `Navegador` — contenedor raíz (`StackPane` con un único hijo); `mostrar(Node)`
     intercambia la pantalla y antes ejecuta un *hook* (cancelar el cálculo en curso).
@@ -144,8 +147,9 @@ su catálogo de pantallas).
 `Calculadora.factorial` consulta `Thread.isInterrupted()` para abortar pronto un
 cómputo largo ya cancelado.
 
-Todo el texto de interfaz, los identificadores y los comentarios están en
-**español**; el proyecto mantiene esa convención.
+Los identificadores y comentarios del código están en **español** (convención
+del proyecto); los textos visibles salen de `i18n` (español de base, inglés
+incluido).
 
 ---
 
@@ -159,18 +163,21 @@ JavaCalcFX/
 └── src/
     ├── main/
     │   ├── java/
-    │   │   ├── module-info.java              requires javafx.controls; exporta los 3 paquetes
+    │   │   ├── module-info.java              requires javafx.controls; exporta los 4 paquetes
     │   │   └── io/guillermoamadodiaz/javacalcfx/
     │   │       ├── SelectorDeOpciones.java       Application + catálogo de pantallas
     │   │       ├── calc/Calculadora.java         lógica matemática pura y validada
+    │   │       ├── i18n/Textos.java              acceso al ResourceBundle
     │   │       └── ui/                           Navegador, CalculosAsync,
     │   │                                         ConstructorDeFormularios, MensajesDeError,
-    │   │                                         Formato, Entrada, Botones
+    │   │                                         Formato, Entrada, FiltroNumerico, Botones
     │   └── resources/io/guillermoamadodiaz/javacalcfx/
-    │       └── styles.css
+    │       ├── styles.css
+    │       └── i18n/messages[_en].properties
     └── test/java/io/guillermoamadodiaz/javacalcfx/
         ├── calc/CalculadoraTest.java            JUnit 5, casos parametrizados y @Nested
-        └── ui/{FormatoTest,MensajesDeErrorTest,EntradaTest}.java
+        ├── i18n/TextosTest.java
+        └── ui/{Formato,MensajesDeError,Entrada,FiltroNumerico}Test.java
 ```
 
 ---
@@ -202,16 +209,18 @@ distinto de `0` es múltiplo de `0`; por eso `esMultiplo(a, 0)` es `true` solo s
 ## Cómo añadir una calculadora nueva
 
 1. Añade un método puro a `Calculadora` con sus precondiciones **y un test**.
-2. Crea un método `pantallaX()` que llame a `formularios.mostrar(...)` con las
-   instrucciones, los `prompts` y la función de presentación.
-3. Añade una entrada `Botones.crear(...)` en `mostrarMenu()`.
+2. Añade sus textos (título, instrucciones, campos, resultado) a
+   `messages.properties` y `messages_en.properties`.
+3. Crea un método `pantallaX()` que llame a `formularios.mostrar(...)` con el
+   título, las instrucciones, los `prompts`, el `Tipo` de campo y la función de
+   presentación (todo vía `Textos.get(...)`).
+4. Añade una entrada `Botones.crear(...)` en `mostrarMenu()`.
 
 ---
 
 ## Limitaciones conocidas y mejoras futuras
 
 1. Tests de interfaz con TestFX (navegación, mensajes de error en pantalla).
-2. Internacionalización con `ResourceBundle`.
 
 ---
 

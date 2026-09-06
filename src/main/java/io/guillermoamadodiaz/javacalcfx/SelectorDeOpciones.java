@@ -1,10 +1,12 @@
 package io.guillermoamadodiaz.javacalcfx;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.guillermoamadodiaz.javacalcfx.calc.Calculadora;
 import io.guillermoamadodiaz.javacalcfx.calc.Calculadora.Triangulo;
+import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 import io.guillermoamadodiaz.javacalcfx.ui.Botones;
 import io.guillermoamadodiaz.javacalcfx.ui.CalculosAsync;
 import io.guillermoamadodiaz.javacalcfx.ui.ConstructorDeFormularios;
@@ -28,16 +30,13 @@ import javafx.stage.Stage;
  * ({@link Navegador}, {@link CalculosAsync}, {@link ConstructorDeFormularios}),
  * declarar el catálogo de calculadoras y cerrar el ejecutor al salir. Cada
  * {@code pantallaX()} describe únicamente <em>qué</em> se pide y <em>qué</em> se
- * muestra; la aritmética vive en {@link Calculadora}.
+ * muestra; la aritmética vive en {@link Calculadora} y los textos en {@link Textos}.
  */
 public class SelectorDeOpciones extends Application {
 
     private static final int COLUMNAS_MENU = 3;
     private static final double ANCHO_BOTON_MENU = 210;
-
-    /** Recordatorio de que los decimales se escriben con punto. */
-    private static final String NOTA_DECIMALES =
-            "\nLos decimales se escriben con punto (.), por ejemplo 7.5";
+    private static final int NOTAS_APROBADO = 5;
 
     private final StackPane raiz = new StackPane();
     private final CalculosAsync calculos = new CalculosAsync();
@@ -47,7 +46,7 @@ public class SelectorDeOpciones extends Application {
 
     @Override
     public void start(Stage escenario) {
-        escenario.setTitle("Calculadora Matemática");
+        escenario.setTitle(Textos.get("app.titulo"));
         raiz.setPadding(new Insets(20));
 
         Scene escena = new Scene(raiz, 680, 480);
@@ -71,7 +70,7 @@ public class SelectorDeOpciones extends Application {
     // ------------------------------------------------------------------
 
     private void mostrarMenu() {
-        Label titulo = new Label("Calculadora Matemática");
+        Label titulo = new Label(Textos.get("menu.titulo"));
         titulo.getStyleClass().add("titulo");
 
         GridPane botonera = new GridPane();
@@ -80,12 +79,12 @@ public class SelectorDeOpciones extends Application {
         botonera.setAlignment(Pos.CENTER);
 
         Button[] botones = {
-            Botones.crear("Calcular Teorema de Pitágoras", this::pantallaPitagoras),
-            Botones.crear("Calcular Área de Cilindro", this::pantallaCilindro),
-            Botones.crear("Determinar Año Bisiesto", this::pantallaBisiesto),
-            Botones.crear("Calcular Factorial", this::pantallaFactorial),
-            Botones.crear("Determinar Múltiplo", this::pantallaMultiplo),
-            Botones.crear("Determinar Aprobado", this::pantallaAprobado),
+            Botones.crear(Textos.get("menu.boton.pitagoras"), this::pantallaPitagoras),
+            Botones.crear(Textos.get("menu.boton.cilindro"), this::pantallaCilindro),
+            Botones.crear(Textos.get("menu.boton.bisiesto"), this::pantallaBisiesto),
+            Botones.crear(Textos.get("menu.boton.factorial"), this::pantallaFactorial),
+            Botones.crear(Textos.get("menu.boton.multiplo"), this::pantallaMultiplo),
+            Botones.crear(Textos.get("menu.boton.aprobado"), this::pantallaAprobado),
         };
         for (int i = 0; i < botones.length; i++) {
             botones[i].setPrefWidth(ANCHO_BOTON_MENU);
@@ -104,81 +103,93 @@ public class SelectorDeOpciones extends Application {
 
     private void pantallaPitagoras() {
         formularios.mostrar(
-                "Teorema de Pitágoras",
-                "Ingresa las longitudes de los catetos para calcular la hipotenusa:",
-                List.of("Longitud del cateto a", "Longitud del cateto b"),
+                Textos.get("pitagoras.titulo"),
+                Textos.get("pitagoras.instrucciones"),
+                List.of(Textos.get("pitagoras.campo.catetoA"), Textos.get("pitagoras.campo.catetoB")),
                 FiltroNumerico.Tipo.DECIMAL,
                 valores -> {
                     Triangulo t = Calculadora.resolverTrianguloRectangulo(
                             Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1)));
-                    return "Hipotenusa: " + Formato.numero(t.hipotenusa()) + "\n"
-                            + "Área: " + Formato.numero(t.area()) + "\n"
-                            + "Perímetro: " + Formato.numero(t.perimetro()) + "\n"
-                            + "α ≅ " + Formato.numero(t.anguloAlfa()) + "°\n"
-                            + "β ≅ " + Formato.numero(t.anguloBeta()) + "°";
+                    return Textos.get("pitagoras.resultado",
+                            Formato.numero(t.hipotenusa()),
+                            Formato.numero(t.area()),
+                            Formato.numero(t.perimetro()),
+                            Formato.numero(t.anguloAlfa()),
+                            Formato.numero(t.anguloBeta()));
                 });
     }
 
     private void pantallaCilindro() {
         formularios.mostrar(
-                "Área de Cilindro",
-                "Ingresa el radio y la altura del cilindro:",
-                List.of("Radio", "Altura"),
+                Textos.get("cilindro.titulo"),
+                Textos.get("cilindro.instrucciones"),
+                List.of(Textos.get("cilindro.campo.radio"), Textos.get("cilindro.campo.altura")),
                 FiltroNumerico.Tipo.DECIMAL,
-                valores -> "Área del cilindro: " + Formato.numero(Calculadora.areaCilindro(
-                        Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1)))));
+                valores -> Textos.get("cilindro.resultado", Formato.numero(Calculadora.areaCilindro(
+                        Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1))))));
     }
 
     private void pantallaBisiesto() {
         formularios.mostrar(
-                "Año Bisiesto",
-                "Ingresa un año para determinar si es bisiesto:",
-                List.of("Año"),
+                Textos.get("bisiesto.titulo"),
+                Textos.get("bisiesto.instrucciones"),
+                List.of(Textos.get("bisiesto.campo.anio")),
                 FiltroNumerico.Tipo.ENTERO,
                 valores -> {
                     int anio = Entrada.entero(valores.get(0));
-                    return "El año " + anio + (Calculadora.esBisiesto(anio)
-                            ? " es bisiesto." : " no es bisiesto.");
+                    String clave = Calculadora.esBisiesto(anio)
+                            ? "bisiesto.resultado.si" : "bisiesto.resultado.no";
+                    return Textos.get(clave, String.valueOf(anio));
                 });
     }
 
     private void pantallaFactorial() {
         formularios.mostrar(
-                "Factorial",
-                "Ingresa un número para calcular su factorial:",
-                List.of("Número"),
+                Textos.get("factorial.titulo"),
+                Textos.get("factorial.instrucciones"),
+                List.of(Textos.get("factorial.campo.numero")),
                 FiltroNumerico.Tipo.ENTERO,
                 valores -> {
                     int n = Entrada.entero(valores.get(0));
                     BigInteger factorial = Calculadora.factorial(n);
-                    return "El factorial de " + n + " es " + Formato.enteroGrande(factorial);
+                    return Textos.get("factorial.resultado",
+                            String.valueOf(n), Formato.enteroGrande(factorial));
                 });
     }
 
     private void pantallaMultiplo() {
         formularios.mostrar(
-                "Múltiplo",
-                "Ingresa dos números para determinar si el primero es múltiplo del segundo:",
-                List.of("Primer número", "Segundo número"),
+                Textos.get("multiplo.titulo"),
+                Textos.get("multiplo.instrucciones"),
+                List.of(Textos.get("multiplo.campo.primero"), Textos.get("multiplo.campo.segundo")),
                 FiltroNumerico.Tipo.ENTERO,
                 valores -> {
                     long a = Entrada.largo(valores.get(0));
                     long b = Entrada.largo(valores.get(1));
-                    return a + (Calculadora.esMultiplo(a, b) ? " es " : " no es ") + "múltiplo de " + b + ".";
+                    String clave = Calculadora.esMultiplo(a, b)
+                            ? "multiplo.resultado.si" : "multiplo.resultado.no";
+                    return Textos.get(clave, String.valueOf(a), String.valueOf(b));
                 });
     }
 
     private void pantallaAprobado() {
+        List<String> prompts = new ArrayList<>(NOTAS_APROBADO);
+        for (int i = 1; i <= NOTAS_APROBADO; i++) {
+            prompts.add(Textos.get("aprobado.campo.nota", i));
+        }
         formularios.mostrar(
-                "Aprobado",
-                "Ingresa las 5 notas del alumno (entre 0 y 10):" + NOTA_DECIMALES,
-                List.of("Nota 1", "Nota 2", "Nota 3", "Nota 4", "Nota 5"),
+                Textos.get("aprobado.titulo"),
+                Textos.get("aprobado.instrucciones",
+                        String.valueOf((int) Calculadora.NOTA_MINIMA),
+                        String.valueOf((int) Calculadora.NOTA_MAXIMA)),
+                prompts,
                 FiltroNumerico.Tipo.DECIMAL,
                 valores -> {
                     double[] notas = valores.stream().mapToDouble(Entrada::doble).toArray();
                     double media = Calculadora.media(notas);
-                    return (Calculadora.estaAprobado(media) ? "Aprobado" : "Suspendido")
-                            + " con una nota media de " + Formato.dosDecimales(media) + ".";
+                    String clave = Calculadora.estaAprobado(media)
+                            ? "aprobado.resultado.aprobado" : "aprobado.resultado.suspendido";
+                    return Textos.get(clave, Formato.dosDecimales(media));
                 });
     }
 
