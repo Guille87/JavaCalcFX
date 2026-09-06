@@ -10,6 +10,10 @@ on:
 permissions:
   contents: write
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   windows:
     runs-on: windows-latest
@@ -25,7 +29,6 @@ jobs:
 
       - name: Versión desde la etiqueta
         id: version
-        shell: bash
         run: echo "v=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
 
       - name: App-image portable
@@ -42,7 +45,7 @@ jobs:
 
       - name: Instalador .msi
         run: >
-          mvn -B --no-transfer-progress -Pdist,installer -DskipTests
+          mvn -B --no-transfer-progress "-Pdist,installer" -DskipTests
           "-Dapp.version=${{ steps.version.outputs.v }}"
           clean javafx:jlink package
 
