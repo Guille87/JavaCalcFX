@@ -6,6 +6,7 @@ import static org.testfx.matcher.control.LabeledMatchers.hasText;
 
 import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 import io.guillermoamadodiaz.javacalcfx.ui.EstadoVentana;
+import io.guillermoamadodiaz.javacalcfx.ui.Tema;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -35,6 +36,7 @@ class InterfazTest extends ApplicationTest {
     static void limpiarPreferencias() {
         try {
             Preferences.userNodeForPackage(EstadoVentana.class).clear();
+            Preferences.userNodeForPackage(Tema.class).node("tema").clear();
         } catch (Exception ignorado) {
             // sin persistencia disponible en el entorno de test: nada que limpiar
         }
@@ -115,6 +117,20 @@ class InterfazTest extends ApplicationTest {
         clickOn("Mostrar pasos");
         String pasos = lookup(".pasos").queryAs(Label.class).getText();
         assertTrue(pasos.contains("h = √(9 + 16)"), "esperaba el desarrollo de Pitágoras, era: " + pasos);
+    }
+
+    @Test
+    void el_boton_de_tema_alterna_el_modo_oscuro() {
+        boolean oscuroAntes = modoOscuro();
+        clickOn(oscuroAntes ? "Modo claro" : "Modo oscuro");
+        assertTrue(modoOscuro() != oscuroAntes, "el botón debe alternar el modo oscuro");
+
+        clickOn(oscuroAntes ? "Modo oscuro" : "Modo claro"); // lo dejamos como estaba
+        assertTrue(modoOscuro() == oscuroAntes, "el segundo clic debe volver al tema anterior");
+    }
+
+    private boolean modoOscuro() {
+        return lookup(".titulo").query().getScene().getRoot().getStyleClass().contains(Tema.CLASE_OSCURO);
     }
 
     @Test

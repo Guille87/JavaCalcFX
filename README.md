@@ -68,6 +68,8 @@ Aspectos transversales a todas las pantallas:
   `#,##0.####` en lugar de la representación cruda de `double`.
 - **Idioma**: español o inglés, seleccionable desde el menú; la elección se
   recuerda para el siguiente arranque.
+- **Tema claro u oscuro**: botón en la barra superior del menú; la elección se
+  recuerda entre sesiones.
 - **Ventana**: recuerda su tamaño y posición entre sesiones; al abrir un
   formulario el cursor ya está en el primer campo.
 
@@ -216,6 +218,8 @@ paquete raíz (la `Application` y su catálogo de pantallas).
   - `Entrada` — único punto de parseo de texto a número (probado con tests).
   - `FiltroNumerico` — `TextFormatter` entero/decimal por campo (probado con tests).
   - `EstadoVentana` — persiste tamaño y posición de la ventana (probado con tests).
+  - `Tema` — modo claro/oscuro (clase `tema-oscuro` en `styles.css`), con la
+    preferencia persistida en `java.util.prefs` (probado con tests).
   - `PasoAPasoX` — desarrollo paso a paso, en notación lineal, de la cuadrática,
     Pitágoras, el cilindro, el porcentaje y la regla de tres (plantillas
     deterministas, probadas con tests).

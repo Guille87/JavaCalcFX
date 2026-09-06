@@ -19,6 +19,7 @@ import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoCuadratica;
 import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoPitagoras;
 import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoPorcentaje;
 import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoReglaDeTres;
+import io.guillermoamadodiaz.javacalcfx.ui.Tema;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +80,7 @@ public class SelectorDeOpciones extends Application {
         if (hojaEstilos != null) {
             escena.getStylesheets().add(hojaEstilos.toExternalForm());
         }
+        Tema.aplicarA(escena); // restaura el modo claro/oscuro guardado
 
         mostrarMenu();
         escenario.setScene(escena);
@@ -177,7 +179,7 @@ public class SelectorDeOpciones extends Application {
         return Botones.crear(Textos.get("menu.boton." + clave), Textos.get("menu.boton." + clave + ".tooltip"), accion);
     }
 
-    /** Selector de idioma alineado arriba a la derecha del menú. */
+    /** Barra superior del menú: botón de tema y selector de idioma, arriba a la derecha. */
     private HBox barraDeIdioma() {
         ComboBox<Idioma> selector = new ComboBox<>();
         selector.getItems().setAll(Idioma.values());
@@ -192,7 +194,14 @@ public class SelectorDeOpciones extends Application {
             }
         });
 
-        HBox barra = new HBox(selector);
+        String clave = Tema.esOscuro() ? "menu.tema.claro" : "menu.tema.oscuro";
+        Button tema = Botones.crear(Textos.get(clave), Textos.get("menu.tema.tooltip"), () -> {
+            Tema.alternar();
+            Tema.aplicarA(escenario.getScene());
+            mostrarMenu(); // reconstruye la barra con la etiqueta correcta
+        });
+
+        HBox barra = new HBox(8, tema, selector);
         barra.setAlignment(Pos.CENTER_RIGHT);
         return barra;
     }

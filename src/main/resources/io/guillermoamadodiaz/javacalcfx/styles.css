@@ -2,6 +2,22 @@
     -fx-font-size: 13px;
 }
 
+/*
+ * Modo oscuro: se activa añadiendo la clase «tema-oscuro» a la raíz de la escena
+ * (lo hace ui/Tema). Modena deriva casi todos los colores de estas tres
+ * variables, así que con redefinirlas basta; el texto se aclara solo.
+ */
+.root.tema-oscuro {
+    -fx-base: #3b3f42;
+    -fx-background: #2b2d30;
+    -fx-control-inner-background: #313438;
+    -fx-control-inner-background-alt: derive(-fx-control-inner-background, -3%);
+    -fx-accent: #4b9fe1;
+    -fx-default-button: #2f6fa8;
+    -fx-focus-color: #4b9fe1;
+    -fx-faint-focus-color: #4b9fe122;
+}
+
 .titulo {
     -fx-font-size: 20px;
     -fx-font-weight: bold;

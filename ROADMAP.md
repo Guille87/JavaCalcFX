@@ -86,7 +86,8 @@ Explicación desarrollada del cálculo, en notación lineal, tras un botón
 
 ## Fase 6 · Opcionales
 
-- [ ] **Modo oscuro** con toggle persistido (variables en `styles.css` + botón en el menú).
+- [x] **Modo oscuro** con toggle persistido (`ui/Tema` + clase `tema-oscuro` en
+      `styles.css` + botón en la barra superior del menú).
 - [ ] Desacoplar `Calculadora` de `Textos` (excepciones con clave; traduce la UI).
 - [ ] `CHANGELOG.md` / `CONTRIBUTING.md`.
 - [ ] Copiar el resultado al portapapeles.
