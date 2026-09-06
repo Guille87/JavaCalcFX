@@ -196,11 +196,12 @@ El proyecto se organiza en cuatro paquetes: `calc` (dominio puro), `i18n`
 (textos traducibles), `ui` (infraestructura de interfaz reutilizable) y el
 paquete raíz (la `Application` y su catálogo de pantallas).
 
-- **`calc/Calculadora.java`** — toda la aritmética como métodos `static` sin
-  ninguna dependencia de JavaFX. Cada método comprueba sus precondiciones y, ante
-  una entrada inválida, lanza `IllegalArgumentException` con un mensaje apto para
-  el usuario. Devuelve `record`s inmutables (`Triangulo`, `EcuacionCuadratica`).
-  Es la capa cubierta por tests unitarios.
+- **`calc/`** — toda la aritmética como métodos `static`, **sin ninguna
+  dependencia del resto del proyecto** (ni de JavaFX ni de los textos). Cada
+  método comprueba sus precondiciones y, ante una entrada inválida, lanza
+  `ErrorDeCalculo` con la *clave* del mensaje y sus argumentos; la interfaz
+  (`ui/MensajesDeError`) es quien lo traduce. Devuelve `record`s inmutables
+  (`Triangulo`, `EcuacionCuadratica`…). Es la capa cubierta por tests unitarios.
 - **`i18n/`** — `Textos` lee los ficheros `messages*.properties` (español de
   base, inglés encima) y resuelve claves con sustitución de parámetros vía
   `MessageFormat`; `Idioma` es el enum del selector. El idioma se elige desde el

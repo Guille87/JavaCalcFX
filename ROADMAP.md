@@ -88,7 +88,9 @@ Explicación desarrollada del cálculo, en notación lineal, tras un botón
 
 - [x] **Modo oscuro** con toggle persistido (`ui/Tema` + clase `tema-oscuro` en
       `styles.css` + botón en la barra superior del menú).
-- [ ] Desacoplar `Calculadora` de `Textos` (excepciones con clave; traduce la UI).
+- [x] Desacoplar `calc` de `Textos`: `ErrorDeCalculo` lleva la clave del mensaje
+      y sus argumentos; `ui/MensajesDeError` traduce. El paquete `calc` ya no
+      importa nada del resto del proyecto.
 - [ ] `CHANGELOG.md` / `CONTRIBUTING.md`.
 - [x] Copiar el resultado al portapapeles (botón «Copiar» tras un cálculo).
 - [ ] Historial de cálculos.

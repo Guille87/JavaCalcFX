@@ -19,6 +19,19 @@ class CalculadoraTest {
 
     private static final double EPS = 1e-9;
 
+    @Test
+    @DisplayName("Los errores de dominio llevan la clave del mensaje, no el texto")
+    void los_errores_llevan_clave_de_texto() {
+        ErrorDeCalculo e = assertThrows(ErrorDeCalculo.class, () -> Calculadora.esBisiesto(0));
+        assertEquals("calc.anio.no.positivo", e.clave());
+
+        ErrorDeCalculo conNombre = assertThrows(ErrorDeCalculo.class, () -> Calculadora.areaCilindro(-1, 2));
+        assertEquals("calc.valor.negativo", conNombre.clave());
+        assertEquals(
+                new ErrorDeCalculo.Nombre("calc.nombre.radio"),
+                conNombre.argumentos().get(0));
+    }
+
     @Nested
     @DisplayName("Triángulo rectángulo")
     class TrianguloRectangulo {

@@ -1,16 +1,16 @@
 package io.guillermoamadodiaz.javacalcfx.calc;
 
-import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 import java.math.BigInteger;
 import java.util.concurrent.CancellationException;
 
 /**
  * Lógica matemática pura de la aplicación.
  *
- * <p>Esta clase no depende de JavaFX ni de ninguna capa de interfaz: recibe
- * valores primitivos, valida sus precondiciones y devuelve resultados o lanza
- * {@link IllegalArgumentException} con un mensaje ya traducido ({@link Textos}).
- * De este modo toda la aritmética es verificable con tests unitarios.
+ * <p>Este paquete no depende de JavaFX ni de ninguna otra capa (ni siquiera de
+ * los textos): recibe valores primitivos, valida sus precondiciones y devuelve
+ * resultados o lanza {@link ErrorDeCalculo} con la <em>clave</em> del mensaje,
+ * que traduce la interfaz. Así toda la aritmética es verificable con tests
+ * unitarios sin montar nada.
  */
 public final class Calculadora {
 
@@ -24,11 +24,11 @@ public final class Calculadora {
      *
      * @param catetoA longitud del cateto A (&gt; 0)
      * @param catetoB longitud del cateto B (&gt; 0)
-     * @throws IllegalArgumentException si algún cateto no es un número finito y positivo
+     * @throws ErrorDeCalculo si algún cateto no es un número finito y positivo
      */
     public static Triangulo resolverTrianguloRectangulo(double catetoA, double catetoB) {
-        exigirPositivoFinito(catetoA, Textos.get("calc.nombre.catetoA"));
-        exigirPositivoFinito(catetoB, Textos.get("calc.nombre.catetoB"));
+        exigirPositivoFinito(catetoA, "calc.nombre.catetoA");
+        exigirPositivoFinito(catetoB, "calc.nombre.catetoB");
 
         double hipotenusa = Math.hypot(catetoA, catetoB); // estable frente a overflow
         double area = (catetoA * catetoB) / 2.0;
@@ -45,19 +45,19 @@ public final class Calculadora {
      * @param altura altura del cilindro (&ge; 0)
      */
     public static double areaCilindro(double radio, double altura) {
-        exigirNoNegativoFinito(radio, Textos.get("calc.nombre.radio"));
-        exigirNoNegativoFinito(altura, Textos.get("calc.nombre.altura"));
+        exigirNoNegativoFinito(radio, "calc.nombre.radio");
+        exigirNoNegativoFinito(altura, "calc.nombre.altura");
         return 2 * Math.PI * radio * (radio + altura);
     }
 
     /**
      * Indica si un año del calendario gregoriano proléptico es bisiesto.
      *
-     * @throws IllegalArgumentException si {@code anio <= 0}
+     * @throws ErrorDeCalculo si {@code anio <= 0}
      */
     public static boolean esBisiesto(int anio) {
         if (anio <= 0) {
-            throw new IllegalArgumentException(Textos.get("calc.anio.no.positivo"));
+            throw new ErrorDeCalculo("calc.anio.no.positivo");
         }
         return (anio % 4 == 0 && anio % 100 != 0) || anio % 400 == 0;
     }
@@ -65,20 +65,20 @@ public final class Calculadora {
     /**
      * Factorial de un entero no negativo.
      *
-     * @throws IllegalArgumentException si {@code n < 0} o {@code n > }{@link #MAX_FACTORIAL}
+     * @throws ErrorDeCalculo si {@code n < 0} o {@code n > }{@link #MAX_FACTORIAL}
      */
     public static BigInteger factorial(int n) {
         if (n < 0) {
-            throw new IllegalArgumentException(Textos.get("calc.factorial.negativo"));
+            throw new ErrorDeCalculo("calc.factorial.negativo");
         }
         if (n > MAX_FACTORIAL) {
-            throw new IllegalArgumentException(Textos.get("calc.factorial.grande", String.valueOf(MAX_FACTORIAL)));
+            throw new ErrorDeCalculo("calc.factorial.grande", String.valueOf(MAX_FACTORIAL));
         }
         BigInteger resultado = BigInteger.ONE;
         for (int i = 2; i <= n; i++) {
             // Permite que quien ejecute este cálculo en un hilo aparte (Task) lo aborte.
             if (Thread.currentThread().isInterrupted()) {
-                throw new CancellationException(Textos.get("calc.factorial.cancelado"));
+                throw new CancellationException();
             }
             resultado = resultado.multiply(BigInteger.valueOf(i));
         }
@@ -111,7 +111,7 @@ public final class Calculadora {
     /**
      * Mínimo común múltiplo de {@code |a|} y {@code |b|}. {@code mcm(0, x) = 0}.
      *
-     * @throws IllegalArgumentException si el resultado no cabe en un {@code long}
+     * @throws ErrorDeCalculo si el resultado no cabe en un {@code long}
      */
     public static long mcm(long a, long b) {
         if (a == 0 || b == 0) {
@@ -120,7 +120,7 @@ public final class Calculadora {
         try {
             return Math.absExact(Math.multiplyExact(a / mcd(a, b), b));
         } catch (ArithmeticException desbordamiento) {
-            throw new IllegalArgumentException(Textos.get("calc.mcm.grande"));
+            throw new ErrorDeCalculo("calc.mcm.grande");
         }
     }
 
@@ -128,7 +128,7 @@ public final class Calculadora {
         try {
             return Math.absExact(valor);
         } catch (ArithmeticException desbordamiento) {
-            throw new IllegalArgumentException(Textos.get("calc.entero.grande"));
+            throw new ErrorDeCalculo("calc.entero.grande");
         }
     }
 
@@ -152,7 +152,7 @@ public final class Calculadora {
         }
         for (long i = 3; i <= n / i; i += 2) {
             if (Thread.currentThread().isInterrupted()) {
-                throw new CancellationException(Textos.get("calc.primo.cancelado"));
+                throw new CancellationException();
             }
             if (n % i == 0) {
                 return new Primalidad(false, i);
@@ -166,7 +166,7 @@ public final class Calculadora {
      * entrada se infiere del prefijo: {@code 0b} binario, {@code 0o} octal,
      * {@code 0x} hexadecimal; sin prefijo, decimal. Admite signo.
      *
-     * @throws IllegalArgumentException si el texto no es un entero válido
+     * @throws ErrorDeCalculo si el texto no es un entero válido
      */
     public static ConversionBase convertirBase(String texto) {
         String limpio = texto == null ? "" : texto.trim();
@@ -190,7 +190,7 @@ public final class Calculadora {
         try {
             valor = Long.parseLong(cuerpo, base);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(Textos.get("calc.base.numero.invalido"));
+            throw new ErrorDeCalculo("calc.base.numero.invalido");
         }
         if (negativo) {
             valor = -valor;
@@ -205,11 +205,11 @@ public final class Calculadora {
     /**
      * El {@code porcentaje}% de {@code cantidad}.
      *
-     * @throws IllegalArgumentException si algún argumento no es finito
+     * @throws ErrorDeCalculo si algún argumento no es finito
      */
     public static double porcentajeDe(double porcentaje, double cantidad) {
-        exigirFinito(porcentaje, Textos.get("calc.nombre.porcentaje"));
-        exigirFinito(cantidad, Textos.get("calc.nombre.cantidad"));
+        exigirFinito(porcentaje, "calc.nombre.porcentaje");
+        exigirFinito(cantidad, "calc.nombre.cantidad");
         return porcentaje / 100.0 * cantidad;
     }
 
@@ -217,14 +217,14 @@ public final class Calculadora {
      * Regla de tres directa: si {@code a} corresponde a {@code b}, entonces
      * {@code c} corresponde a {@code c · b / a}.
      *
-     * @throws IllegalArgumentException si {@code a} es 0 o algún argumento no es finito
+     * @throws ErrorDeCalculo si {@code a} es 0 o algún argumento no es finito
      */
     public static double reglaDeTres(double a, double b, double c) {
-        exigirFinito(a, "a");
-        exigirFinito(b, "b");
-        exigirFinito(c, "c");
+        exigirFinito(a, "calc.nombre.a");
+        exigirFinito(b, "calc.nombre.b");
+        exigirFinito(c, "calc.nombre.c");
         if (a == 0.0) {
-            throw new IllegalArgumentException(Textos.get("calc.regladetres.a.cero"));
+            throw new ErrorDeCalculo("calc.regladetres.a.cero");
         }
         return c * b / a;
     }
@@ -234,15 +234,15 @@ public final class Calculadora {
      * kilogramos y la altura en metros. Devuelve el valor y su categoría según
      * los rangos de la OMS para personas adultas.
      *
-     * @throws IllegalArgumentException si el peso o la altura no son números
+     * @throws ErrorDeCalculo si el peso o la altura no son números
      *     finitos y positivos, o si el resultado no es finito
      */
     public static IndiceMasaCorporal imc(double peso, double altura) {
-        exigirPositivoFinito(peso, Textos.get("calc.nombre.peso"));
-        exigirPositivoFinito(altura, Textos.get("calc.nombre.altura"));
+        exigirPositivoFinito(peso, "calc.nombre.peso");
+        exigirPositivoFinito(altura, "calc.nombre.altura");
         double valor = peso / (altura * altura);
         if (!Double.isFinite(valor)) {
-            throw new IllegalArgumentException(Textos.get("calc.imc.indefinido"));
+            throw new ErrorDeCalculo("calc.imc.indefinido");
         }
         return new IndiceMasaCorporal(valor, CategoriaImc.de(valor));
     }
@@ -256,18 +256,18 @@ public final class Calculadora {
      * Media aritmética de un conjunto no vacío de notas, cada una en el rango
      * {@code [NOTA_MINIMA, NOTA_MAXIMA]}.
      *
-     * @throws IllegalArgumentException si no se pasa ninguna nota o si alguna
+     * @throws ErrorDeCalculo si no se pasa ninguna nota o si alguna
      *     queda fuera del rango permitido
      */
     public static double media(double... notas) {
         if (notas == null || notas.length == 0) {
-            throw new IllegalArgumentException(Textos.get("calc.notas.vacio"));
+            throw new ErrorDeCalculo("calc.notas.vacio");
         }
         double suma = 0;
         for (double nota : notas) {
             if (!Double.isFinite(nota) || nota < NOTA_MINIMA || nota > NOTA_MAXIMA) {
-                throw new IllegalArgumentException(Textos.get(
-                        "calc.nota.rango", String.valueOf((int) NOTA_MINIMA), String.valueOf((int) NOTA_MAXIMA)));
+                throw new ErrorDeCalculo(
+                        "calc.nota.rango", String.valueOf((int) NOTA_MINIMA), String.valueOf((int) NOTA_MAXIMA));
             }
             suma += nota;
         }
@@ -285,15 +285,15 @@ public final class Calculadora {
      * <p>Usa una fórmula numéricamente estable (evita la cancelación catastrófica
      * de {@code (-b ± √Δ) / 2a} cuando {@code b²} domina a {@code 4ac}).
      *
-     * @throws IllegalArgumentException si {@code a} es 0 (no sería de segundo
+     * @throws ErrorDeCalculo si {@code a} es 0 (no sería de segundo
      *     grado) o si algún coeficiente no es finito
      */
     public static EcuacionCuadratica resolverEcuacionCuadratica(double a, double b, double c) {
-        exigirFinito(a, Textos.get("calc.nombre.coefA"));
-        exigirFinito(b, Textos.get("calc.nombre.coefB"));
-        exigirFinito(c, Textos.get("calc.nombre.coefC"));
+        exigirFinito(a, "calc.nombre.coefA");
+        exigirFinito(b, "calc.nombre.coefB");
+        exigirFinito(c, "calc.nombre.coefC");
         if (a == 0.0) {
-            throw new IllegalArgumentException(Textos.get("calc.cuadratica.no.cuadratica"));
+            throw new ErrorDeCalculo("calc.cuadratica.no.cuadratica");
         }
 
         double discriminante = b * b - 4 * a * c;
@@ -315,16 +315,16 @@ public final class Calculadora {
     /**
      * Potencia {@code base}<sup>{@code exponente}</sup>.
      *
-     * @throws IllegalArgumentException si algún argumento no es finito o el
+     * @throws ErrorDeCalculo si algún argumento no es finito o el
      *     resultado no es un número real finito (0 elevado a negativo, base
      *     negativa con exponente no entero, desbordamiento…)
      */
     public static double potencia(double base, double exponente) {
-        exigirFinito(base, Textos.get("calc.nombre.base"));
-        exigirFinito(exponente, Textos.get("calc.nombre.exponente"));
+        exigirFinito(base, "calc.nombre.base");
+        exigirFinito(exponente, "calc.nombre.exponente");
         double resultado = Math.pow(base, exponente);
         if (!Double.isFinite(resultado)) {
-            throw new IllegalArgumentException(Textos.get("calc.potencia.indefinida"));
+            throw new ErrorDeCalculo("calc.potencia.indefinida");
         }
         return resultado;
     }
@@ -334,18 +334,18 @@ public final class Calculadora {
      * de radicando negativo ({@code raiz(-8, 3) == -2}).
      *
      * @param indice número entero &ge; 2
-     * @throws IllegalArgumentException si el radicando no es finito, el índice no
+     * @throws ErrorDeCalculo si el radicando no es finito, el índice no
      *     es un entero &ge; 2, o se pide una raíz de índice par de un negativo
      */
     public static double raiz(double radicando, double indice) {
-        exigirFinito(radicando, Textos.get("calc.nombre.radicando"));
+        exigirFinito(radicando, "calc.nombre.radicando");
         if (!Double.isFinite(indice) || indice < 2 || indice != Math.rint(indice)) {
-            throw new IllegalArgumentException(Textos.get("calc.raiz.indice"));
+            throw new ErrorDeCalculo("calc.raiz.indice");
         }
         int n = (int) indice;
         if (radicando < 0) {
             if (n % 2 == 0) {
-                throw new IllegalArgumentException(Textos.get("calc.raiz.par.de.negativo"));
+                throw new ErrorDeCalculo("calc.raiz.par.de.negativo");
             }
             return -raizPositiva(-radicando, n);
         }
@@ -368,21 +368,21 @@ public final class Calculadora {
         return r;
     }
 
-    private static void exigirFinito(double valor, String nombre) {
+    private static void exigirFinito(double valor, String claveNombre) {
         if (!Double.isFinite(valor)) {
-            throw new IllegalArgumentException(Textos.get("calc.valor.no.finito", nombre));
+            throw new ErrorDeCalculo("calc.valor.no.finito", new ErrorDeCalculo.Nombre(claveNombre));
         }
     }
 
-    private static void exigirPositivoFinito(double valor, String nombre) {
+    private static void exigirPositivoFinito(double valor, String claveNombre) {
         if (!Double.isFinite(valor) || valor <= 0) {
-            throw new IllegalArgumentException(Textos.get("calc.valor.no.positivo", nombre));
+            throw new ErrorDeCalculo("calc.valor.no.positivo", new ErrorDeCalculo.Nombre(claveNombre));
         }
     }
 
-    private static void exigirNoNegativoFinito(double valor, String nombre) {
+    private static void exigirNoNegativoFinito(double valor, String claveNombre) {
         if (!Double.isFinite(valor) || valor < 0) {
-            throw new IllegalArgumentException(Textos.get("calc.valor.negativo", nombre));
+            throw new ErrorDeCalculo("calc.valor.negativo", new ErrorDeCalculo.Nombre(claveNombre));
         }
     }
 

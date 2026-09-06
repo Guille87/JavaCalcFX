@@ -3,6 +3,7 @@ package io.guillermoamadodiaz.javacalcfx.ui;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import io.guillermoamadodiaz.javacalcfx.calc.ErrorDeCalculo;
 import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 import java.util.Locale;
 import java.util.concurrent.CancellationException;
@@ -39,6 +40,28 @@ class MensajesDeErrorTest {
         assertEquals(
                 "Error: El radio no puede ser negativo.",
                 MensajesDeError.describir(new IllegalArgumentException("El radio no puede ser negativo.")));
+    }
+
+    @Test
+    void error_de_calculo_se_traduce_por_su_clave() {
+        assertEquals(
+                "Error: El año debe ser mayor que cero.",
+                MensajesDeError.describir(new ErrorDeCalculo("calc.anio.no.positivo")));
+    }
+
+    @Test
+    void error_de_calculo_traduce_tambien_el_nombre_del_dato() {
+        assertEquals(
+                "Error: El radio no puede ser negativo.",
+                MensajesDeError.describir(
+                        new ErrorDeCalculo("calc.valor.negativo", new ErrorDeCalculo.Nombre("calc.nombre.radio"))));
+    }
+
+    @Test
+    void error_de_calculo_con_argumento_literal() {
+        assertEquals(
+                "Error: El número es demasiado grande (máximo 100000).",
+                MensajesDeError.describir(new ErrorDeCalculo("calc.factorial.grande", "100000")));
     }
 
     @Test
