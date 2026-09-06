@@ -354,4 +354,55 @@ class CalculadoraTest {
             assertThrows(IllegalArgumentException.class, () -> Calculadora.mcm(1_000_000_000_000L, 999_999_999_999L));
         }
     }
+
+    @Nested
+    @DisplayName("Primalidad")
+    class Primos {
+
+        @ParameterizedTest
+        @ValueSource(longs = {2, 3, 5, 7, 13, 97, 7919, 1_000_000_007L})
+        void primos(long n) {
+            assertTrue(Calculadora.analizarPrimalidad(n).primo());
+        }
+
+        @ParameterizedTest
+        @ValueSource(longs = {4, 6, 9, 15, 100, 7917})
+        void compuestos(long n) {
+            var p = Calculadora.analizarPrimalidad(n);
+            assertFalse(p.primo());
+            assertTrue(p.compuesto());
+            assertEquals(0, n % p.menorDivisorPropio());
+        }
+
+        @Test
+        void el_divisor_es_el_menor() {
+            assertEquals(2, Calculadora.analizarPrimalidad(14).menorDivisorPropio());
+            assertEquals(3, Calculadora.analizarPrimalidad(15).menorDivisorPropio()); // 15 = 3·5
+        }
+
+        @ParameterizedTest
+        @ValueSource(longs = {1, 0, -7})
+        void menores_que_dos_no_son_primos_ni_compuestos(long n) {
+            var p = Calculadora.analizarPrimalidad(n);
+            assertFalse(p.primo());
+            assertFalse(p.compuesto());
+        }
+
+        @Test
+        void se_puede_cancelar_via_interrupcion() throws InterruptedException {
+            var abortado = new java.util.concurrent.atomic.AtomicBoolean(false);
+            Thread hilo = new Thread(() -> {
+                try {
+                    Calculadora.analizarPrimalidad(2_305_843_009_213_693_951L); // 2^61 - 1, primo de Mersenne
+                } catch (java.util.concurrent.CancellationException e) {
+                    abortado.set(true);
+                }
+            });
+            hilo.start();
+            Thread.sleep(30);
+            hilo.interrupt();
+            hilo.join(5_000);
+            assertTrue(abortado.get(), "la comprobación debe abortar al interrumpir el hilo");
+        }
+    }
 }

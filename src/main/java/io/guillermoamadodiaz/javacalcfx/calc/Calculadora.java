@@ -132,6 +132,35 @@ public final class Calculadora {
         }
     }
 
+    /**
+     * Analiza la primalidad de {@code n} por división de prueba hasta √n. Para un
+     * número compuesto devuelve su menor divisor propio; para un primo o para
+     * {@code n < 2} el divisor es 0.
+     *
+     * <p>El bucle comprueba {@link Thread#isInterrupted()} para poder abortar un
+     * número grande al navegar a otra pantalla.
+     */
+    public static Primalidad analizarPrimalidad(long n) {
+        if (n < 2) {
+            return new Primalidad(false, 0);
+        }
+        if (n < 4) {
+            return new Primalidad(true, 0); // 2 y 3
+        }
+        if (n % 2 == 0) {
+            return new Primalidad(false, 2);
+        }
+        for (long i = 3; i <= n / i; i += 2) {
+            if (Thread.currentThread().isInterrupted()) {
+                throw new CancellationException(Textos.get("calc.primo.cancelado"));
+            }
+            if (n % i == 0) {
+                return new Primalidad(false, i);
+            }
+        }
+        return new Primalidad(true, 0);
+    }
+
     /** Nota mínima y máxima admitidas por {@link #media(double...)}. */
     public static final double NOTA_MINIMA = 0.0;
 
@@ -299,6 +328,17 @@ public final class Calculadora {
 
         public boolean tieneRaizDoble() {
             return discriminante == 0.0;
+        }
+    }
+
+    /**
+     * Resultado de {@link #analizarPrimalidad(long)}: si el número es primo y,
+     * cuando es compuesto, su menor divisor propio ({@code > 1}).
+     */
+    public record Primalidad(boolean primo, long menorDivisorPropio) {
+        /** {@code true} si el número es compuesto (tiene un divisor propio mayor que 1). */
+        public boolean compuesto() {
+            return menorDivisorPropio > 1;
         }
     }
 }

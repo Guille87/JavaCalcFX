@@ -40,7 +40,7 @@ Un mini-commit por calculadora.
 - [x] Potencia (`xⁿ`) y raíz n-ésima (pantallas separadas; la raíz admite
       índices impares de negativos)
 - [x] MCD y MCM
-- [ ] ¿Es primo?
+- [x] ¿Es primo? (da un divisor y la factorización si es compuesto)
 - [ ] Conversor de bases (bin/oct/hex/dec)
 - [ ] Porcentajes / regla de tres
 - [ ] IMC
