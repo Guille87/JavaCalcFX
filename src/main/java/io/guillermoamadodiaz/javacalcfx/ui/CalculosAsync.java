@@ -4,7 +4,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-
 import javafx.concurrent.Task;
 
 /**
@@ -31,10 +30,8 @@ public final class CalculosAsync {
      * @param alTerminar recibe el resultado; también se invoca con cadena vacía si se cancela
      * @param alFallar   recibe el mensaje ya traducido por {@link MensajesDeError}
      */
-    public void ejecutar(Supplier<String> calculo,
-                         Runnable alEmpezar,
-                         Consumer<String> alTerminar,
-                         Consumer<String> alFallar) {
+    public void ejecutar(
+            Supplier<String> calculo, Runnable alEmpezar, Consumer<String> alTerminar, Consumer<String> alFallar) {
         cancelar();
 
         Task<String> tarea = new Task<>() {

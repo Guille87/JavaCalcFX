@@ -5,16 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import io.guillermoamadodiaz.javacalcfx.calc.Calculadora.Triangulo;
 import java.math.BigInteger;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import io.guillermoamadodiaz.javacalcfx.calc.Calculadora.Triangulo;
 
 class CalculadoraTest {
 
@@ -42,8 +40,7 @@ class CalculadoraTest {
         @ParameterizedTest
         @CsvSource({"0,1", "-1,1", "1,0", "NaN,1"})
         void rechaza_catetos_no_positivos(double a, double b) {
-            assertThrows(IllegalArgumentException.class,
-                    () -> Calculadora.resolverTrianguloRectangulo(a, b));
+            assertThrows(IllegalArgumentException.class, () -> Calculadora.resolverTrianguloRectangulo(a, b));
         }
     }
 
@@ -115,8 +112,7 @@ class CalculadoraTest {
 
         @Test
         void rechaza_desmesurado() {
-            assertThrows(IllegalArgumentException.class,
-                    () -> Calculadora.factorial(Calculadora.MAX_FACTORIAL + 1));
+            assertThrows(IllegalArgumentException.class, () -> Calculadora.factorial(Calculadora.MAX_FACTORIAL + 1));
         }
 
         @Test
@@ -189,8 +185,7 @@ class CalculadoraTest {
         @ParameterizedTest
         @CsvSource({"11", "-1", "10.5", "NaN"})
         void media_rechaza_notas_fuera_de_rango(double nota) {
-            assertThrows(IllegalArgumentException.class,
-                    () -> Calculadora.media(nota, 5, 5, 5, 5));
+            assertThrows(IllegalArgumentException.class, () -> Calculadora.media(nota, 5, 5, 5, 5));
         }
 
         @Test

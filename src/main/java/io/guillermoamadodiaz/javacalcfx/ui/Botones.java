@@ -6,8 +6,7 @@ import javafx.scene.control.Tooltip;
 /** Fábrica de botones que ejecutan una acción sin parámetros. */
 public final class Botones {
 
-    private Botones() {
-    }
+    private Botones() {}
 
     public static Button crear(String texto, Runnable accion) {
         return crear(texto, null, accion);

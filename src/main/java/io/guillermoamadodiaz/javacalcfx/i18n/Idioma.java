@@ -4,7 +4,6 @@ import java.util.Locale;
 
 /** Idiomas que ofrece la aplicación en el selector de la interfaz. */
 public enum Idioma {
-
     ESPANOL(Locale.forLanguageTag("es"), "Español"),
     INGLES(Locale.ENGLISH, "English");
 

@@ -3,11 +3,10 @@ package io.guillermoamadodiaz.javacalcfx.ui;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import io.guillermoamadodiaz.javacalcfx.ui.FiltroNumerico.Tipo;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import io.guillermoamadodiaz.javacalcfx.ui.FiltroNumerico.Tipo;
 
 class FiltroNumericoTest {
 

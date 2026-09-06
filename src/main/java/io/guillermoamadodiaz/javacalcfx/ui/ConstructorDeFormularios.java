@@ -1,22 +1,20 @@
 package io.guillermoamadodiaz.javacalcfx.ui;
 
+import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-
-import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 
 /**
  * Construye y muestra la pantalla de formulario genérica que comparten todas las
@@ -46,9 +44,12 @@ public final class ConstructorDeFormularios {
         this.volverAlMenu = volverAlMenu;
     }
 
-    public void mostrar(String titulo, String instrucciones, List<String> prompts,
-                        FiltroNumerico.Tipo tipoCampo,
-                        Function<List<String>, String> calculo) {
+    public void mostrar(
+            String titulo,
+            String instrucciones,
+            List<String> prompts,
+            FiltroNumerico.Tipo tipoCampo,
+            Function<List<String>, String> calculo) {
         VBox pantalla = new VBox(ESPACIADO);
         pantalla.setPadding(RELLENO);
         pantalla.setAlignment(Pos.TOP_CENTER);
@@ -90,13 +91,21 @@ public final class ConstructorDeFormularios {
                     .toList();
             calculos.ejecutar(
                     () -> calculo.apply(valores),
-                    () -> { calcular.setDisable(true); resultado.setText(Textos.get("form.calculando")); },
-                    texto -> { calcular.setDisable(false); resultado.setText(texto); },
-                    mensaje -> { calcular.setDisable(false); resultado.setText(mensaje); });
+                    () -> {
+                        calcular.setDisable(true);
+                        resultado.setText(Textos.get("form.calculando"));
+                    },
+                    texto -> {
+                        calcular.setDisable(false);
+                        resultado.setText(texto);
+                    },
+                    mensaje -> {
+                        calcular.setDisable(false);
+                        resultado.setText(mensaje);
+                    });
         });
 
-        Button volver = Botones.crear(
-                Textos.get("form.volver"), Textos.get("form.volver.tooltip"), volverAlMenu);
+        Button volver = Botones.crear(Textos.get("form.volver"), Textos.get("form.volver.tooltip"), volverAlMenu);
         volver.setCancelButton(true); // permite pulsar Esc
 
         pantalla.getChildren().addAll(encabezado, instruccion);

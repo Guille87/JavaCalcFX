@@ -14,7 +14,6 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -48,7 +47,9 @@ class TextosTest {
     void espanol_y_ingles_tienen_exactamente_las_mismas_claves() {
         Properties es = cargar("messages.properties");
         Properties en = cargar("messages_en.properties");
-        assertEquals(es.stringPropertyNames(), en.stringPropertyNames(),
+        assertEquals(
+                es.stringPropertyNames(),
+                en.stringPropertyNames(),
                 "los dos ficheros de idioma deben declarar las mismas claves");
     }
 
@@ -129,7 +130,8 @@ class TextosTest {
             }
             String formateado = MessageFormat.format(valor, args);
             for (int i = 0; i <= maximo; i++) {
-                assertTrue(formateado.contains("X" + i),
+                assertTrue(
+                        formateado.contains("X" + i),
                         fichero + " / " + clave + ": no sustituye {" + i + "} -> " + formateado);
             }
         }

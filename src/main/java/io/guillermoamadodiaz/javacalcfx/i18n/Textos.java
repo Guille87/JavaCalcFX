@@ -30,8 +30,7 @@ public final class Textos {
     private static Idioma idioma = idiomaInicial();
     private static Properties textos = cargar(idioma);
 
-    private Textos() {
-    }
+    private Textos() {}
 
     private static Preferences preferencias() {
         return Preferences.userNodeForPackage(Textos.class);
@@ -53,8 +52,7 @@ public final class Textos {
         Properties p = new Properties();
         try (InputStream in = Textos.class.getResourceAsStream(RUTA + fichero)) {
             if (in == null) {
-                throw new MissingResourceException(
-                        "No se encuentra " + fichero, Textos.class.getName(), fichero);
+                throw new MissingResourceException("No se encuentra " + fichero, Textos.class.getName(), fichero);
             }
             try (Reader r = new InputStreamReader(in, StandardCharsets.UTF_8)) {
                 p.load(r);
@@ -101,8 +99,7 @@ public final class Textos {
     public static String get(String clave) {
         String valor = textos.getProperty(clave);
         if (valor == null) {
-            throw new MissingResourceException(
-                    "Falta la clave " + clave, Textos.class.getName(), clave);
+            throw new MissingResourceException("Falta la clave " + clave, Textos.class.getName(), clave);
         }
         return valor;
     }

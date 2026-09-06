@@ -18,5 +18,8 @@ jobs:
           java-version: "17"
           cache: maven
 
+      - name: Comprobar formato
+        run: mvn -B --no-transfer-progress spotless:check
+
       - name: Ejecutar tests
         run: mvn -B --no-transfer-progress clean test

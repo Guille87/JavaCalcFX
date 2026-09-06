@@ -101,17 +101,26 @@ mvn clean test
 Una sola clase o un solo método:
 
 ```bash
-mvn test -Dtest=CalculadoraTest
-mvn test -Dtest=CalculadoraTest#terna_3_4_5
+mvn test -Dtest=FormatoTest
+mvn test -Dtest=FormatoTest#numero_entero_sin_decimales
 ```
 
-Los casos están agrupados en clases `@Nested` (`TrianguloRectangulo`,
-`AreaCilindro`, `AnioBisiesto`, `Factorial`, `Multiplos`, `Notas`), así que para
-apuntar a un método anidado hay que nombrar la clase que lo contiene:
+Todos los métodos de `CalculadoraTest` viven en una clase `@Nested`
+(`TrianguloRectangulo`, `AreaCilindro`, `AnioBisiesto`, `Factorial`, `Multiplos`,
+`Notas`), así que para apuntar a uno hay que nombrar la clase que lo contiene:
 
 ```bash
 mvn test -Dtest='CalculadoraTest$Factorial#rechaza_negativos'
 ```
+
+El formato del código lo aplica Spotless (`palantir-java-format`). Antes de
+commitear:
+
+```bash
+mvn spotless:apply
+```
+
+La CI ejecuta `mvn spotless:check` y falla si algo no está formateado.
 
 Los tests de interfaz (`InterfazTest`, con TestFX) corren **sin pantalla**
 mediante Monocle; no hace falta configurar nada. Para verlos con ventana:

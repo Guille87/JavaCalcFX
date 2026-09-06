@@ -4,20 +4,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.LabeledMatchers.hasText;
 
+import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.util.WaitForAsyncUtils;
-
-import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.util.WaitForAsyncUtils;
 
 /**
  * Tests de interfaz con TestFX (sin pantalla, vía Monocle). Cubren la navegación
@@ -71,8 +69,7 @@ class InterfazTest extends ApplicationTest {
         clickOn(lookup(".text-field").nth(1).queryAs(TextField.class)).write("4");
         clickOn("Calcular");
 
-        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS,
-                () -> textoResultado().contains("Hipotenusa"));
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> textoResultado().contains("Hipotenusa"));
         assertTrue(textoResultado().contains("5"), "hipotenusa 3-4-5, era: " + textoResultado());
     }
 
@@ -83,7 +80,8 @@ class InterfazTest extends ApplicationTest {
         clickOn("Calcular");
 
         WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> !textoResultado().isBlank());
-        assertTrue(textoResultado().contains("números válidos"),
+        assertTrue(
+                textoResultado().contains("números válidos"),
                 "esperaba el aviso de números inválidos, era: " + textoResultado());
     }
 }

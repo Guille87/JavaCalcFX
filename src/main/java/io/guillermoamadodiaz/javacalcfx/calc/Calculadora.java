@@ -1,9 +1,8 @@
 package io.guillermoamadodiaz.javacalcfx.calc;
 
+import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 import java.math.BigInteger;
 import java.util.concurrent.CancellationException;
-
-import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 
 /**
  * Lógica matemática pura de la aplicación.
@@ -18,8 +17,7 @@ public final class Calculadora {
     /** Límite de {@link #factorial(int)} para evitar bloqueos por cómputo desbordado. */
     public static final int MAX_FACTORIAL = 100_000;
 
-    private Calculadora() {
-    }
+    private Calculadora() {}
 
     /**
      * Resuelve un triángulo rectángulo a partir de sus dos catetos.
@@ -74,8 +72,7 @@ public final class Calculadora {
             throw new IllegalArgumentException(Textos.get("calc.factorial.negativo"));
         }
         if (n > MAX_FACTORIAL) {
-            throw new IllegalArgumentException(
-                    Textos.get("calc.factorial.grande", String.valueOf(MAX_FACTORIAL)));
+            throw new IllegalArgumentException(Textos.get("calc.factorial.grande", String.valueOf(MAX_FACTORIAL)));
         }
         BigInteger resultado = BigInteger.ONE;
         for (int i = 2; i <= n; i++) {
@@ -101,6 +98,7 @@ public final class Calculadora {
 
     /** Nota mínima y máxima admitidas por {@link #media(double...)}. */
     public static final double NOTA_MINIMA = 0.0;
+
     public static final double NOTA_MAXIMA = 10.0;
 
     /**
@@ -117,8 +115,8 @@ public final class Calculadora {
         double suma = 0;
         for (double nota : notas) {
             if (!Double.isFinite(nota) || nota < NOTA_MINIMA || nota > NOTA_MAXIMA) {
-                throw new IllegalArgumentException(Textos.get("calc.nota.rango",
-                        String.valueOf((int) NOTA_MINIMA), String.valueOf((int) NOTA_MAXIMA)));
+                throw new IllegalArgumentException(Textos.get(
+                        "calc.nota.rango", String.valueOf((int) NOTA_MINIMA), String.valueOf((int) NOTA_MAXIMA)));
             }
             suma += nota;
         }
@@ -153,6 +151,5 @@ public final class Calculadora {
             double area,
             double perimetro,
             double anguloAlfa,
-            double anguloBeta) {
-    }
+            double anguloBeta) {}
 }

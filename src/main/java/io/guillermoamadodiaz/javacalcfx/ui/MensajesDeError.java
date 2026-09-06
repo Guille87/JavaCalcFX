@@ -1,8 +1,7 @@
 package io.guillermoamadodiaz.javacalcfx.ui;
 
-import java.util.concurrent.CancellationException;
-
 import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
+import java.util.concurrent.CancellationException;
 
 /**
  * Traduce una excepción surgida durante un cálculo a un mensaje para el usuario.
@@ -12,8 +11,7 @@ import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
  */
 public final class MensajesDeError {
 
-    private MensajesDeError() {
-    }
+    private MensajesDeError() {}
 
     public static String describir(Throwable ex) {
         if (ex instanceof CancellationException) {
