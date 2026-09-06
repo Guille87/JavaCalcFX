@@ -47,6 +47,8 @@ error legible) en la misma pantalla.
 | **MCD y MCM** | Dos enteros | El máximo común divisor y el mínimo común múltiplo |
 | **¿Es primo?** | Un entero | Si es primo; si es compuesto, un divisor y la factorización |
 | **Conversor de bases** | Un entero (prefijos `0b`/`0o`/`0x`, o decimal) | El número en binario, octal, decimal y hexadecimal |
+| **Porcentaje** | Un porcentaje y una cantidad | El X % de la cantidad |
+| **Regla de tres** | Tres valores `a`, `b`, `c` | `x = c·b/a` (regla de tres directa) |
 
 Aspectos transversales a todas las pantallas:
 

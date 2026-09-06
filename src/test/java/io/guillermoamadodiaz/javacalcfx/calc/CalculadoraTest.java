@@ -445,4 +445,33 @@ class CalculadoraTest {
             assertThrows(IllegalArgumentException.class, () -> Calculadora.convertirBase(texto));
         }
     }
+
+    @Nested
+    @DisplayName("Porcentaje y regla de tres")
+    class ProporcionesYPorcentajes {
+
+        @Test
+        void porcentaje_de_una_cantidad() {
+            assertEquals(30.0, Calculadora.porcentajeDe(15, 200), EPS);
+            assertEquals(0.0, Calculadora.porcentajeDe(0, 200), EPS);
+            assertEquals(-10.0, Calculadora.porcentajeDe(-5, 200), EPS);
+        }
+
+        @Test
+        void regla_de_tres_directa() {
+            assertEquals(10.0, Calculadora.reglaDeTres(3, 6, 5), EPS); // 3 kg -> 6 €, 5 kg -> 10 €
+            assertEquals(30.0, Calculadora.reglaDeTres(100, 15, 200), EPS); // 15 % de 200
+        }
+
+        @Test
+        void regla_de_tres_con_a_cero_se_rechaza() {
+            assertThrows(IllegalArgumentException.class, () -> Calculadora.reglaDeTres(0, 5, 3));
+        }
+
+        @Test
+        void rechaza_argumentos_no_finitos() {
+            assertThrows(IllegalArgumentException.class, () -> Calculadora.porcentajeDe(Double.NaN, 100));
+            assertThrows(IllegalArgumentException.class, () -> Calculadora.reglaDeTres(1, Double.POSITIVE_INFINITY, 1));
+        }
+    }
 }
