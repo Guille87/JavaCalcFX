@@ -26,7 +26,8 @@ import javafx.scene.layout.VBox;
  *
  * <p>El cálculo se delega en {@link CalculosAsync}; el parseo y la validación de
  * dominio están en la función que recibe cada pantalla, y sus errores se muestran
- * en la misma etiqueta.
+ * en la misma etiqueta. Si la pantalla aporta una función {@code pasos}, tras un
+ * cálculo correcto aparece un botón «Mostrar pasos» que despliega su desarrollo.
  */
 public final class ConstructorDeFormularios {
 
@@ -50,6 +51,16 @@ public final class ConstructorDeFormularios {
             List<String> prompts,
             FiltroNumerico.Tipo tipoCampo,
             Function<List<String>, String> calculo) {
+        mostrar(titulo, instrucciones, prompts, tipoCampo, calculo, null);
+    }
+
+    public void mostrar(
+            String titulo,
+            String instrucciones,
+            List<String> prompts,
+            FiltroNumerico.Tipo tipoCampo,
+            Function<List<String>, String> calculo,
+            Function<List<String>, String> pasos) {
         VBox pantalla = new VBox(ESPACIADO);
         pantalla.setPadding(RELLENO);
         pantalla.setAlignment(Pos.TOP_CENTER);
@@ -82,6 +93,8 @@ public final class ConstructorDeFormularios {
         resultado.setMaxWidth(Double.MAX_VALUE);
         resultado.getStyleClass().add("resultado");
 
+        SeccionPasos seccion = pasos == null ? null : new SeccionPasos();
+
         Button calcular = new Button(Textos.get("form.calcular"));
         calcular.setDefaultButton(true); // permite pulsar Enter
         calcular.setTooltip(new Tooltip(Textos.get("form.calcular.tooltip")));
@@ -89,6 +102,9 @@ public final class ConstructorDeFormularios {
             List<String> valores = campos.stream()
                     .map(c -> c.getText() == null ? "" : c.getText().trim())
                     .toList();
+            if (seccion != null) {
+                seccion.ocultar();
+            }
             calculos.ejecutar(
                     () -> calculo.apply(valores),
                     () -> {
@@ -98,6 +114,9 @@ public final class ConstructorDeFormularios {
                     texto -> {
                         calcular.setDisable(false);
                         resultado.setText(texto);
+                        if (seccion != null && !texto.isBlank()) {
+                            seccion.preparar(() -> pasos.apply(valores));
+                        }
                     },
                     mensaje -> {
                         calcular.setDisable(false);
@@ -110,7 +129,11 @@ public final class ConstructorDeFormularios {
 
         pantalla.getChildren().addAll(encabezado, instruccion);
         pantalla.getChildren().addAll(campos);
-        pantalla.getChildren().addAll(calcular, resultado, volver);
+        pantalla.getChildren().addAll(calcular, resultado);
+        if (seccion != null) {
+            pantalla.getChildren().addAll(seccion.boton, seccion.detalle);
+        }
+        pantalla.getChildren().add(volver);
 
         StackPane centrador = new StackPane(pantalla); // mantiene el formulario centrado
         ScrollPane scroll = new ScrollPane(centrador);
@@ -120,5 +143,44 @@ public final class ConstructorDeFormularios {
         navegador.mostrar(scroll);
 
         campos.get(0).requestFocus(); // el cursor ya está en el primer campo
+    }
+
+    /** Botón «Mostrar / Ocultar pasos» y la etiqueta con el desarrollo. */
+    private static final class SeccionPasos {
+
+        private final Button boton = new Button();
+        private final Label detalle = new Label();
+
+        SeccionPasos() {
+            detalle.setWrapText(true);
+            detalle.setMaxWidth(Double.MAX_VALUE);
+            detalle.getStyleClass().add("pasos");
+            boton.setOnAction(e -> mostrarDetalle(!detalle.isVisible()));
+            ocultar();
+        }
+
+        void ocultar() {
+            boton.setVisible(false);
+            boton.setManaged(false);
+            mostrarDetalle(false);
+        }
+
+        /** Calcula el texto y muestra el botón (aún plegado). */
+        void preparar(java.util.function.Supplier<String> desarrollo) {
+            try {
+                detalle.setText(desarrollo.get());
+            } catch (RuntimeException ignorado) {
+                return; // si el desarrollo falla, simplemente no ofrecemos los pasos
+            }
+            boton.setVisible(true);
+            boton.setManaged(true);
+            mostrarDetalle(false);
+        }
+
+        private void mostrarDetalle(boolean visible) {
+            detalle.setVisible(visible);
+            detalle.setManaged(visible);
+            boton.setText(Textos.get(visible ? "form.pasos.ocultar" : "form.pasos.mostrar"));
+        }
     }
 }

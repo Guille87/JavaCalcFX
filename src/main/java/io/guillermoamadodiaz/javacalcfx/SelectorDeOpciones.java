@@ -14,6 +14,7 @@ import io.guillermoamadodiaz.javacalcfx.ui.EstadoVentana;
 import io.guillermoamadodiaz.javacalcfx.ui.FiltroNumerico;
 import io.guillermoamadodiaz.javacalcfx.ui.Formato;
 import io.guillermoamadodiaz.javacalcfx.ui.Navegador;
+import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoCuadratica;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -273,7 +274,9 @@ public class SelectorDeOpciones extends Application {
                     }
                     return Textos.get(
                             "cuadratica.resultado.complejas", delta, formatoRaiz(e.x1()), formatoRaiz(e.x2()));
-                });
+                },
+                valores -> PasoAPasoCuadratica.desarrollo(
+                        Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1)), Entrada.doble(valores.get(2))));
     }
 
     /** Formatea una raíz compleja como {@code a + b i} (o {@code a - b i}). */
