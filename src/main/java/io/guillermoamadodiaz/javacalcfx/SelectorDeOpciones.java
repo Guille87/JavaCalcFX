@@ -25,10 +25,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -43,8 +44,8 @@ import javafx.stage.Stage;
  */
 public class SelectorDeOpciones extends Application {
 
-    private static final int COLUMNAS_MENU = 3;
     private static final double ANCHO_BOTON_MENU = 210;
+    private static final double ANCHO_MENU = 690;
     private static final int NOTAS_APROBADO = 5;
 
     private final StackPane raiz = new StackPane();
@@ -93,37 +94,68 @@ public class SelectorDeOpciones extends Application {
     // Menú
     // ------------------------------------------------------------------
 
+    /** Una entrada del menú: su clave de textos y qué pantalla abre. */
+    private record EntradaMenu(String clave, Runnable abrir) {}
+
+    /** Una categoría del menú: su clave de textos y sus calculadoras. */
+    private record Categoria(String clave, List<EntradaMenu> entradas) {}
+
+    private List<Categoria> catalogo() {
+        return List.of(
+                new Categoria(
+                        "geometria",
+                        List.of(
+                                new EntradaMenu("pitagoras", this::pantallaPitagoras),
+                                new EntradaMenu("cilindro", this::pantallaCilindro))),
+                new Categoria(
+                        "aritmetica",
+                        List.of(
+                                new EntradaMenu("factorial", this::pantallaFactorial),
+                                new EntradaMenu("multiplo", this::pantallaMultiplo),
+                                new EntradaMenu("mcd", this::pantallaMcd))),
+                new Categoria(
+                        "potencias",
+                        List.of(
+                                new EntradaMenu("potencia", this::pantallaPotencia),
+                                new EntradaMenu("raiz", this::pantallaRaiz),
+                                new EntradaMenu("cuadratica", this::pantallaCuadratica))),
+                new Categoria(
+                        "otros",
+                        List.of(
+                                new EntradaMenu("bisiesto", this::pantallaBisiesto),
+                                new EntradaMenu("aprobado", this::pantallaAprobado))));
+    }
+
     private void mostrarMenu() {
         Label titulo = new Label(Textos.get("menu.titulo"));
         titulo.getStyleClass().add("titulo");
 
-        GridPane botonera = new GridPane();
-        botonera.setHgap(10);
-        botonera.setVgap(10);
-        botonera.setAlignment(Pos.CENTER);
+        VBox categorias = new VBox(16);
+        categorias.setAlignment(Pos.TOP_LEFT);
+        categorias.setMaxWidth(ANCHO_MENU);
+        for (Categoria categoria : catalogo()) {
+            Label nombre = new Label(Textos.get("menu.categoria." + categoria.clave()));
+            nombre.getStyleClass().add("categoria");
 
-        Button[] botones = {
-            botonMenu("pitagoras", this::pantallaPitagoras),
-            botonMenu("cilindro", this::pantallaCilindro),
-            botonMenu("bisiesto", this::pantallaBisiesto),
-            botonMenu("factorial", this::pantallaFactorial),
-            botonMenu("multiplo", this::pantallaMultiplo),
-            botonMenu("aprobado", this::pantallaAprobado),
-            botonMenu("cuadratica", this::pantallaCuadratica),
-            botonMenu("potencia", this::pantallaPotencia),
-            botonMenu("raiz", this::pantallaRaiz),
-            botonMenu("mcd", this::pantallaMcd),
-        };
-        for (int i = 0; i < botones.length; i++) {
-            botones[i].setPrefWidth(ANCHO_BOTON_MENU);
-            botones[i].setWrapText(true);
-            botonera.add(botones[i], i % COLUMNAS_MENU, i / COLUMNAS_MENU);
+            FlowPane botones = new FlowPane(10, 10);
+            for (EntradaMenu entrada : categoria.entradas()) {
+                Button boton = botonMenu(entrada.clave(), entrada.abrir());
+                boton.setPrefWidth(ANCHO_BOTON_MENU);
+                boton.setWrapText(true);
+                botones.getChildren().add(boton);
+            }
+            categorias.getChildren().add(new VBox(6, nombre, botones));
         }
 
-        VBox centro = new VBox(20, titulo, botonera);
+        VBox centro = new VBox(20, titulo, categorias);
         centro.setAlignment(Pos.CENTER);
 
-        BorderPane menu = new BorderPane(centro);
+        ScrollPane scroll = new ScrollPane(new StackPane(centro));
+        scroll.setFitToWidth(true);
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.getStyleClass().add("formulario"); // fondo transparente, sin borde
+
+        BorderPane menu = new BorderPane(scroll);
         menu.setTop(barraDeIdioma());
         navegador.mostrar(menu);
     }

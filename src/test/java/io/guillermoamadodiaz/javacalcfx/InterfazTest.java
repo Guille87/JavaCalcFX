@@ -45,6 +45,13 @@ class InterfazTest extends ApplicationTest {
     }
 
     @Test
+    void el_menu_agrupa_las_calculadoras_por_categorias() {
+        assertTrue(lookup(".categoria").queryAll().size() >= 3);
+        assertTrue(lookup("Geometría").tryQuery().isPresent());
+        assertTrue(lookup("Aritmética").tryQuery().isPresent());
+    }
+
+    @Test
     void el_foco_empieza_en_el_primer_campo() {
         clickOn("Calcular Área de Cilindro");
         WaitForAsyncUtils.waitForFxEvents();

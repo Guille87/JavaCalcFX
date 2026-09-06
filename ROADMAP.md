@@ -44,8 +44,9 @@ Un mini-commit por calculadora.
 - [ ] Conversor de bases (bin/oct/hex/dec)
 - [ ] Porcentajes / regla de tres
 - [ ] IMC
-- [ ] Si el menú pasa de ~8 botones → **agrupar por categorías** (cambio
-      localizado en `mostrarMenu`).
+- [x] **Menú agrupado por categorías** (Geometría · Aritmética · Potencias y
+      ecuaciones · Otros). El catálogo es una lista de `Categoria` en
+      `SelectorDeOpciones`.
 
 ## Fase 3 · Calidad y modernización
 
