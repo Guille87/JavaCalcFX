@@ -5,13 +5,16 @@ import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.LabeledMatchers.hasText;
 
 import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
+import io.guillermoamadodiaz.javacalcfx.ui.EstadoVentana;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.prefs.Preferences;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -28,9 +31,22 @@ class InterfazTest extends ApplicationTest {
         Textos.usarIdioma(Locale.forLanguageTag("es"));
     }
 
+    @AfterAll
+    static void limpiarPreferencias() {
+        try {
+            Preferences.userNodeForPackage(EstadoVentana.class).clear();
+        } catch (Exception ignorado) {
+            // sin persistencia disponible en el entorno de test: nada que limpiar
+        }
+    }
+
     @Override
     public void start(Stage escenario) {
         new SelectorDeOpciones().start(escenario);
+        // El menú por categorías es alto; damos una ventana grande para que TestFX
+        // pueda ver y pulsar cualquier botón sin depender del scroll.
+        escenario.setWidth(900);
+        escenario.setHeight(1000);
     }
 
     private String textoResultado() {
@@ -61,8 +77,8 @@ class InterfazTest extends ApplicationTest {
 
     @Test
     void abrir_una_calculadora_y_volver_con_el_boton() {
-        clickOn("Determinar Año Bisiesto");
-        verifyThat(".encabezado", hasText("Año Bisiesto"));
+        clickOn("Calcular Área de Cilindro");
+        verifyThat(".encabezado", hasText("Área de Cilindro"));
 
         clickOn("Volver");
         verifyThat(".titulo", hasText("Calculadora Matemática"));
@@ -105,7 +121,7 @@ class InterfazTest extends ApplicationTest {
 
     @Test
     void un_dato_no_numerico_muestra_un_mensaje_de_error() throws TimeoutException {
-        clickOn("Determinar Año Bisiesto");
+        clickOn("Calcular Área de Cilindro");
         clickOn(".text-field").write("abc");
         clickOn("Calcular");
 
