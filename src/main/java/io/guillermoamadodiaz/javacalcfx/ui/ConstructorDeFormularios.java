@@ -9,8 +9,11 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
@@ -19,7 +22,9 @@ import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
  * Construye y muestra la pantalla de formulario genérica que comparten todas las
  * calculadoras: encabezado, instrucciones, un campo por cada dato pedido, botón
  * «Calcular» (activable con Enter), etiqueta de resultado y botón «Volver»
- * (activable con Esc desde cualquier punto de la pantalla).
+ * (activable con Esc desde cualquier punto de la pantalla). Va dentro de un
+ * {@link ScrollPane} para que, si la ventana se hace muy pequeña, se pueda
+ * desplazar en vez de recortar contenido.
  *
  * <p>El cálculo se delega en {@link CalculosAsync}; el parseo y la validación de
  * dominio están en la función que recibe cada pantalla, y sus errores se muestran
@@ -78,6 +83,7 @@ public final class ConstructorDeFormularios {
 
         Button calcular = new Button(Textos.get("form.calcular"));
         calcular.setDefaultButton(true); // permite pulsar Enter
+        calcular.setTooltip(new Tooltip(Textos.get("form.calcular.tooltip")));
         calcular.setOnAction(e -> {
             List<String> valores = campos.stream()
                     .map(c -> c.getText() == null ? "" : c.getText().trim())
@@ -89,12 +95,19 @@ public final class ConstructorDeFormularios {
                     mensaje -> { calcular.setDisable(false); resultado.setText(mensaje); });
         });
 
-        Button volver = Botones.crear(Textos.get("form.volver"), volverAlMenu);
+        Button volver = Botones.crear(
+                Textos.get("form.volver"), Textos.get("form.volver.tooltip"), volverAlMenu);
         volver.setCancelButton(true); // permite pulsar Esc
 
         pantalla.getChildren().addAll(encabezado, instruccion);
         pantalla.getChildren().addAll(campos);
         pantalla.getChildren().addAll(calcular, resultado, volver);
-        navegador.mostrar(pantalla);
+
+        StackPane centrador = new StackPane(pantalla); // mantiene el formulario centrado
+        ScrollPane scroll = new ScrollPane(centrador);
+        scroll.setFitToWidth(true);
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.getStyleClass().add("formulario");
+        navegador.mostrar(scroll);
     }
 }

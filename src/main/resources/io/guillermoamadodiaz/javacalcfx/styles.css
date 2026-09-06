@@ -19,3 +19,12 @@
 .button {
     -fx-cursor: hand;
 }
+
+/* El formulario va en un ScrollPane; que se vea como el fondo de la ventana. */
+.formulario,
+.formulario > .viewport {
+    -fx-background-color: transparent;
+}
+.formulario {
+    -fx-padding: 0;
+}
