@@ -55,10 +55,10 @@ Un mini-commit por calculadora.
 - [x] **JaCoCo**: informe de cobertura (HTML como artefacto, comentario en las
       PR y badge que se regenera al hacer push a `main`). Pendiente opcional: un
       umbral que rompa el build.
-- [x] **Migrar a JavaFX 21 LTS**: `javafx.version` a `21.0.10` y
-      `openjfx-monocle` a `21.0.2` (el JDK sigue en 17; JavaFX 21 lo admite).
-      Se mantiene el `ignore` de Dependabot solo para saltos de *major* (22+ no
-      tienen Monocle y la CI tendría que pasar a `xvfb`).
+- [x] **Migrar a JavaFX 21 LTS**: `javafx.version` a `21.0.10` (el JDK sigue en
+      17; JavaFX 21 lo admite). `openjfx-monocle` se queda en `17.0.10`: es
+      compatible con JavaFX 21 y su bytecode corre en JDK 17, mientras que la
+      21.x exigiría un runtime 21+ y rompería el job de JDK 17 de la CI.
 - [x] **Matriz de CI**: JDK 17 y 21.
 - [ ] Opcional: **SpotBugs** o **Error Prone** como check.
 

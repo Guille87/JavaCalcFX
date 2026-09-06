@@ -11,7 +11,10 @@
         <javafx.version>21.0.10</javafx.version>
         <junit.version>6.1.3</junit.version>
         <testfx.version>4.0.18</testfx.version>
-        <monocle.version>21.0.2</monocle.version>
+        <!-- Monocle se queda en la 17.x: es compatible con JavaFX 21 en runtime y
+             su bytecode corre en JDK 17 (la 21.x exige un runtime 21+ y rompería
+             el job de JDK 17 de la CI). -->
+        <monocle.version>17.0.10</monocle.version>
         <!-- Los tests de UI corren sin pantalla (Monocle). El perfil «headed» lo desactiva. -->
         <headless.args>-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dglass.platform=Monocle -Dmonocle.platform=Headless -Dprism.order=sw -Dprism.text=t2k</headless.args>
         <!-- Lo rellena jacoco:prepare-agent; el valor por defecto vacío permite `-Pheaded` sin JaCoCo. -->
