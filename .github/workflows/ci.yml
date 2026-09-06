@@ -49,7 +49,7 @@ jobs:
 
       - name: Guardar el informe de cobertura (HTML)
         if: ${{ matrix.java == '17' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: cobertura-html
           path: target/site/jacoco/
