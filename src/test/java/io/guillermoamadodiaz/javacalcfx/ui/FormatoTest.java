@@ -31,6 +31,15 @@ class FormatoTest {
     }
 
     @Test
+    void el_formato_no_depende_del_idioma_del_sistema() {
+        // Punto decimal y coma para los miles, siempre (coherente con la entrada).
+        assertEquals("0.15", Formato.numero(0.15));
+        assertEquals("1,234.5", Formato.numero(1234.5));
+        assertEquals("7.50", Formato.dosDecimales(7.5));
+        assertEquals("1,000,000", Formato.entero(1_000_000L));
+    }
+
+    @Test
     void dos_decimales_siempre_dos_posiciones() {
         assertEquals("500", soloDigitos(Formato.dosDecimales(5)));
     }
