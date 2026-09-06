@@ -81,8 +81,8 @@ Explicación desarrollada del cálculo, en notación lineal, tras un botón
 
 - [x] **Prototipo: ecuación de 2.º grado** (`ui/PasoAPasoCuadratica` + toggle en
       `ConstructorDeFormularios`).
-- [ ] Extenderlo a las calculadoras donde aporte (Pitágoras, quizá cilindro).
-      En «primo», «bisiesto», etc. no tiene sentido.
+- [x] Extendido a Pitágoras, cilindro, porcentaje y regla de tres (un
+      `ui/PasoAPasoX` por calculadora). En «primo», «bisiesto», etc. no aporta.
 
 ## Fase 6 · Opcionales
 

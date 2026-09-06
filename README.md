@@ -38,8 +38,8 @@ error legible) en la misma pantalla.
 
 | Calculadora | Entrada | Resultado |
 |---|---|---|
-| **Teorema de Pitágoras** | Los dos catetos de un triángulo rectángulo (> 0) | Hipotenusa, área, perímetro y los dos ángulos agudos (α, β) en grados |
-| **Área de un cilindro** | Radio y altura (≥ 0) | Área total de la superficie: `2·π·r·(r + h)` |
+| **Teorema de Pitágoras** | Los dos catetos de un triángulo rectángulo (> 0) | Hipotenusa, área, perímetro y los dos ángulos agudos (α, β) en grados, con **paso a paso** opcional |
+| **Área de un cilindro** | Radio y altura (≥ 0) | Área total de la superficie: `2·π·r·(r + h)`, con **paso a paso** opcional |
 | **Año bisiesto** | Un año del calendario gregoriano (> 0) | Si el año es bisiesto o no |
 | **Factorial** | Un entero entre `0` y `100 000` | `n!` con separadores de miles |
 | **Múltiplo** | Dos enteros `a` y `b` | Si `a` es múltiplo de `b` |
@@ -50,8 +50,8 @@ error legible) en la misma pantalla.
 | **MCD y MCM** | Dos enteros | El máximo común divisor y el mínimo común múltiplo |
 | **¿Es primo?** | Un entero | Si es primo; si es compuesto, un divisor y la factorización |
 | **Conversor de bases** | Un entero (prefijos `0b`/`0o`/`0x`, o decimal) | El número en binario, octal, decimal y hexadecimal |
-| **Porcentaje** | Un porcentaje y una cantidad | El X % de la cantidad |
-| **Regla de tres** | Tres valores `a`, `b`, `c` | `x = c·b/a` (regla de tres directa) |
+| **Porcentaje** | Un porcentaje y una cantidad | El X % de la cantidad, con **paso a paso** opcional |
+| **Regla de tres** | Tres valores `a`, `b`, `c` | `x = c·b/a` (regla de tres directa), con **paso a paso** opcional |
 | **IMC** | Peso en kg y altura en m (> 0) | El índice de masa corporal y su categoría (peso insuficiente / normal / sobrepeso / obesidad) según la OMS |
 
 Aspectos transversales a todas las pantallas:
@@ -211,11 +211,14 @@ paquete raíz (la `Application` y su catálogo de pantallas).
   - `ConstructorDeFormularios` — arma la pantalla de formulario genérica (dentro de
     un `ScrollPane`, con el foco en el primer campo).
   - `MensajesDeError` — función pura `Throwable → String` (probada con tests).
-  - `Formato` — formateo numérico puro y seguro entre hilos (probado con tests).
+  - `Formato` — formateo numérico puro y seguro entre hilos, con `Locale.ROOT`
+    (punto decimal) para no depender del idioma del sistema (probado con tests).
   - `Entrada` — único punto de parseo de texto a número (probado con tests).
   - `FiltroNumerico` — `TextFormatter` entero/decimal por campo (probado con tests).
   - `EstadoVentana` — persiste tamaño y posición de la ventana (probado con tests).
-  - `PasoAPasoCuadratica` — desarrollo paso a paso de la fórmula cuadrática (probado con tests).
+  - `PasoAPasoX` — desarrollo paso a paso, en notación lineal, de la cuadrática,
+    Pitágoras, el cilindro, el porcentaje y la regla de tres (plantillas
+    deterministas, probadas con tests).
   - `Botones` — fábrica de botones.
 - **`SelectorDeOpciones.java`** — `Application` mínima: conecta las piezas de `ui`,
   carga `styles.css` y los iconos, y define un `pantallaX()` + entrada de menú por
