@@ -16,8 +16,8 @@ marcando conforme se completan.
 
 Se hace primero para que el código nuevo nazca ya con el estilo correcto.
 
-- [ ] **Spotless** con `palantir-java-format`: `mvn spotless:apply` sobre el
-      código actual (1 commit aparte) y `spotless:check` en la CI.
+- [x] **Spotless** con `palantir-java-format`: `mvn spotless:apply` sobre el
+      código actual y `spotless:check` en la CI.
 - [ ] **`.github/dependabot.yml`** — PRs de actualización para JavaFX, JUnit,
       TestFX, Monocle y plugins de Maven.
 - [ ] **README**: badges de CI y licencia; sustituir el diagrama ASCII por

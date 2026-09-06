@@ -2,7 +2,6 @@ package io.guillermoamadodiaz.javacalcfx.ui;
 
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
-
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 
@@ -30,8 +29,7 @@ public final class FiltroNumerico {
         }
     }
 
-    private FiltroNumerico() {
-    }
+    private FiltroNumerico() {}
 
     /** {@code true} si {@code texto} es un prefijo válido de un número del tipo dado. */
     public static boolean esValido(String texto, Tipo tipo) {

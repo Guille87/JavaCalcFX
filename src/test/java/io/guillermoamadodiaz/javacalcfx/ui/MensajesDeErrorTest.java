@@ -3,14 +3,12 @@ package io.guillermoamadodiaz.javacalcfx.ui;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 import java.util.Locale;
 import java.util.concurrent.CancellationException;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 
 class MensajesDeErrorTest {
 
@@ -31,19 +29,22 @@ class MensajesDeErrorTest {
 
     @Test
     void numero_invalido_da_mensaje_generico() {
-        assertEquals("Por favor ingresa números válidos en todos los campos.",
+        assertEquals(
+                "Por favor ingresa números válidos en todos los campos.",
                 MensajesDeError.describir(new NumberFormatException("For input string: \"x\"")));
     }
 
     @Test
     void argumento_ilegal_conserva_el_mensaje_de_dominio() {
-        assertEquals("Error: El radio no puede ser negativo.",
+        assertEquals(
+                "Error: El radio no puede ser negativo.",
                 MensajesDeError.describir(new IllegalArgumentException("El radio no puede ser negativo.")));
     }
 
     @Test
     void aritmetica_se_trata_como_error_de_dominio() {
-        assertTrue(MensajesDeError.describir(new ArithmeticException("/ by zero")).startsWith("Error: "));
+        assertTrue(
+                MensajesDeError.describir(new ArithmeticException("/ by zero")).startsWith("Error: "));
     }
 
     @Test

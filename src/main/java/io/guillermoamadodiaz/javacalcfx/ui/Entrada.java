@@ -9,8 +9,7 @@ package io.guillermoamadodiaz.javacalcfx.ui;
  */
 public final class Entrada {
 
-    private Entrada() {
-    }
+    private Entrada() {}
 
     public static double doble(String texto) {
         return Double.parseDouble(texto);

@@ -14,8 +14,7 @@ public final class Formato {
 
     private static final String PATRON_DECIMAL = "#,##0.####";
 
-    private Formato() {
-    }
+    private Formato() {}
 
     /** Número con separador de miles y hasta 4 decimales (sin ceros finales). */
     public static String numero(double valor) {

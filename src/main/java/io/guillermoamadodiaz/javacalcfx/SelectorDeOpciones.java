@@ -1,9 +1,5 @@
 package io.guillermoamadodiaz.javacalcfx;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-
 import io.guillermoamadodiaz.javacalcfx.calc.Calculadora;
 import io.guillermoamadodiaz.javacalcfx.calc.Calculadora.Triangulo;
 import io.guillermoamadodiaz.javacalcfx.i18n.Idioma;
@@ -15,6 +11,9 @@ import io.guillermoamadodiaz.javacalcfx.ui.Entrada;
 import io.guillermoamadodiaz.javacalcfx.ui.FiltroNumerico;
 import io.guillermoamadodiaz.javacalcfx.ui.Formato;
 import io.guillermoamadodiaz.javacalcfx.ui.Navegador;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -112,10 +111,7 @@ public class SelectorDeOpciones extends Application {
 
     /** Botón del menú a partir de su clave: usa {@code menu.boton.<clave>[.tooltip]}. */
     private Button botonMenu(String clave, Runnable accion) {
-        return Botones.crear(
-                Textos.get("menu.boton." + clave),
-                Textos.get("menu.boton." + clave + ".tooltip"),
-                accion);
+        return Botones.crear(Textos.get("menu.boton." + clave), Textos.get("menu.boton." + clave + ".tooltip"), accion);
     }
 
     /** Selector de idioma alineado arriba a la derecha del menú. */
@@ -151,7 +147,8 @@ public class SelectorDeOpciones extends Application {
                 valores -> {
                     Triangulo t = Calculadora.resolverTrianguloRectangulo(
                             Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1)));
-                    return Textos.get("pitagoras.resultado",
+                    return Textos.get(
+                            "pitagoras.resultado",
                             Formato.numero(t.hipotenusa()),
                             Formato.numero(t.area()),
                             Formato.numero(t.perimetro()),
@@ -166,8 +163,10 @@ public class SelectorDeOpciones extends Application {
                 Textos.get("cilindro.instrucciones"),
                 List.of(Textos.get("cilindro.campo.radio"), Textos.get("cilindro.campo.altura")),
                 FiltroNumerico.Tipo.DECIMAL,
-                valores -> Textos.get("cilindro.resultado", Formato.numero(Calculadora.areaCilindro(
-                        Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1))))));
+                valores -> Textos.get(
+                        "cilindro.resultado",
+                        Formato.numero(Calculadora.areaCilindro(
+                                Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1))))));
     }
 
     private void pantallaBisiesto() {
@@ -178,8 +177,7 @@ public class SelectorDeOpciones extends Application {
                 FiltroNumerico.Tipo.ENTERO,
                 valores -> {
                     int anio = Entrada.entero(valores.get(0));
-                    String clave = Calculadora.esBisiesto(anio)
-                            ? "bisiesto.resultado.si" : "bisiesto.resultado.no";
+                    String clave = Calculadora.esBisiesto(anio) ? "bisiesto.resultado.si" : "bisiesto.resultado.no";
                     return Textos.get(clave, String.valueOf(anio));
                 });
     }
@@ -193,8 +191,7 @@ public class SelectorDeOpciones extends Application {
                 valores -> {
                     int n = Entrada.entero(valores.get(0));
                     BigInteger factorial = Calculadora.factorial(n);
-                    return Textos.get("factorial.resultado",
-                            String.valueOf(n), Formato.enteroGrande(factorial));
+                    return Textos.get("factorial.resultado", String.valueOf(n), Formato.enteroGrande(factorial));
                 });
     }
 
@@ -207,8 +204,7 @@ public class SelectorDeOpciones extends Application {
                 valores -> {
                     long a = Entrada.largo(valores.get(0));
                     long b = Entrada.largo(valores.get(1));
-                    String clave = Calculadora.esMultiplo(a, b)
-                            ? "multiplo.resultado.si" : "multiplo.resultado.no";
+                    String clave = Calculadora.esMultiplo(a, b) ? "multiplo.resultado.si" : "multiplo.resultado.no";
                     return Textos.get(clave, String.valueOf(a), String.valueOf(b));
                 });
     }
@@ -220,16 +216,17 @@ public class SelectorDeOpciones extends Application {
         }
         formularios.mostrar(
                 Textos.get("aprobado.titulo"),
-                Textos.get("aprobado.instrucciones",
-                        String.valueOf((int) Calculadora.NOTA_MINIMA),
-                        String.valueOf((int) Calculadora.NOTA_MAXIMA)),
+                Textos.get("aprobado.instrucciones", String.valueOf((int) Calculadora.NOTA_MINIMA), String.valueOf((int)
+                        Calculadora.NOTA_MAXIMA)),
                 prompts,
                 FiltroNumerico.Tipo.DECIMAL,
                 valores -> {
-                    double[] notas = valores.stream().mapToDouble(Entrada::doble).toArray();
+                    double[] notas =
+                            valores.stream().mapToDouble(Entrada::doble).toArray();
                     double media = Calculadora.media(notas);
                     String clave = Calculadora.estaAprobado(media)
-                            ? "aprobado.resultado.aprobado" : "aprobado.resultado.suspendido";
+                            ? "aprobado.resultado.aprobado"
+                            : "aprobado.resultado.suspendido";
                     return Textos.get(clave, Formato.dosDecimales(media));
                 });
     }
