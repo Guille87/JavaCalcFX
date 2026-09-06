@@ -82,6 +82,21 @@ class InterfazTest extends ApplicationTest {
     }
 
     @Test
+    void la_cuadratica_explica_el_discriminante_y_da_las_raices_complejas() throws TimeoutException {
+        clickOn("Resolver Ecuación de 2.º Grado");
+        clickOn(lookup(".text-field").nth(0).queryAs(TextField.class)).write("7");
+        clickOn(lookup(".text-field").nth(1).queryAs(TextField.class)).write("-3");
+        clickOn(lookup(".text-field").nth(2).queryAs(TextField.class)).write("1");
+        clickOn("Calcular");
+
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> textoResultado().contains("Δ"));
+        String r = textoResultado();
+        assertTrue(r.contains("-19"), "el discriminante es -19, era: " + r);
+        assertTrue(r.contains("no hay soluciones reales"), r);
+        assertTrue(r.contains("i"), "raíces complejas, era: " + r);
+    }
+
+    @Test
     void un_dato_no_numerico_muestra_un_mensaje_de_error() throws TimeoutException {
         clickOn("Determinar Año Bisiesto");
         clickOn(".text-field").write("abc");
