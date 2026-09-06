@@ -65,7 +65,17 @@ Un mini-commit por calculadora.
 - [ ] **Versionado**: `pom.xml` de `1.0-SNAPSHOT` a `0.1.0` (y `0.1.0-SNAPSHOT`
       entre releases).
 
-## Fase 5 · Opcionales
+## Fase 5 · Paso a paso
+
+Explicación desarrollada del cálculo, en notación lineal, tras un botón
+«Mostrar pasos». Plantillas deterministas y testeadas, no álgebra simbólica.
+
+- [x] **Prototipo: ecuación de 2.º grado** (`ui/PasoAPasoCuadratica` + toggle en
+      `ConstructorDeFormularios`).
+- [ ] Extenderlo a las calculadoras donde aporte (Pitágoras, quizá cilindro).
+      En «primo», «bisiesto», etc. no tiene sentido.
+
+## Fase 6 · Opcionales
 
 - [ ] **Modo oscuro** con toggle persistido (variables en `styles.css` + botón en el menú).
 - [ ] Desacoplar `Calculadora` de `Textos` (excepciones con clave; traduce la UI).

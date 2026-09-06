@@ -41,7 +41,7 @@ error legible) en la misma pantalla.
 | **Factorial** | Un entero entre `0` y `100 000` | `n!` con separadores de miles |
 | **Múltiplo** | Dos enteros `a` y `b` | Si `a` es múltiplo de `b` |
 | **Aprobado** | Cinco notas del alumno entre `0` y `10` | «Aprobado» / «Suspendido» y la nota media (aprueba con media ≥ 5) |
-| **Ecuación de 2.º grado** | Los coeficientes `a` (≠ 0), `b` y `c` de `ax² + bx + c = 0` | Las dos raíces (reales, doble o complejas conjugadas) |
+| **Ecuación de 2.º grado** | Los coeficientes `a` (≠ 0), `b` y `c` de `ax² + bx + c = 0` | Las dos raíces (reales, doble o complejas conjugadas), con el discriminante explicado y un **paso a paso** opcional |
 
 Aspectos transversales a todas las pantallas:
 
@@ -161,6 +161,7 @@ paquete raíz (la `Application` y su catálogo de pantallas).
   - `Entrada` — único punto de parseo de texto a número (probado con tests).
   - `FiltroNumerico` — `TextFormatter` entero/decimal por campo (probado con tests).
   - `EstadoVentana` — persiste tamaño y posición de la ventana (probado con tests).
+  - `PasoAPasoCuadratica` — desarrollo paso a paso de la fórmula cuadrática (probado con tests).
   - `Botones` — fábrica de botones.
 - **`SelectorDeOpciones.java`** — `Application` mínima: conecta las piezas de `ui`,
   carga `styles.css` y los iconos, y define un `pantallaX()` + entrada de menú por
@@ -205,7 +206,7 @@ JavaCalcFX/
         ├── InterfazTest.java                    TestFX: navegación y mensajes en pantalla
         ├── calc/CalculadoraTest.java            JUnit 5, casos parametrizados y @Nested
         ├── i18n/{Textos,Idioma}Test.java
-        └── ui/{Formato,MensajesDeError,Entrada,FiltroNumerico,EstadoVentana}Test.java
+        └── ui/{Formato,MensajesDeError,Entrada,FiltroNumerico,EstadoVentana,PasoAPasoCuadratica}Test.java
 ```
 
 ---

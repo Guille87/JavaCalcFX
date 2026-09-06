@@ -16,6 +16,12 @@
     -fx-font-size: 14px;
 }
 
+/* Desarrollo paso a paso: monoespaciado para que la notación quede alineada. */
+.label.pasos {
+    -fx-font-family: "Consolas", "DejaVu Sans Mono", "Courier New", monospace;
+    -fx-font-size: 12px;
+}
+
 .button {
     -fx-cursor: hand;
 }
