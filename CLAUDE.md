@@ -23,7 +23,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   select one with the enclosing class:
   `-Dtest='CalculadoraTest$Factorial#rechaza_negativos'`. Other test classes:
   `i18n/{Textos,Idioma}Test`; in `ui` `Formato`, `MensajesDeError`, `Entrada`,
-  `FiltroNumerico`, `EstadoVentana`, `Tema`, `Historial`, and
+  `FiltroNumerico`, `EstadoVentana`, `Tema`, `Historial`, `UltimaCalculadora`, and
   `PasoAPaso{Cuadratica,Pitagoras,Cilindro,
   Proporciones}Test`; and root `InterfazTest` (TestFX).
 - `InterfazTest` drives the real UI headless via Monocle (surefire `argLine` in the POM,
@@ -120,6 +120,11 @@ Single-module JavaFX desktop app in four packages: `calc` (pure domain), `i18n`
     to `MAX_RESULTADO`=300 so a huge factorial can't overflow the prefs value limit).
     `ConstructorDeFormularios` calls `Historial.registrar(titulo, texto)` after every
     successful calc; `SelectorDeOpciones.pantallaHistorial()` renders it.
+  - `UltimaCalculadora` — `recordar`/`recordada`/`olvidar` a calculator key in a
+    `java.util.prefs` subnode. `catalogo()`'s `entrada(...)` factory records on open;
+    `mostrarMenu()` calls `olvidar()`; `start()` reads it before `mostrarMenu()` and
+    reopens that screen via `abrirCalculadora(clave)`. `InterfazTest.start()` clears it so
+    each test begins on the menu.
   - `PasoAPaso{Cuadratica,Pitagoras,Cilindro,Porcentaje,ReglaDeTres}` — pure, deterministic
     templates rendering a calculation step by step in linear notation. Each calls its
     `Calculadora` method (for validation + values) then fills fixed templates. Unit-tested.

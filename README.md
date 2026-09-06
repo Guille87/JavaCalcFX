@@ -76,6 +76,8 @@ Aspectos transversales a todas las pantallas:
   recuerda entre sesiones.
 - **Ventana**: recuerda su tamaño y posición entre sesiones; al abrir un
   formulario el cursor ya está en el primer campo.
+- **Última pantalla**: al arrancar vuelve a la calculadora que estuviera abierta
+  al cerrar la app.
 
 ---
 
@@ -232,6 +234,9 @@ paquete raíz (la `Application` y su catálogo de pantallas).
   - `Historial` — los últimos 25 cálculos (título + resultado), persistidos en un
     subnodo de `java.util.prefs`; el resultado se recorta a 300 caracteres para
     no desbordar el límite de tamaño de las preferencias (probado con tests).
+  - `UltimaCalculadora` — guarda en `java.util.prefs` la clave de la última
+    calculadora abierta; `SelectorDeOpciones` la reabre al arrancar y la olvida al
+    volver al menú (probado con tests).
   - `PasoAPasoX` — desarrollo paso a paso, en notación lineal, de la cuadrática,
     Pitágoras, el cilindro, el porcentaje y la regla de tres (plantillas
     deterministas, probadas con tests).

@@ -27,7 +27,8 @@ Se hace primero para que el código nuevo nazca ya con el estilo correcto.
 
 - [x] **Persistir tamaño y posición de la ventana** entre sesiones
       (`ui/EstadoVentana`, con `java.util.prefs`).
-- [ ] Opcional: recordar la última calculadora abierta.
+- [x] **Recordar la última calculadora abierta** (`ui/UltimaCalculadora`): al
+      arrancar se reabre esa pantalla; volver al menú lo olvida.
 - [x] El **primer campo recibe el foco** al abrir un formulario.
 
 ## Fase 2 · Más calculadoras

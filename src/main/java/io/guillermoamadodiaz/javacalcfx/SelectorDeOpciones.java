@@ -21,9 +21,11 @@ import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoPitagoras;
 import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoPorcentaje;
 import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoReglaDeTres;
 import io.guillermoamadodiaz.javacalcfx.ui.Tema;
+import io.guillermoamadodiaz.javacalcfx.ui.UltimaCalculadora;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -83,13 +85,15 @@ public class SelectorDeOpciones extends Application {
         }
         Tema.aplicarA(escena); // restaura el modo claro/oscuro guardado
 
-        mostrarMenu();
+        Optional<String> ultimaCalculadora = UltimaCalculadora.recordada();
+        mostrarMenu(); // esto la olvida; por eso se lee antes
         escenario.setScene(escena);
         escenario.setMinWidth(710);
         escenario.setMinHeight(600);
         EstadoVentana.restaurar(escenario);
         escenario.show();
         EstadoVentana.vigilar(escenario);
+        ultimaCalculadora.ifPresent(this::abrirCalculadora); // reabre la última pantalla
     }
 
     @Override
@@ -112,36 +116,54 @@ public class SelectorDeOpciones extends Application {
                 new Categoria(
                         "geometria",
                         List.of(
-                                new EntradaMenu("pitagoras", this::pantallaPitagoras),
-                                new EntradaMenu("cilindro", this::pantallaCilindro))),
+                                entrada("pitagoras", this::pantallaPitagoras),
+                                entrada("cilindro", this::pantallaCilindro))),
                 new Categoria(
                         "aritmetica",
                         List.of(
-                                new EntradaMenu("factorial", this::pantallaFactorial),
-                                new EntradaMenu("multiplo", this::pantallaMultiplo),
-                                new EntradaMenu("mcd", this::pantallaMcd),
-                                new EntradaMenu("primo", this::pantallaPrimo),
-                                new EntradaMenu("base", this::pantallaBase))),
+                                entrada("factorial", this::pantallaFactorial),
+                                entrada("multiplo", this::pantallaMultiplo),
+                                entrada("mcd", this::pantallaMcd),
+                                entrada("primo", this::pantallaPrimo),
+                                entrada("base", this::pantallaBase))),
                 new Categoria(
                         "potencias",
                         List.of(
-                                new EntradaMenu("potencia", this::pantallaPotencia),
-                                new EntradaMenu("raiz", this::pantallaRaiz),
-                                new EntradaMenu("cuadratica", this::pantallaCuadratica))),
+                                entrada("potencia", this::pantallaPotencia),
+                                entrada("raiz", this::pantallaRaiz),
+                                entrada("cuadratica", this::pantallaCuadratica))),
                 new Categoria(
                         "proporciones",
                         List.of(
-                                new EntradaMenu("porcentaje", this::pantallaPorcentaje),
-                                new EntradaMenu("regladetres", this::pantallaReglaDeTres))),
+                                entrada("porcentaje", this::pantallaPorcentaje),
+                                entrada("regladetres", this::pantallaReglaDeTres))),
                 new Categoria(
                         "otros",
                         List.of(
-                                new EntradaMenu("bisiesto", this::pantallaBisiesto),
-                                new EntradaMenu("aprobado", this::pantallaAprobado),
-                                new EntradaMenu("imc", this::pantallaImc))));
+                                entrada("bisiesto", this::pantallaBisiesto),
+                                entrada("aprobado", this::pantallaAprobado),
+                                entrada("imc", this::pantallaImc))));
+    }
+
+    /** Entrada de menú que, al abrirse, recuerda la calculadora para el próximo arranque. */
+    private EntradaMenu entrada(String clave, Runnable pantalla) {
+        return new EntradaMenu(clave, () -> {
+            UltimaCalculadora.recordar(clave);
+            pantalla.run();
+        });
+    }
+
+    private void abrirCalculadora(String clave) {
+        catalogo().stream()
+                .flatMap(categoria -> categoria.entradas().stream())
+                .filter(menu -> menu.clave().equals(clave))
+                .findFirst()
+                .ifPresent(menu -> menu.abrir().run());
     }
 
     private void mostrarMenu() {
+        UltimaCalculadora.olvidar(); // se está en el menú: no hay «última calculadora» que reabrir
+
         Label titulo = new Label(Textos.get("menu.titulo"));
         titulo.getStyleClass().add("titulo");
 

@@ -9,6 +9,7 @@ import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 import io.guillermoamadodiaz.javacalcfx.ui.EstadoVentana;
 import io.guillermoamadodiaz.javacalcfx.ui.Historial;
 import io.guillermoamadodiaz.javacalcfx.ui.Tema;
+import io.guillermoamadodiaz.javacalcfx.ui.UltimaCalculadora;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -44,6 +45,7 @@ class InterfazTest extends ApplicationTest {
     @AfterAll
     static void limpiarPreferencias() {
         Historial.limpiar();
+        UltimaCalculadora.olvidar();
         try {
             Preferences.userNodeForPackage(EstadoVentana.class).clear();
             Preferences.userNodeForPackage(Tema.class).node("tema").clear();
@@ -55,6 +57,7 @@ class InterfazTest extends ApplicationTest {
 
     @Override
     public void start(Stage escenario) {
+        UltimaCalculadora.olvidar(); // cada test arranca en el menú
         new SelectorDeOpciones().start(escenario);
         // El menú por categorías es alto; damos una ventana grande para que TestFX
         // pueda ver y pulsar cualquier botón sin depender del scroll.
@@ -167,6 +170,17 @@ class InterfazTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
         assertTrue(Historial.reciente().isEmpty(), "«Vaciar historial» debe borrar los cálculos");
         assertTrue(lookup(".historial-titulo").tryQuery().isEmpty(), "la pantalla debe quedar sin entradas");
+    }
+
+    @Test
+    void recuerda_la_ultima_calculadora_y_la_olvida_al_volver() {
+        clickOn("Calcular Factorial");
+        WaitForAsyncUtils.waitForFxEvents();
+        assertEquals("factorial", UltimaCalculadora.recordada().orElse(null));
+
+        clickOn("Volver");
+        WaitForAsyncUtils.waitForFxEvents();
+        assertTrue(UltimaCalculadora.recordada().isEmpty(), "volver al menú debe olvidar la calculadora");
     }
 
     @Test
