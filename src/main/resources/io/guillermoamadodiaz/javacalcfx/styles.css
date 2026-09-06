@@ -18,8 +18,14 @@
     -fx-faint-focus-color: #4b9fe122;
 }
 
-/* En oscuro, el texto de ayuda (prompt) de los campos queda casi negro sobre
-   fondo oscuro: lo aclaramos a un gris legible. */
+/*
+ * Texto de ayuda (prompt) de los campos: siempre visible —también con el campo
+ * enfocado, mientras no se escriba nada— y con un gris bien legible en ambos
+ * temas (el de Modena por defecto es demasiado tenue).
+ */
+.text-input {
+    -fx-prompt-text-fill: #6f7276;
+}
 .root.tema-oscuro .text-input {
     -fx-prompt-text-fill: #9aa0a6;
 }
