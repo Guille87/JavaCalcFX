@@ -14,6 +14,7 @@ import io.guillermoamadodiaz.javacalcfx.ui.EstadoVentana;
 import io.guillermoamadodiaz.javacalcfx.ui.FiltroNumerico;
 import io.guillermoamadodiaz.javacalcfx.ui.Formato;
 import io.guillermoamadodiaz.javacalcfx.ui.Navegador;
+import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoCilindro;
 import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoCuadratica;
 import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoPitagoras;
 import java.math.BigInteger;
@@ -227,7 +228,8 @@ public class SelectorDeOpciones extends Application {
                 valores -> Textos.get(
                         "cilindro.resultado",
                         Formato.numero(Calculadora.areaCilindro(
-                                Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1))))));
+                                Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1))))),
+                valores -> PasoAPasoCilindro.desarrollo(Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1))));
     }
 
     private void pantallaBisiesto() {
