@@ -32,14 +32,16 @@ its screen catalog).
   `esMultiplo`, `media` (grades in `[NOTA_MINIMA, NOTA_MAXIMA]` = 0..10), `estaAprobado`).
   Invalid input throws `IllegalArgumentException` whose message comes from `Textos`.
   Unit-tested by `CalculadoraTest`.
-- **`i18n/`** — `Textos` loads `ResourceBundle` `messages` (`messages.properties` is Spanish
-  and the fallback; `messages_en.properties` is English). `Textos.get(key)` /
-  `Textos.get(key, args...)` (the latter via `MessageFormat` — a literal `'` in a
-  parametrized value must be doubled). `seleccionar(Idioma)` switches the language and
-  persists it via `java.util.prefs`; `idioma()` reads the current one; `usarIdioma(Locale)`
-  swaps the bundle without persisting (tests). `Idioma` is the two-value enum
-  (`ESPANOL` / `INGLES`) behind the menu's language `ComboBox`. All user-visible strings
-  go through `Textos`.
+- **`i18n/`** — `Textos` reads the `messages*.properties` files directly (not via
+  `ResourceBundle`, whose lookup mixes in `Locale.getDefault()` and would return the wrong
+  language on a machine whose default locale differs): `messages.properties` is Spanish and
+  the base; a non-Spanish `Idioma` loads its `messages_<lang>.properties` on top, falling
+  back to the base for missing keys. `Textos.get(key)` / `Textos.get(key, args...)` (the
+  latter via `MessageFormat` — a literal `'` in a parametrized value must be doubled).
+  `seleccionar(Idioma)` switches the language and persists it via `java.util.prefs`;
+  `idioma()` reads the current one; `usarIdioma(Locale)` switches without persisting
+  (tests). `Idioma` is the two-value enum (`ESPANOL` / `INGLES`) behind the menu's language
+  `ComboBox`. All user-visible strings go through `Textos`.
 - **`ui/` infrastructure** — small single-responsibility pieces:
   - `Navegador` — owns the root `StackPane` (always one child); `mostrar(Node)` swaps the
     screen and first runs an `alNavegar` hook (wired to cancel the in-flight calculation).

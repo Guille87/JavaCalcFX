@@ -70,6 +70,23 @@ class TextosTest {
         assertEquals("Volver", Textos.get("form.volver"));
     }
 
+    /** Regresión: pedir español debe dar español aunque el locale por defecto sea otro. */
+    @Test
+    void el_idioma_no_depende_del_locale_por_defecto() {
+        Locale previo = Locale.getDefault();
+        try {
+            Locale.setDefault(Locale.ENGLISH);
+            Textos.usarIdioma(Locale.forLanguageTag("es"));
+            assertEquals("Calcular", Textos.get("form.calcular"));
+
+            Locale.setDefault(Locale.forLanguageTag("es"));
+            Textos.usarIdioma(Locale.ENGLISH);
+            assertEquals("Calculate", Textos.get("form.calcular"));
+        } finally {
+            Locale.setDefault(previo);
+        }
+    }
+
     @Test
     void sustituye_los_parametros() {
         Textos.usarIdioma(Locale.forLanguageTag("es"));
