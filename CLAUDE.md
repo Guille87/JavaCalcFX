@@ -18,13 +18,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   select one with the enclosing class:
   `-Dtest='CalculadoraTest$Factorial#rechaza_negativos'`. Other test classes:
   `i18n/{Textos,Idioma}Test`; in `ui` `Formato`, `MensajesDeError`, `Entrada`,
-  `FiltroNumerico`, `EstadoVentana`, `Tema`, and `PasoAPaso{Cuadratica,Pitagoras,Cilindro,
+  `FiltroNumerico`, `EstadoVentana`, `Tema`, `Historial`, and
+  `PasoAPaso{Cuadratica,Pitagoras,Cilindro,
   Proporciones}Test`; and root `InterfazTest` (TestFX).
 - `InterfazTest` drives the real UI headless via Monocle (surefire `argLine` in the POM,
   plus `useModulePath=false` so TestFX isn't on the module path). `mvn test -Pheaded` shows
   a window. No display or xvfb needed. It opens the stage large (the categorized menu is
-  tall — small windows would scroll buttons out of TestFX's reach) and its `@AfterAll`
-  clears the `EstadoVentana`/`Tema` prefs it touched.
+  tall — small windows would scroll buttons out of TestFX's reach); a `@BeforeEach` clears
+  `Historial` and `@AfterAll` clears the `EstadoVentana`/`Tema`/`Historial` prefs it touched.
 - Package for Windows (profile `dist`): `mvn -Pdist -DskipTests clean javafx:jlink package`
   → portable app-image in `target/dist/JavaCalcFX/`. Add `,installer` for the `.msi`
   (needs WiX 3.x on PATH). `javafx:jlink` must run before `package`.
@@ -109,6 +110,11 @@ Single-module JavaFX desktop app in four packages: `calc` (pure domain), `i18n`
     `aplicarA(Scene)` toggles the `tema-oscuro` style class on the scene root. `styles.css`
     redefines `-fx-base`/`-fx-background`/`-fx-control-inner-background` (+ prompt-text
     fill) for `.root.tema-oscuro`; Modena derives the rest.
+  - `Historial` — the last `MAXIMO` (25) calculations (screen title + shown result), most
+    recent first, persisted to a `java.util.prefs` subnode as one string (results trimmed
+    to `MAX_RESULTADO`=300 so a huge factorial can't overflow the prefs value limit).
+    `ConstructorDeFormularios` calls `Historial.registrar(titulo, texto)` after every
+    successful calc; `SelectorDeOpciones.pantallaHistorial()` renders it.
   - `PasoAPaso{Cuadratica,Pitagoras,Cilindro,Porcentaje,ReglaDeTres}` — pure, deterministic
     templates rendering a calculation step by step in linear notation. Each calls its
     `Calculadora` method (for validation + values) then fills fixed templates. Unit-tested.

@@ -66,6 +66,8 @@ Aspectos transversales a todas las pantallas:
   «Calcular»; <kbd>Esc</kbd> vuelve al menú.
 - **Copiar**: tras un cálculo, un botón «Copiar» pone el resultado en el
   portapapeles.
+- **Historial**: los últimos cálculos quedan en una pantalla accesible desde la
+  barra del menú; se recuerdan entre sesiones.
 - **Formato numérico legible**: los decimales se muestran con
   `#,##0.####` en lugar de la representación cruda de `double`.
 - **Idioma**: español o inglés, seleccionable desde el menú; la elección se
@@ -225,6 +227,9 @@ paquete raíz (la `Application` y su catálogo de pantallas).
   - `EstadoVentana` — persiste tamaño y posición de la ventana (probado con tests).
   - `Tema` — modo claro/oscuro (clase `tema-oscuro` en `styles.css`), con la
     preferencia persistida en `java.util.prefs` (probado con tests).
+  - `Historial` — los últimos 25 cálculos (título + resultado), persistidos en un
+    subnodo de `java.util.prefs`; el resultado se recorta a 300 caracteres para
+    no desbordar el límite de tamaño de las preferencias (probado con tests).
   - `PasoAPasoX` — desarrollo paso a paso, en notación lineal, de la cuadrática,
     Pitágoras, el cilindro, el porcentaje y la regla de tres (plantillas
     deterministas, probadas con tests).

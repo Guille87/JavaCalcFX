@@ -93,4 +93,5 @@ Explicación desarrollada del cálculo, en notación lineal, tras un botón
       importa nada del resto del proyecto.
 - [x] `CHANGELOG.md` / `CONTRIBUTING.md`.
 - [x] Copiar el resultado al portapapeles (botón «Copiar» tras un cálculo).
-- [ ] Historial de cálculos.
+- [x] Historial de cálculos (`ui/Historial`, persistido; pantalla accesible
+      desde la barra del menú, con botón «Vaciar»).

@@ -51,6 +51,11 @@
     -fx-font-size: 14px;
 }
 
+/* Título de cada cálculo en la pantalla de historial. */
+.historial-titulo {
+    -fx-font-weight: bold;
+}
+
 /* Desarrollo paso a paso: monoespaciado para que la notación quede alineada. */
 .label.pasos {
     -fx-font-family: "Consolas", "DejaVu Sans Mono", "Courier New", monospace;

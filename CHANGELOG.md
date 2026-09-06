@@ -9,6 +9,8 @@ y el proyecto sigue [versionado semántico](https://semver.org/lang/es/).
 
 ### Añadido
 
+- **Historial de cálculos**: pantalla accesible desde la barra del menú con los
+  últimos 25 resultados; se guarda entre sesiones y tiene botón «Vaciar».
 - Botón **«Copiar»** que pone el resultado en el portapapeles tras un cálculo.
 - **Modo oscuro** con interruptor en la barra superior del menú; la preferencia
   se recuerda entre sesiones.

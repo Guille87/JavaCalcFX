@@ -123,6 +123,7 @@ public final class ConstructorDeFormularios {
                         calcular.setDisable(false);
                         resultado.setText(texto);
                         if (!texto.isBlank()) {
+                            Historial.registrar(titulo, texto);
                             copiar.mostrar();
                             if (seccion != null) {
                                 seccion.preparar(() -> pasos.apply(valores));

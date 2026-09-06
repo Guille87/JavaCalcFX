@@ -7,6 +7,7 @@ import static org.testfx.matcher.control.LabeledMatchers.hasText;
 
 import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 import io.guillermoamadodiaz.javacalcfx.ui.EstadoVentana;
+import io.guillermoamadodiaz.javacalcfx.ui.Historial;
 import io.guillermoamadodiaz.javacalcfx.ui.Tema;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +20,7 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
@@ -34,11 +36,18 @@ class InterfazTest extends ApplicationTest {
         Textos.usarIdioma(Locale.forLanguageTag("es"));
     }
 
+    @BeforeEach
+    void historialLimpio() {
+        Historial.limpiar();
+    }
+
     @AfterAll
     static void limpiarPreferencias() {
+        Historial.limpiar();
         try {
             Preferences.userNodeForPackage(EstadoVentana.class).clear();
             Preferences.userNodeForPackage(Tema.class).node("tema").clear();
+            Preferences.userNodeForPackage(Historial.class).node("historial").clear();
         } catch (Exception ignorado) {
             // sin persistencia disponible en el entorno de test: nada que limpiar
         }
@@ -136,6 +145,28 @@ class InterfazTest extends ApplicationTest {
         final String[] enPortapapeles = new String[1];
         interact(() -> enPortapapeles[0] = Clipboard.getSystemClipboard().getString());
         assertEquals(esperado, enPortapapeles[0]);
+    }
+
+    @Test
+    void el_historial_recoge_los_calculos() throws TimeoutException {
+        clickOn("Calcular Teorema de Pitágoras");
+        clickOn(lookup(".text-field").nth(0).queryAs(TextField.class)).write("3");
+        clickOn(lookup(".text-field").nth(1).queryAs(TextField.class)).write("4");
+        clickOn("Calcular");
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> textoResultado().contains("Hipotenusa"));
+
+        clickOn("Volver");
+        clickOn("Historial");
+
+        verifyThat(".encabezado", hasText("Historial de cálculos"));
+        assertTrue(lookup(".historial-titulo").tryQuery().isPresent(), "debe aparecer el cálculo en el historial");
+        String resultado = lookup(".resultado").nth(0).queryAs(Label.class).getText();
+        assertTrue(resultado.contains("Hipotenusa: 5"), "era: " + resultado);
+
+        clickOn("Vaciar historial");
+        WaitForAsyncUtils.waitForFxEvents();
+        assertTrue(Historial.reciente().isEmpty(), "«Vaciar historial» debe borrar los cálculos");
+        assertTrue(lookup(".historial-titulo").tryQuery().isEmpty(), "la pantalla debe quedar sin entradas");
     }
 
     @Test

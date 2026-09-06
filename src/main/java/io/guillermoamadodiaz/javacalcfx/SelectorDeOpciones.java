@@ -13,6 +13,7 @@ import io.guillermoamadodiaz.javacalcfx.ui.Entrada;
 import io.guillermoamadodiaz.javacalcfx.ui.EstadoVentana;
 import io.guillermoamadodiaz.javacalcfx.ui.FiltroNumerico;
 import io.guillermoamadodiaz.javacalcfx.ui.Formato;
+import io.guillermoamadodiaz.javacalcfx.ui.Historial;
 import io.guillermoamadodiaz.javacalcfx.ui.Navegador;
 import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoCilindro;
 import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoCuadratica;
@@ -179,7 +180,7 @@ public class SelectorDeOpciones extends Application {
         return Botones.crear(Textos.get("menu.boton." + clave), Textos.get("menu.boton." + clave + ".tooltip"), accion);
     }
 
-    /** Barra superior del menú: botón de tema y selector de idioma, arriba a la derecha. */
+    /** Barra superior del menú: historial, tema e idioma, arriba a la derecha. */
     private HBox barraDeIdioma() {
         ComboBox<Idioma> selector = new ComboBox<>();
         selector.getItems().setAll(Idioma.values());
@@ -201,9 +202,56 @@ public class SelectorDeOpciones extends Application {
             mostrarMenu(); // reconstruye la barra con la etiqueta correcta
         });
 
-        HBox barra = new HBox(8, tema, selector);
+        Button historial = Botones.crear(
+                Textos.get("menu.historial"), Textos.get("menu.historial.tooltip"), this::pantallaHistorial);
+
+        HBox barra = new HBox(8, historial, tema, selector);
         barra.setAlignment(Pos.CENTER_RIGHT);
         return barra;
+    }
+
+    /** Pantalla con los últimos cálculos ({@link Historial}). */
+    private void pantallaHistorial() {
+        Label encabezado = new Label(Textos.get("historial.titulo"));
+        encabezado.getStyleClass().add("encabezado");
+
+        List<Historial.Entrada> entradas = Historial.reciente();
+
+        Button vaciar = Botones.crear(Textos.get("historial.vaciar"), () -> {
+            Historial.limpiar();
+            pantallaHistorial();
+        });
+        vaciar.setDisable(entradas.isEmpty());
+        Button volver = Botones.crear(Textos.get("form.volver"), Textos.get("form.volver.tooltip"), this::mostrarMenu);
+        volver.setCancelButton(true); // Esc
+
+        VBox contenido = new VBox(16, encabezado, new HBox(8, vaciar, volver));
+        contenido.setAlignment(Pos.TOP_CENTER);
+        contenido.setMaxWidth(ANCHO_MENU);
+        contenido.setPadding(new Insets(20));
+
+        if (entradas.isEmpty()) {
+            Label vacio = new Label(Textos.get("historial.vacio"));
+            vacio.getStyleClass().add("categoria");
+            contenido.getChildren().add(vacio);
+        } else {
+            VBox lista = new VBox(14);
+            for (Historial.Entrada entrada : entradas) {
+                Label titulo = new Label(entrada.titulo());
+                titulo.getStyleClass().add("historial-titulo");
+                Label resultado = new Label(entrada.resultado());
+                resultado.setWrapText(true);
+                resultado.getStyleClass().add("resultado");
+                lista.getChildren().add(new VBox(2, titulo, resultado));
+            }
+            contenido.getChildren().add(lista);
+        }
+
+        ScrollPane scroll = new ScrollPane(new StackPane(contenido));
+        scroll.setFitToWidth(true);
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.getStyleClass().add("formulario");
+        navegador.mostrar(scroll);
     }
 
     // ------------------------------------------------------------------
