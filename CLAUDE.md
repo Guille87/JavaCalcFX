@@ -38,7 +38,8 @@ its screen catalog).
   functions (`resolverTrianguloRectangulo`, `areaCilindro`, `esBisiesto`, `factorial`,
   `esMultiplo`, `media` (grades in `[NOTA_MINIMA, NOTA_MAXIMA]` = 0..10), `estaAprobado`,
   `resolverEcuacionCuadratica`, `potencia`, `raiz` (n-th root, handles odd roots of
-  negatives, Newton-refined so exact roots come out exact)). Returns immutable records
+  negatives, Newton-refined so exact roots come out exact), `mcd`, `mcm` (`Math.absExact`
+  / `multiplyExact` guarded)). Returns immutable records
   (`Triangulo`, `EcuacionCuadratica` with `Raiz`). Invalid input throws
   `IllegalArgumentException` whose message comes from `Textos`. Unit-tested by
   `CalculadoraTest`.

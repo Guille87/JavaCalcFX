@@ -39,7 +39,7 @@ Un mini-commit por calculadora.
 - [x] Ecuación de 2.º grado
 - [x] Potencia (`xⁿ`) y raíz n-ésima (pantallas separadas; la raíz admite
       índices impares de negativos)
-- [ ] MCD y MCM
+- [x] MCD y MCM
 - [ ] ¿Es primo?
 - [ ] Conversor de bases (bin/oct/hex/dec)
 - [ ] Porcentajes / regla de tres

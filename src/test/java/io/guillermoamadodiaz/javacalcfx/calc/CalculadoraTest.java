@@ -313,4 +313,45 @@ class CalculadoraTest {
             assertEquals(0.0, Calculadora.raiz(0, 5), EPS);
         }
     }
+
+    @Nested
+    @DisplayName("MCD y MCM")
+    class McdYMcm {
+
+        @Test
+        void mcd_valores_conocidos() {
+            assertEquals(6, Calculadora.mcd(12, 18));
+            assertEquals(1, Calculadora.mcd(7, 13));
+            assertEquals(5, Calculadora.mcd(-15, 10)); // el signo se ignora
+        }
+
+        @Test
+        void mcd_con_cero() {
+            assertEquals(7, Calculadora.mcd(0, 7));
+            assertEquals(7, Calculadora.mcd(7, 0));
+            assertEquals(0, Calculadora.mcd(0, 0));
+        }
+
+        @Test
+        void mcm_valores_conocidos() {
+            assertEquals(36, Calculadora.mcm(12, 18));
+            assertEquals(91, Calculadora.mcm(7, 13));
+            assertEquals(30, Calculadora.mcm(-6, 10));
+        }
+
+        @Test
+        void mcm_con_cero_es_cero() {
+            assertEquals(0, Calculadora.mcm(0, 5));
+        }
+
+        @Test
+        void mcd_por_mcm_es_el_producto_de_los_valores_absolutos() {
+            assertEquals(12L * 18, Calculadora.mcd(12, 18) * Calculadora.mcm(12, 18));
+        }
+
+        @Test
+        void mcm_que_desborda_un_long_se_rechaza() {
+            assertThrows(IllegalArgumentException.class, () -> Calculadora.mcm(1_000_000_000_000L, 999_999_999_999L));
+        }
+    }
 }

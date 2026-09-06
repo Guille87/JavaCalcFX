@@ -31,6 +31,11 @@ public final class Formato {
         return valor + 0.0;
     }
 
+    /** Entero con separador de miles. */
+    public static String entero(long valor) {
+        return String.format("%,d", valor);
+    }
+
     /** Entero grande con separador de miles. */
     public static String enteroGrande(BigInteger valor) {
         return String.format("%,d", valor);

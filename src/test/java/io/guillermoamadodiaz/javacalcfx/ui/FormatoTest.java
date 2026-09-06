@@ -47,4 +47,11 @@ class FormatoTest {
         assertEquals("1000000", soloDigitos(s));
         assertTrue(s.length() > 7, "debe incluir separadores de miles: " + s);
     }
+
+    @Test
+    void entero_long_con_separador_de_miles() {
+        String s = Formato.entero(1_234_567L);
+        assertEquals("1234567", soloDigitos(s));
+        assertTrue(s.length() > 7, "debe incluir separadores de miles: " + s);
+    }
 }

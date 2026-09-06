@@ -112,6 +112,7 @@ public class SelectorDeOpciones extends Application {
             botonMenu("cuadratica", this::pantallaCuadratica),
             botonMenu("potencia", this::pantallaPotencia),
             botonMenu("raiz", this::pantallaRaiz),
+            botonMenu("mcd", this::pantallaMcd),
         };
         for (int i = 0; i < botones.length; i++) {
             botones[i].setPrefWidth(ANCHO_BOTON_MENU);
@@ -318,6 +319,24 @@ public class SelectorDeOpciones extends Application {
                             Formato.numero(indice),
                             Formato.numero(radicando),
                             Formato.numero(Calculadora.raiz(radicando, indice)));
+                });
+    }
+
+    private void pantallaMcd() {
+        formularios.mostrar(
+                Textos.get("mcd.titulo"),
+                Textos.get("mcd.instrucciones"),
+                List.of(Textos.get("mcd.campo.a"), Textos.get("mcd.campo.b")),
+                FiltroNumerico.Tipo.ENTERO,
+                valores -> {
+                    long a = Entrada.largo(valores.get(0));
+                    long b = Entrada.largo(valores.get(1));
+                    return Textos.get(
+                            "mcd.resultado",
+                            Formato.entero(a),
+                            Formato.entero(b),
+                            Formato.entero(Calculadora.mcd(a, b)),
+                            Formato.entero(Calculadora.mcm(a, b)));
                 });
     }
 
