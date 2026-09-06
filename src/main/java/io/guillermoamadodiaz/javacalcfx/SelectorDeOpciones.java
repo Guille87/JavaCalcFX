@@ -22,6 +22,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -50,10 +51,18 @@ public class SelectorDeOpciones extends Application {
 
     private Stage escenario;
 
+    private static final int[] TAMANOS_ICONO = {16, 32, 48, 64, 128, 256};
+
     @Override
     public void start(Stage escenario) {
         this.escenario = escenario;
         escenario.setTitle(Textos.get("app.titulo"));
+        for (int px : TAMANOS_ICONO) {
+            var url = getClass().getResource("icons/icon-" + px + ".png");
+            if (url != null) {
+                escenario.getIcons().add(new Image(url.toExternalForm()));
+            }
+        }
         raiz.setPadding(new Insets(20));
 
         Scene escena = new Scene(raiz, 680, 480);
