@@ -96,6 +96,42 @@ public final class Calculadora {
         return a % b == 0;
     }
 
+    /** Máximo común divisor de {@code |a|} y {@code |b|} (algoritmo de Euclides). {@code mcd(0, 0) = 0}. */
+    public static long mcd(long a, long b) {
+        long x = valorAbsoluto(a);
+        long y = valorAbsoluto(b);
+        while (y != 0) {
+            long resto = x % y;
+            x = y;
+            y = resto;
+        }
+        return x;
+    }
+
+    /**
+     * Mínimo común múltiplo de {@code |a|} y {@code |b|}. {@code mcm(0, x) = 0}.
+     *
+     * @throws IllegalArgumentException si el resultado no cabe en un {@code long}
+     */
+    public static long mcm(long a, long b) {
+        if (a == 0 || b == 0) {
+            return 0;
+        }
+        try {
+            return Math.absExact(Math.multiplyExact(a / mcd(a, b), b));
+        } catch (ArithmeticException desbordamiento) {
+            throw new IllegalArgumentException(Textos.get("calc.mcm.grande"));
+        }
+    }
+
+    private static long valorAbsoluto(long valor) {
+        try {
+            return Math.absExact(valor);
+        } catch (ArithmeticException desbordamiento) {
+            throw new IllegalArgumentException(Textos.get("calc.entero.grande"));
+        }
+    }
+
     /** Nota mínima y máxima admitidas por {@link #media(double...)}. */
     public static final double NOTA_MINIMA = 0.0;
 
