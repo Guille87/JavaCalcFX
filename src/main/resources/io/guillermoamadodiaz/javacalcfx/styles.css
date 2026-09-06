@@ -1,0 +1,21 @@
+.root {
+    -fx-font-size: 13px;
+}
+
+.titulo {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.encabezado {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.label.resultado {
+    -fx-font-size: 14px;
+}
+
+.button {
+    -fx-cursor: hand;
+}

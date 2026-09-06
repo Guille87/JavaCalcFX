@@ -1,7 +1,7 @@
 module io.guillermoamadodiaz.javacalcfx {
-    requires javafx.controls;
-    requires javafx.fxml;
+    requires transitive javafx.controls;
 
-    opens io.guillermoamadodiaz.javacalcfx to javafx.fxml;
     exports io.guillermoamadodiaz.javacalcfx;
+    exports io.guillermoamadodiaz.javacalcfx.calc;
+    exports io.guillermoamadodiaz.javacalcfx.ui;
 }
