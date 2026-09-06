@@ -70,7 +70,7 @@ public class SelectorDeOpciones extends Application {
         }
         raiz.setPadding(new Insets(20));
 
-        Scene escena = new Scene(raiz, 680, 480);
+        Scene escena = new Scene(raiz, 695, 500);
         var hojaEstilos = getClass().getResource("styles.css");
         if (hojaEstilos != null) {
             escena.getStylesheets().add(hojaEstilos.toExternalForm());
@@ -78,8 +78,8 @@ public class SelectorDeOpciones extends Application {
 
         mostrarMenu();
         escenario.setScene(escena);
-        escenario.setMinWidth(655);
-        escenario.setMinHeight(490);
+        escenario.setMinWidth(710);
+        escenario.setMinHeight(600);
         EstadoVentana.restaurar(escenario);
         escenario.show();
         EstadoVentana.vigilar(escenario);
