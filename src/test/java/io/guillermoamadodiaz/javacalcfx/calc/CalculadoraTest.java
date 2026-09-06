@@ -252,4 +252,65 @@ class CalculadoraTest {
             assertEquals(-1e-8, r[1], 1e-12);
         }
     }
+
+    @Nested
+    @DisplayName("Potencia")
+    class Potencia {
+
+        @Test
+        void valores_conocidos() {
+            assertEquals(1024.0, Calculadora.potencia(2, 10), EPS);
+            assertEquals(0.125, Calculadora.potencia(2, -3), EPS);
+            assertEquals(1.0, Calculadora.potencia(5, 0), EPS);
+        }
+
+        @Test
+        void exponente_fraccionario_es_una_raiz() {
+            assertEquals(3.0, Calculadora.potencia(9, 0.5), EPS);
+        }
+
+        @ParameterizedTest
+        @CsvSource({"-8,0.5", "0,-1", "10,400"}) // no real, 0^-1, desbordamiento
+        void resultados_no_reales_o_infinitos_se_rechazan(double base, double exponente) {
+            assertThrows(IllegalArgumentException.class, () -> Calculadora.potencia(base, exponente));
+        }
+
+        @Test
+        void rechaza_argumentos_no_finitos() {
+            assertThrows(IllegalArgumentException.class, () -> Calculadora.potencia(Double.NaN, 2));
+        }
+    }
+
+    @Nested
+    @DisplayName("Raíz n-ésima")
+    class RaizNesima {
+
+        @Test
+        void raices_exactas() {
+            assertEquals(3.0, Calculadora.raiz(27, 3), 1e-12);
+            assertEquals(2.0, Calculadora.raiz(16, 4), 1e-12);
+            assertEquals(5.0, Calculadora.raiz(25, 2), 1e-12);
+        }
+
+        @Test
+        void indice_impar_de_radicando_negativo() {
+            assertEquals(-2.0, Calculadora.raiz(-8, 3), 1e-12);
+        }
+
+        @Test
+        void indice_par_de_radicando_negativo_no_tiene_valor_real() {
+            assertThrows(IllegalArgumentException.class, () -> Calculadora.raiz(-4, 2));
+        }
+
+        @ParameterizedTest
+        @CsvSource({"27,1", "27,0", "27,-3", "27,2.5", "27,NaN"})
+        void indice_debe_ser_entero_mayor_o_igual_que_dos(double radicando, double indice) {
+            assertThrows(IllegalArgumentException.class, () -> Calculadora.raiz(radicando, indice));
+        }
+
+        @Test
+        void radicando_cero() {
+            assertEquals(0.0, Calculadora.raiz(0, 5), EPS);
+        }
+    }
 }
