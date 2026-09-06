@@ -64,12 +64,15 @@ Un mini-commit por calculadora.
 
 ## Fase 4 · Distribución (Windows)
 
-- [ ] **`javafx:jlink`** — imagen de runtime autocontenida (paso intermedio).
-- [ ] **`jpackage`** — instalador Windows (`.msi`/`.exe`) y/o *app-image* portable.
-- [ ] **Workflow de release**: al hacer `git tag vX.Y.Z` en un runner
-      `windows-latest`, construir el instalador y adjuntarlo al GitHub Release.
-- [ ] **Versionado**: `pom.xml` de `1.0-SNAPSHOT` a `0.1.0` (y `0.1.0-SNAPSHOT`
-      entre releases).
+- [x] **`javafx:jlink`** — runtime autocontenido en `target/JavaCalcFX`.
+- [x] **`jpackage`** (perfil `dist`): *app-image* portable por defecto,
+      instalador `.msi` con `-Pdist,installer`. Vía `panteleyev/jpackage-maven-plugin`.
+- [x] **Workflow de release** (`release.yml`): al empujar una etiqueta `vX.Y.Z`
+      en `windows-latest`, construye el `.msi` y el zip portable y los adjunta al
+      GitHub Release.
+- [x] **Versionado**: `pom.xml` a `0.1.0`. Pendiente opcional: convención
+      `0.2.0-SNAPSHOT` entre releases (ahora la versión del build es siempre la
+      del último tag).
 
 ## Fase 5 · Paso a paso
 

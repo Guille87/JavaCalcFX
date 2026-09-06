@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.guillermoamadodiaz</groupId>
     <artifactId>JavaCalcFX</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -122,6 +122,13 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>io.guillermoamadodiaz.javacalcfx/io.guillermoamadodiaz.javacalcfx.SelectorDeOpciones</mainClass>
+                    <!-- `mvn javafx:jlink` genera target/JavaCalcFX: runtime autocontenido + bin/JavaCalcFX. -->
+                    <launcher>JavaCalcFX</launcher>
+                    <jlinkImageName>JavaCalcFX</jlinkImageName>
+                    <jlinkZipName>JavaCalcFX</jlinkZipName>
+                    <stripDebug>true</stripDebug>
+                    <noManPages>true</noManPages>
+                    <noHeaderFiles>true</noHeaderFiles>
                 </configuration>
                 <executions>
                     <execution>
@@ -149,6 +156,86 @@
             <properties>
                 <headless.args></headless.args>
             </properties>
+        </profile>
+
+        <!--
+          mvn -Pdist clean javafx:jlink package  →  app-image portable de Windows
+          en target/dist/JavaCalcFX (carpeta con JavaCalcFX.exe, sin instalar nada).
+            · javafx:jlink monta el runtime autocontenido en target/JavaCalcFX
+            · jpackage lo envuelve en la app-image
+          Para el instalador .msi:  mvn -Pdist,installer clean javafx:jlink package
+          (necesita WiX 3.x en PATH; los runners windows-latest de GitHub lo traen).
+        -->
+        <profile>
+            <id>dist</id>
+            <properties>
+                <jpackage.type>APP_IMAGE</jpackage.type>
+                <app.version>${project.version}</app.version>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.panteleyev</groupId>
+                        <artifactId>jpackage-maven-plugin</artifactId>
+                        <version>1.6.5</version>
+                        <executions>
+                            <execution>
+                                <id>empaquetar</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jpackage</goal>
+                                </goals>
+                                <configuration>
+                                    <type>${jpackage.type}</type>
+                                    <name>JavaCalcFX</name>
+                                    <appVersion>${app.version}</appVersion>
+                                    <vendor>Guillermo Amado Diaz</vendor>
+                                    <copyright>Guillermo Amado Diaz - MIT</copyright>
+                                    <runtimeImage>${project.build.directory}/JavaCalcFX</runtimeImage>
+                                    <module>
+                                        io.guillermoamadodiaz.javacalcfx/io.guillermoamadodiaz.javacalcfx.SelectorDeOpciones</module>
+                                    <icon>src/main/resources/io/guillermoamadodiaz/javacalcfx/icons/icon.ico</icon>
+                                    <destination>${project.build.directory}/dist</destination>
+                                    <javaOptions>
+                                        <option>-Dfile.encoding=UTF-8</option>
+                                    </javaOptions>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Añade a -Pdist las opciones del instalador .msi (menú Inicio, acceso
+             directo, selector de carpeta). Se activa junto con dist. -->
+        <profile>
+            <id>installer</id>
+            <properties>
+                <jpackage.type>MSI</jpackage.type>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.panteleyev</groupId>
+                        <artifactId>jpackage-maven-plugin</artifactId>
+                        <version>1.6.5</version>
+                        <executions>
+                            <execution>
+                                <id>empaquetar</id>
+                                <configuration>
+                                    <winMenu>true</winMenu>
+                                    <winMenuGroup>JavaCalcFX</winMenuGroup>
+                                    <winShortcut>true</winShortcut>
+                                    <winShortcutPrompt>true</winShortcutPrompt>
+                                    <winDirChooser>true</winDirChooser>
+                                    <winPerUserInstall>true</winPerUserInstall>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 </project>

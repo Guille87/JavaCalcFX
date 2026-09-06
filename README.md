@@ -20,8 +20,10 @@ error legible) en la misma pantalla.
 
 - [Características](#características)
 - [Flujo](#flujo)
+- [Descarga (Windows)](#descarga-windows)
 - [Requisitos](#requisitos)
 - [Cómo ejecutar](#cómo-ejecutar)
+- [Cómo empaquetar para Windows](#cómo-empaquetar-para-windows)
 - [Cómo ejecutar los tests](#cómo-ejecutar-los-tests)
 - [Arquitectura](#arquitectura)
 - [Estructura del proyecto](#estructura-del-proyecto)
@@ -79,7 +81,23 @@ muestra **una** pantalla; `mostrar(...)` la intercambia.
 
 ---
 
+## Descarga (Windows)
+
+En la página de [**Releases**](https://github.com/Guille87/JavaCalcFX/releases)
+hay, para cada versión:
+
+- **`JavaCalcFX-X.Y.Z.msi`** — instalador. Crea acceso directo y entrada en el
+  menú Inicio; se instala por usuario (no pide permisos de administrador).
+- **`JavaCalcFX-X.Y.Z-windows-portable.zip`** — carpeta autocontenida; se
+  descomprime y se ejecuta `JavaCalcFX.exe`, sin instalar nada.
+
+Ambos incluyen su propio runtime de Java: **no hace falta tener Java instalado**.
+
+---
+
 ## Requisitos
+
+Solo para compilar desde el código (para *usar* la app, ver la sección anterior):
 
 - **JDK 17 o superior** (`maven.compiler.release = 17`).
 - **Maven 3.8+**. Las dependencias de JavaFX 21 LTS (`org.openjfx`) se descargan
@@ -99,6 +117,28 @@ Depuración (el JVM queda suspendido hasta que un depurador se conecte a
 ```bash
 mvn clean javafx:run@debug
 ```
+
+---
+
+## Cómo empaquetar para Windows
+
+Versión portable (carpeta con `JavaCalcFX.exe` en `target/dist/JavaCalcFX/`):
+
+```bash
+mvn -Pdist -DskipTests clean javafx:jlink package
+```
+
+Instalador `.msi` (requiere [WiX 3.x](https://github.com/wixtoolset/wix3/releases)
+en el `PATH`):
+
+```bash
+mvn -Pdist,installer -DskipTests clean javafx:jlink package
+```
+
+`javafx:jlink` arma un runtime de Java mínimo en `target/JavaCalcFX` y `jpackage`
+lo envuelve. Al empujar una etiqueta `vX.Y.Z`, el workflow
+[`release.yml`](.github/workflows/release.yml) hace ambos en un runner
+`windows-latest` y los sube al Release.
 
 ---
 
@@ -199,7 +239,7 @@ JavaCalcFX/
 ├── LICENSE                     MIT
 ├── CLAUDE.md · ROADMAP.md      guía para agentes · plan de mejoras
 ├── docs/                       capturas para el README
-├── .github/                    workflow de CI y config de Dependabot
+├── .github/                    workflows de CI y release, badges y config de Dependabot
 └── src/
     ├── main/
     │   ├── java/
@@ -214,7 +254,7 @@ JavaCalcFX/
     │   │                                         EstadoVentana
     │   └── resources/io/guillermoamadodiaz/javacalcfx/
     │       ├── styles.css
-    │       ├── icons/icon-*.png
+    │       ├── icons/icon-*.png · icon.ico   (el .ico lo usa jpackage)
     │       └── i18n/messages[_en].properties
     └── test/java/io/guillermoamadodiaz/javacalcfx/
         ├── InterfazTest.java                    TestFX: navegación y mensajes en pantalla

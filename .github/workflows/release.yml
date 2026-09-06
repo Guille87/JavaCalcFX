@@ -1,0 +1,60 @@
+name: Release (Windows)
+
+# Al empujar una etiqueta vX.Y.Z se construyen el instalador .msi y la versión
+# portable y se adjuntan a un GitHub Release.
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Configurar JDK 21
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Versión desde la etiqueta
+        id: version
+        shell: bash
+        run: echo "v=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: App-image portable
+        run: >
+          mvn -B --no-transfer-progress -Pdist -DskipTests
+          "-Dapp.version=${{ steps.version.outputs.v }}"
+          clean javafx:jlink package
+
+      - name: Recoger la versión portable
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force artefactos | Out-Null
+          Compress-Archive -Path target/dist/JavaCalcFX -DestinationPath "artefactos/JavaCalcFX-${{ steps.version.outputs.v }}-windows-portable.zip"
+
+      - name: Instalador .msi
+        run: >
+          mvn -B --no-transfer-progress -Pdist,installer -DskipTests
+          "-Dapp.version=${{ steps.version.outputs.v }}"
+          clean javafx:jlink package
+
+      - name: Recoger el instalador
+        shell: pwsh
+        run: Copy-Item target/dist/*.msi artefactos/
+
+      - name: Publicar el Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: JavaCalcFX ${{ github.ref_name }}
+          draft: false
+          prerelease: ${{ startsWith(steps.version.outputs.v, '0.') }}
+          files: artefactos/*
+          fail_on_unmatched_files: true
