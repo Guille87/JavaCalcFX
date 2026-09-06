@@ -12,6 +12,13 @@
     -fx-font-weight: bold;
 }
 
+/* Nombre de cada categoría en el menú. */
+.categoria {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-opacity: 0.7;
+}
+
 .label.resultado {
     -fx-font-size: 14px;
 }

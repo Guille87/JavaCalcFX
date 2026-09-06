@@ -84,19 +84,19 @@ its screen catalog).
     prototype for the "step by step" feature (ROADMAP Fase 5).
 - **`SelectorDeOpciones.java`** — thin `Application`: wires `Navegador` + `CalculosAsync` +
   `ConstructorDeFormularios`, loads `styles.css` and the window icons (`resources/.../icons/`),
-  sets a minimum window size, builds the menu (title, a grid of `botonMenu(clave, accion)`
-  buttons with per-button tooltips, and a top-right language `ComboBox` that calls
-  `Textos.seleccionar(...)` and rebuilds the menu), and defines one `pantallaX()` per
-  calculator (each declares its title, prompts, field `Tipo` and display function).
-  `stop()` delegates to `calculos.cerrar()`.
+  sets a minimum window size, builds the menu from `catalogo()` — a `List<Categoria>`, each a
+  `menu.categoria.<clave>` heading over a `FlowPane` of `botonMenu(clave, accion)` buttons —
+  plus a top-right language `ComboBox` that calls `Textos.seleccionar(...)` and rebuilds the
+  menu. Each calculator is one `pantallaX()` (declares title, prompts, field `Tipo`, display
+  function) and one `EntradaMenu` in `catalogo()`. `stop()` delegates to `calculos.cerrar()`.
 - `Calculadora.factorial` polls `Thread.isInterrupted()` so a cancelled long computation
   aborts promptly.
 
 To add a calculator: add a pure method to `Calculadora` (with a test); add its strings to
 both `messages*.properties` (including `menu.boton.<clave>` and `.tooltip`); add a
 `pantallaX()` that calls `formularios.mostrar(titulo, instrucciones, prompts,
-FiltroNumerico.Tipo, calculo)` with everything resolved via `Textos.get(...)`; and a
-`botonMenu("<clave>", this::pantallaX)` entry in `mostrarMenu()`.
+FiltroNumerico.Tipo, calculo)` with everything resolved via `Textos.get(...)`; and an
+`EntradaMenu("<clave>", this::pantallaX)` in the right `Categoria` of `catalogo()`.
 
 Identifiers and comments are in Spanish (keep that convention); user-visible strings live in
 `messages*.properties`. `TextosTest` guards that the two bundles have identical keys and
