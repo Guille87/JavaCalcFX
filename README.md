@@ -162,6 +162,7 @@ incluido).
 JavaCalcFX/
 ├── pom.xml                     Java 17, JavaFX 17.0.13, JUnit 5, surefire
 ├── nbactions.xml               acciones «run» / «debug» para NetBeans
+├── LICENSE                     MIT
 ├── CLAUDE.md                   guía para agentes de IA
 └── src/
     ├── main/
@@ -212,12 +213,13 @@ distinto de `0` es múltiplo de `0`; por eso `esMultiplo(a, 0)` es `true` solo s
 ## Cómo añadir una calculadora nueva
 
 1. Añade un método puro a `Calculadora` con sus precondiciones **y un test**.
-2. Añade sus textos (título, instrucciones, campos, resultado) a
-   `messages.properties` y `messages_en.properties`.
+2. Añade sus textos (título, instrucciones, campos, resultado y
+   `menu.boton.<clave>` + `.tooltip`) a `messages.properties` y
+   `messages_en.properties`.
 3. Crea un método `pantallaX()` que llame a `formularios.mostrar(...)` con el
    título, las instrucciones, los `prompts`, el `Tipo` de campo y la función de
    presentación (todo vía `Textos.get(...)`).
-4. Añade una entrada `Botones.crear(...)` en `mostrarMenu()`.
+4. Añade una entrada `botonMenu("<clave>", this::pantallaX)` en `mostrarMenu()`.
 
 ---
 
@@ -237,6 +239,6 @@ enviarlo, ejecuta `mvn clean test` y mantén la convención de nombres en españ
 
 ## Licencia y contacto
 
-Este repositorio no declara aún una licencia explícita.
+Publicado bajo la licencia **MIT** (ver [`LICENSE`](LICENSE)).
 
 Para cualquier pregunta o comentario: **guillermo_amado@hotmail.es**.
