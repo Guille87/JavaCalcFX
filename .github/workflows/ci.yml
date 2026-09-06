@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  formato:
+  analisis-estatico:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -24,8 +24,11 @@ jobs:
       - name: Comprobar formato
         run: mvn -B --no-transfer-progress spotless:check
 
+      - name: SpotBugs
+        run: mvn -B --no-transfer-progress compile spotbugs:check
+
   test:
-    needs: formato
+    needs: analisis-estatico
     runs-on: ubuntu-latest
     permissions:
       contents: write

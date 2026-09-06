@@ -27,6 +27,7 @@ y el proyecto sigue [versionado semántico](https://semver.org/lang/es/).
 - El paquete `calc` deja de depender de la capa de textos: lanza `ErrorDeCalculo`
   con la clave del mensaje y sus argumentos, y es la interfaz
   (`ui/MensajesDeError`) quien lo traduce.
+- La CI añade **análisis estático con SpotBugs** al *check* de formato.
 
 ## [0.1.0] - 2026-09-06
 

@@ -60,7 +60,8 @@ Un mini-commit por calculadora.
       compatible con JavaFX 21 y su bytecode corre en JDK 17, mientras que la
       21.x exigiría un runtime 21+ y rompería el job de JDK 17 de la CI.
 - [x] **Matriz de CI**: JDK 17 y 21.
-- [ ] Opcional: **SpotBugs** o **Error Prone** como check.
+- [x] **SpotBugs** como check en la CI (esfuerzo Max, umbral Medium, solo código
+      de producción; falsos positivos en `spotbugs-exclude.xml`).
 
 ## Fase 4 · Distribución (Windows)
 

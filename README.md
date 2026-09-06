@@ -176,7 +176,9 @@ commitear:
 mvn spotless:apply
 ```
 
-La CI ejecuta `mvn spotless:check` y falla si algo no está formateado.
+La CI ejecuta `mvn spotless:check` (formato) y `mvn compile spotbugs:check`
+(análisis estático) y falla ante cualquier problema. Los falsos positivos de
+SpotBugs se listan en [`spotbugs-exclude.xml`](spotbugs-exclude.xml).
 
 Los tests de interfaz (`InterfazTest`, con TestFX) corren **sin pantalla**
 mediante Monocle; no hace falta configurar nada. Para verlos con ventana:
@@ -251,10 +253,12 @@ incluido).
 
 ```
 JavaCalcFX/
-├── pom.xml                     Java 17, JavaFX 21 LTS, JUnit 5, TestFX + Monocle, JaCoCo, Spotless
+├── pom.xml                     Java 17, JavaFX 21 LTS, JUnit 5, TestFX + Monocle, JaCoCo, Spotless, SpotBugs
+├── spotbugs-exclude.xml        falsos positivos de SpotBugs
 ├── nbactions.xml               acciones «run» / «debug» para NetBeans
 ├── LICENSE                     MIT
 ├── CLAUDE.md · ROADMAP.md      guía para agentes · plan de mejoras
+├── CHANGELOG.md · CONTRIBUTING.md
 ├── docs/                       capturas para el README
 ├── .github/                    workflows de CI y release, badges y config de Dependabot
 └── src/

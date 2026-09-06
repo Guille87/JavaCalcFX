@@ -10,6 +10,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   `target/site/jacoco/index.html`.
 - Formatting: `mvn spotless:apply` reformats (palantir-java-format, 120 cols); `mvn
   spotless:check` verifies. Run `apply` before committing — CI fails on unformatted code.
+- Static analysis: `mvn compile spotbugs:check` (CI runs it). Effort Max, threshold
+  Medium, production code only. False positives go in `spotbugs-exclude.xml` (currently:
+  `VA_FORMAT_STRING_USES_NEWLINE` — UI labels need literal `\n`, not `%n`; and
+  `EI_EXPOSE_REP*` — GUI classes legitimately hold their `Stage`/`StackPane`). Any *new*
+  finding should be fixed, not excluded.
 - Single test class / method: `mvn test -Dtest=FormatoTest` or
   `-Dtest=FormatoTest#numero_entero_sin_decimales`. `CalculadoraTest`'s methods live in
   `@Nested` classes (`TrianguloRectangulo`, `AreaCilindro`, `AnioBisiesto`, `Factorial`,
@@ -32,8 +37,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## CI / release
 
-- `.github/workflows/ci.yml`: a `formato` job (`spotless:check`) then a `test` job on a
-  **JDK 17 + 21 matrix** (`mvn -B clean test`). On JDK 17 it uploads the JaCoCo HTML,
+- `.github/workflows/ci.yml`: an `analisis-estatico` job (`spotless:check` +
+  `spotbugs:check`) then a `test` job on a **JDK 17 + 21 matrix** (`mvn -B clean test`). On JDK 17 it uploads the JaCoCo HTML,
   comments coverage on PRs, and — on push to `main` — regenerates `.github/badges/jacoco.svg`
   and commits it back with `[skip ci]`.
 - `.github/workflows/release.yml`: pushing a tag `vX.Y.Z` builds the `.msi` + portable zip

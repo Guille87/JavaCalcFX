@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Descartes de SpotBugs: solo falsos positivos para este proyecto.
+  Cada nuevo hallazgo real debe corregirse, no añadirse aquí.
+-->
+<FindBugsFilter>
+
+    <!--
+      El texto se construye para etiquetas de JavaFX, que necesitan un '\n'
+      literal como salto de línea. '%n' daría '\r\n' en Windows y rompería tanto
+      la presentación como los tests, que comparan cadenas exactas.
+    -->
+    <Match>
+        <Bug pattern="VA_FORMAT_STRING_USES_NEWLINE" />
+    </Match>
+
+    <!--
+      Guardar el Stage o el StackPane que la clase controla no es «exponer la
+      representación interna»: es exactamente su cometido. No tiene sentido copiar
+      defensivamente un componente de interfaz.
+    -->
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2" />
+    </Match>
+
+</FindBugsFilter>
