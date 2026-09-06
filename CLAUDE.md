@@ -6,102 +6,129 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - Run the app: `mvn clean javafx:run`
 - Debug (attach on `localhost:8000`, JVM suspends until attached): `mvn clean javafx:run@debug`
-- Run tests: `mvn clean test`
-- Single test class / method: `mvn test -Dtest=FormatoTest` or `-Dtest=FormatoTest#numero_entero_sin_decimales`.
-  Every method in `CalculadoraTest` lives in a `@Nested` class (`TrianguloRectangulo`,
-  `AreaCilindro`, `AnioBisiesto`, `Factorial`, `Multiplos`, `Notas`), so selecting one needs
-  the enclosing class: `-Dtest='CalculadoraTest$Factorial#rechaza_negativos'`.
-  Other test classes: `i18n/TextosTest`, `i18n/IdiomaTest`, in `ui` `FormatoTest`,
-  `MensajesDeErrorTest`, `EntradaTest`, `FiltroNumericoTest`, `EstadoVentanaTest`, and
-  `InterfazTest` (TestFX).
-- `InterfazTest` drives the real UI. It runs headless via Monocle (surefire `argLine` in the
-  POM, plus `useModulePath=false` so TestFX isn't on the module path); `mvn test -Pheaded`
-  shows a window. No display or xvfb needed in CI.
-
+- Run tests: `mvn clean test` — also writes the JaCoCo coverage report to
+  `target/site/jacoco/index.html`.
 - Formatting: `mvn spotless:apply` reformats (palantir-java-format, 120 cols); `mvn
-  spotless:check` verifies. Run `apply` before committing.
+  spotless:check` verifies. Run `apply` before committing — CI fails on unformatted code.
+- Single test class / method: `mvn test -Dtest=FormatoTest` or
+  `-Dtest=FormatoTest#numero_entero_sin_decimales`. `CalculadoraTest`'s methods live in
+  `@Nested` classes (`TrianguloRectangulo`, `AreaCilindro`, `AnioBisiesto`, `Factorial`,
+  `Multiplos`, `Notas`, `EcuacionSegundoGrado`, `Potencia`, `RaizNesima`, `McdYMcm`,
+  `Primos`, `ConversorDeBases`, `ProporcionesYPorcentajes`, `IndiceMasaCorporal`), so
+  select one with the enclosing class:
+  `-Dtest='CalculadoraTest$Factorial#rechaza_negativos'`. Other test classes:
+  `i18n/{Textos,Idioma}Test`; in `ui` `Formato`, `MensajesDeError`, `Entrada`,
+  `FiltroNumerico`, `EstadoVentana`, `Tema`, and `PasoAPaso{Cuadratica,Pitagoras,Cilindro,
+  Proporciones}Test`; and root `InterfazTest` (TestFX).
+- `InterfazTest` drives the real UI headless via Monocle (surefire `argLine` in the POM,
+  plus `useModulePath=false` so TestFX isn't on the module path). `mvn test -Pheaded` shows
+  a window. No display or xvfb needed. It opens the stage large (the categorized menu is
+  tall — small windows would scroll buttons out of TestFX's reach) and its `@AfterAll`
+  clears the `EstadoVentana`/`Tema` prefs it touched.
+- Package for Windows (profile `dist`): `mvn -Pdist -DskipTests clean javafx:jlink package`
+  → portable app-image in `target/dist/JavaCalcFX/`. Add `,installer` for the `.msi`
+  (needs WiX 3.x on PATH). `javafx:jlink` must run before `package`.
 
-`.github/workflows/ci.yml` runs `spotless:check` then `mvn -B clean test` on JDK 17 for
-every push and pull request (the UI tests run there headless too). No other linter.
+## CI / release
+
+- `.github/workflows/ci.yml`: a `formato` job (`spotless:check`) then a `test` job on a
+  **JDK 17 + 21 matrix** (`mvn -B clean test`). On JDK 17 it uploads the JaCoCo HTML,
+  comments coverage on PRs, and — on push to `main` — regenerates `.github/badges/jacoco.svg`
+  and commits it back with `[skip ci]`.
+- `.github/workflows/release.yml`: pushing a tag `vX.Y.Z` builds the `.msi` + portable zip
+  on `windows-latest` and attaches them to a GitHub Release. Bump `pom.xml` `<version>`
+  then `git tag vX.Y.Z && git push origin vX.Y.Z`.
+- Dependabot (`.github/dependabot.yml`) tracks Maven + Actions; it ignores semver-major
+  bumps of `org.openjfx:*` and `org.testfx:openjfx-monocle`.
 
 ## Requirements
 
-- JDK 17+ (`maven.compiler.release` = 17). JavaFX 17 modules come from Maven (`org.openjfx`); no separate SDK install needed.
+- JDK 17+ (`maven.compiler.release` = 17). JavaFX 21 LTS and all other deps come from Maven
+  (`org.openjfx`, `org.testfx`); no separate SDK install. `openjfx-monocle` deliberately
+  stays on `17.0.10` — the `21.x` artifact is Java-21 bytecode and breaks the JDK 17 CI job,
+  while `17.0.10` runs fine against JavaFX 21.
 
 ## Architecture
 
-Single-module JavaFX desktop app in four packages: `calc` (pure domain), `i18n` (translatable
-text), `ui` (reusable interface infrastructure), and the root package (the `Application` and
-its screen catalog).
+Single-module JavaFX desktop app in four packages: `calc` (pure domain), `i18n`
+(translatable text), `ui` (reusable interface infrastructure), and the root package (the
+`Application` and its screen catalog). Dependency direction: `ui` → `calc` and `ui` →
+`i18n`; **`calc` imports nothing from the rest of the project** (nor JavaFX).
 
-- **`calc/Calculadora.java`** — all mathematics as static, JavaFX-free, precondition-checked
-  functions (`resolverTrianguloRectangulo`, `areaCilindro`, `esBisiesto`, `factorial`,
-  `esMultiplo`, `media` (grades in `[NOTA_MINIMA, NOTA_MAXIMA]` = 0..10), `estaAprobado`,
-  `resolverEcuacionCuadratica`, `potencia`, `raiz` (n-th root, handles odd roots of
-  negatives, Newton-refined so exact roots come out exact), `mcd`, `mcm` (`Math.absExact`
-  / `multiplyExact` guarded), `analizarPrimalidad` (trial division to √n, interruptible;
-  returns the smallest proper divisor for composites), `convertirBase` (base inferred from
-  a `0b`/`0o`/`0x` prefix), `porcentajeDe`, `reglaDeTres`). Returns immutable records
-  (`Triangulo`, `EcuacionCuadratica` with `Raiz`, `Primalidad`, `ConversionBase`). Invalid
-  input throws
-  `IllegalArgumentException` whose message comes from `Textos`. Unit-tested by
-  `CalculadoraTest`.
+- **`calc/`** — all mathematics as static, dependency-free, precondition-checked functions:
+  `resolverTrianguloRectangulo`, `areaCilindro`, `esBisiesto`, `factorial`, `esMultiplo`,
+  `media` (grades in `[NOTA_MINIMA, NOTA_MAXIMA]` = 0..10), `estaAprobado`,
+  `resolverEcuacionCuadratica`, `potencia`, `raiz` (n-th root; odd roots of negatives;
+  Newton-refined so exact roots come out exact), `mcd`, `mcm` (`absExact`/`multiplyExact`
+  guarded), `analizarPrimalidad` (trial division to √n, interruptible; smallest proper
+  divisor for composites), `convertirBase` (base inferred from a `0b`/`0o`/`0x` prefix),
+  `porcentajeDe`, `reglaDeTres`, `imc` (with `CategoriaImc` per WHO ranges). Returns
+  immutable records (`Triangulo`, `EcuacionCuadratica`/`Raiz`, `Primalidad`,
+  `ConversionBase`, `IndiceMasaCorporal`). Interruptible loops (`factorial`,
+  `analizarPrimalidad`) throw a bare `CancellationException` when `Thread.isInterrupted()`.
+  Invalid input throws **`ErrorDeCalculo`** (a subclass of `IllegalArgumentException`)
+  carrying the *message key* (`clave()`) and its `argumentos()`, never translated text; an
+  arg of type `ErrorDeCalculo.Nombre` marks a value that is itself a key (a field name).
+  Unit-tested by `CalculadoraTest`.
 - **`i18n/`** — `Textos` reads the `messages*.properties` files directly (not via
-  `ResourceBundle`, whose lookup mixes in `Locale.getDefault()` and would return the wrong
-  language on a machine whose default locale differs): `messages.properties` is Spanish and
-  the base; a non-Spanish `Idioma` loads its `messages_<lang>.properties` on top, falling
-  back to the base for missing keys. `Textos.get(key)` / `Textos.get(key, args...)` (the
-  latter via `MessageFormat` — a literal `'` in a parametrized value must be doubled).
-  `seleccionar(Idioma)` switches the language and persists it via `java.util.prefs`;
-  `idioma()` reads the current one; `usarIdioma(Locale)` switches without persisting
-  (tests). `Idioma` is the two-value enum (`ESPANOL` / `INGLES`) behind the menu's language
-  `ComboBox`. All user-visible strings go through `Textos`.
+  `ResourceBundle`, whose lookup mixes in `Locale.getDefault()` and returns the wrong
+  language on a machine with a different default locale): `messages.properties` is Spanish
+  and the base; a non-Spanish `Idioma` loads `messages_<lang>.properties` on top, falling
+  back to the base. `Textos.get(key)` / `get(key, args...)` (latter via `MessageFormat` — a
+  literal `'` in a parametrized value must be doubled `''`). `seleccionar(Idioma)` switches
+  and persists via `java.util.prefs`; `usarIdioma(Locale)` switches without persisting
+  (tests). `Idioma` is the `ESPANOL`/`INGLES` enum behind the menu's language `ComboBox`.
 - **`ui/` infrastructure** — small single-responsibility pieces:
   - `Navegador` — owns the root `StackPane` (always one child); `mostrar(Node)` swaps the
     screen and first runs an `alNavegar` hook (wired to cancel the in-flight calculation).
-  - `CalculosAsync` — owns the single daemon-thread `ExecutorService` and the current
-    `Task<String>`. `ejecutar(calculo, alEmpezar, alTerminar, alFallar)` runs work off the
-    FX thread; `cancelar()` interrupts it; `cerrar()` (called from `Application.stop()`)
-    shuts the executor down. Only one calculation runs at a time.
+  - `CalculosAsync` — the single daemon-thread `ExecutorService` + current `Task<String>`.
+    `ejecutar(calculo, alEmpezar, alTerminar, alFallar)` runs work off the FX thread;
+    `cancelar()` interrupts; `cerrar()` (from `Application.stop()`) shuts it down. One
+    calculation at a time.
   - `ConstructorDeFormularios` — builds the generic form screen (bold header, wrapped
-    instructions, one `TextField` per prompt with its `FiltroNumerico` — pass `null` for the
-    `Tipo` to skip filtering, e.g. to allow hex digits, Enter-default «Calcular», wrapped
-    result label, «Volver» that also fires on Esc via a `KEY_PRESSED` filter on the screen
-    root). Wrapped in a transparent `ScrollPane` so a small window scrolls instead of
-    clipping. Focuses the first field on open. `mostrar(...)` has an overload taking an
-    extra `pasos` function: after a successful calc a «Mostrar pasos» button reveals its
-    step-by-step development.
-  - `MensajesDeError` — pure `Throwable → String` mapping (`NumberFormatException` /
-    `IllegalArgumentException` / `ArithmeticException` / cancellation). Unit-tested.
-  - `Formato` — pure number-to-text formatting (thread-safe: a fresh `DecimalFormat` per
-    call). Unit-tested.
+    instructions, one `TextField` per prompt with its `FiltroNumerico` — pass `null` `Tipo`
+    to skip filtering, e.g. hex digits; Enter-default «Calcular»; wrapped result label;
+    «Volver» that also fires on Esc via a capture-phase `KEY_PRESSED` filter). In a
+    transparent `ScrollPane`; focuses the first field. After a successful calc it shows a
+    **«Copiar»** button (`BotonCopiar` → system clipboard); the `mostrar(...)` overload
+    that also takes a `pasos` function additionally shows a **«Mostrar pasos»** toggle.
+  - `MensajesDeError` — pure `Throwable → String`. This is where `ErrorDeCalculo.clave()`
+    (and any `Nombre` args) get translated via `Textos`; `NumberFormatException` →
+    generic message; cancellation → `""`. Unit-tested.
+  - `Formato` — pure number-to-text formatting, **always `Locale.ROOT`** (dot decimal,
+    comma thousands) so output matches the dot-only input and doesn't vary by machine
+    locale or between local/CI. Fresh `DecimalFormat` per call (thread-safety). Unit-tested.
   - `Entrada` — the single text→number parsing seam. Unit-tested.
-  - `FiltroNumerico` — installs a `TextFormatter` that keeps fields to numeric text while
-    typing, in two variants (`Tipo.ENTERO` / `Tipo.DECIMAL`); `esValido` is a pure prefix
-    check. Unit-tested. Each `pantallaX()` passes the `Tipo` for its fields.
-  - `Botones` — button factory (`crear(texto, accion)` / `crear(texto, tooltip, accion)`).
+  - `FiltroNumerico` — installs a `TextFormatter` keeping fields numeric while typing,
+    `Tipo.ENTERO` / `Tipo.DECIMAL`; `esValido` is a pure prefix check. Unit-tested.
+  - `Botones` — button factory (`crear(texto[, tooltip], accion)`).
   - `EstadoVentana` — persists window size/position via `java.util.prefs`; `restaurar(stage)`
-    before `show()`, `vigilar(stage)` after. Discards sizes below the minimum or a position
-    off every screen. Pure checks (`tamanoValido`, `puntoVisible`) are unit-tested.
-  - `PasoAPasoCuadratica` — pure, deterministic templates that render the classic quadratic
-    formula step by step in linear notation (`(4 ± √(16 - 16)) / 8`). Unit-tested. The
-    prototype for the "step by step" feature (ROADMAP Fase 5).
+    before `show()`, `vigilar(stage)` after. Discards sub-minimum sizes / off-screen
+    positions. Pure `tamanoValido` / `puntoVisible` are unit-tested.
+  - `Tema` — light/dark. `esOscuro()` / `alternar()` persist to a `java.util.prefs` subnode;
+    `aplicarA(Scene)` toggles the `tema-oscuro` style class on the scene root. `styles.css`
+    redefines `-fx-base`/`-fx-background`/`-fx-control-inner-background` (+ prompt-text
+    fill) for `.root.tema-oscuro`; Modena derives the rest.
+  - `PasoAPaso{Cuadratica,Pitagoras,Cilindro,Porcentaje,ReglaDeTres}` — pure, deterministic
+    templates rendering a calculation step by step in linear notation. Each calls its
+    `Calculadora` method (for validation + values) then fills fixed templates. Unit-tested.
 - **`SelectorDeOpciones.java`** — thin `Application`: wires `Navegador` + `CalculosAsync` +
-  `ConstructorDeFormularios`, loads `styles.css` and the window icons (`resources/.../icons/`),
-  sets a minimum window size, builds the menu from `catalogo()` — a `List<Categoria>`, each a
-  `menu.categoria.<clave>` heading over a `FlowPane` of `botonMenu(clave, accion)` buttons —
-  plus a top-right language `ComboBox` that calls `Textos.seleccionar(...)` and rebuilds the
-  menu. Each calculator is one `pantallaX()` (declares title, prompts, field `Tipo`, display
-  function) and one `EntradaMenu` in `catalogo()`. `stop()` delegates to `calculos.cerrar()`.
-- `Calculadora.factorial` polls `Thread.isInterrupted()` so a cancelled long computation
-  aborts promptly.
+  `ConstructorDeFormularios`, loads `styles.css` + window icons, calls `Tema.aplicarA(scene)`,
+  sets a minimum window size. `catalogo()` is a `List<Categoria>` (`geometria`,
+  `aritmetica`, `potencias`, `proporciones`, `otros`), each a `menu.categoria.<clave>`
+  heading over a `FlowPane` of `botonMenu(clave, accion)`. The menu's top bar has a theme
+  toggle + a language `ComboBox` (both rebuild the menu). Each calculator is one
+  `pantallaX()` + one `EntradaMenu` in `catalogo()`. `stop()` → `calculos.cerrar()`.
 
-To add a calculator: add a pure method to `Calculadora` (with a test); add its strings to
-both `messages*.properties` (including `menu.boton.<clave>` and `.tooltip`); add a
-`pantallaX()` that calls `formularios.mostrar(titulo, instrucciones, prompts,
-FiltroNumerico.Tipo, calculo)` with everything resolved via `Textos.get(...)`; and an
-`EntradaMenu("<clave>", this::pantallaX)` in the right `Categoria` of `catalogo()`.
+To add a calculator: add a pure method to `calc/Calculadora` that throws `ErrorDeCalculo`
+on bad input (with a test); add its strings to both `messages*.properties` (including
+`menu.boton.<clave>` and `.tooltip`, plus any `calc.*` error keys); add a `pantallaX()`
+calling `formularios.mostrar(titulo, instrucciones, prompts, FiltroNumerico.Tipo, calculo
+[, pasos])` with text via `Textos.get(...)`; and an `EntradaMenu("<clave>",
+this::pantallaX)` in the right `Categoria`. If it warrants a step-by-step, add a pure
+`ui/PasoAPasoX` and pass it as the `pasos` argument.
 
-Identifiers and comments are in Spanish (keep that convention); user-visible strings live in
-`messages*.properties`. `TextosTest` guards that the two bundles have identical keys and
-that every parametrized value is a valid `MessageFormat` pattern.
+Identifiers and comments are in Spanish (keep that convention); user-visible strings live
+in `messages*.properties`. `TextosTest` guards that the two bundles have identical keys and
+that every parametrized value is a valid `MessageFormat` pattern. `ROADMAP.md` tracks
+planned work (Fases 0–5 done; remaining items are optional).
