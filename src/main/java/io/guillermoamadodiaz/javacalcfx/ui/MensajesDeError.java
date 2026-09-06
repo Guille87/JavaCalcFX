@@ -2,6 +2,8 @@ package io.guillermoamadodiaz.javacalcfx.ui;
 
 import java.util.concurrent.CancellationException;
 
+import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
+
 /**
  * Traduce una excepción surgida durante un cálculo a un mensaje para el usuario.
  *
@@ -18,11 +20,11 @@ public final class MensajesDeError {
             return ""; // el cálculo se canceló: no hay nada que mostrar
         }
         if (ex instanceof NumberFormatException) {
-            return "Por favor ingresa números válidos en todos los campos.";
+            return Textos.get("error.numeros.invalidos");
         }
         if (ex instanceof IllegalArgumentException || ex instanceof ArithmeticException) {
-            return "Error: " + ex.getMessage();
+            return Textos.get("error.prefijo", ex.getMessage());
         }
-        return "Error inesperado: " + ex;
+        return Textos.get("error.inesperado", String.valueOf(ex));
     }
 }

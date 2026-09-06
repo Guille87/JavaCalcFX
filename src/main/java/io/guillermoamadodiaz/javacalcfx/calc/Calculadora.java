@@ -3,13 +3,15 @@ package io.guillermoamadodiaz.javacalcfx.calc;
 import java.math.BigInteger;
 import java.util.concurrent.CancellationException;
 
+import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
+
 /**
  * Lógica matemática pura de la aplicación.
  *
  * <p>Esta clase no depende de JavaFX ni de ninguna capa de interfaz: recibe
  * valores primitivos, valida sus precondiciones y devuelve resultados o lanza
- * {@link IllegalArgumentException} con un mensaje apto para el usuario. De este
- * modo toda la aritmética es verificable con tests unitarios.
+ * {@link IllegalArgumentException} con un mensaje ya traducido ({@link Textos}).
+ * De este modo toda la aritmética es verificable con tests unitarios.
  */
 public final class Calculadora {
 
@@ -27,8 +29,8 @@ public final class Calculadora {
      * @throws IllegalArgumentException si algún cateto no es un número finito y positivo
      */
     public static Triangulo resolverTrianguloRectangulo(double catetoA, double catetoB) {
-        exigirPositivoFinito(catetoA, "El cateto A");
-        exigirPositivoFinito(catetoB, "El cateto B");
+        exigirPositivoFinito(catetoA, Textos.get("calc.nombre.catetoA"));
+        exigirPositivoFinito(catetoB, Textos.get("calc.nombre.catetoB"));
 
         double hipotenusa = Math.hypot(catetoA, catetoB); // estable frente a overflow
         double area = (catetoA * catetoB) / 2.0;
@@ -45,8 +47,8 @@ public final class Calculadora {
      * @param altura altura del cilindro (&ge; 0)
      */
     public static double areaCilindro(double radio, double altura) {
-        exigirNoNegativoFinito(radio, "El radio");
-        exigirNoNegativoFinito(altura, "La altura");
+        exigirNoNegativoFinito(radio, Textos.get("calc.nombre.radio"));
+        exigirNoNegativoFinito(altura, Textos.get("calc.nombre.altura"));
         return 2 * Math.PI * radio * (radio + altura);
     }
 
@@ -57,7 +59,7 @@ public final class Calculadora {
      */
     public static boolean esBisiesto(int anio) {
         if (anio <= 0) {
-            throw new IllegalArgumentException("El año debe ser mayor que cero.");
+            throw new IllegalArgumentException(Textos.get("calc.anio.no.positivo"));
         }
         return (anio % 4 == 0 && anio % 100 != 0) || anio % 400 == 0;
     }
@@ -69,16 +71,17 @@ public final class Calculadora {
      */
     public static BigInteger factorial(int n) {
         if (n < 0) {
-            throw new IllegalArgumentException("El factorial solo existe para enteros no negativos.");
+            throw new IllegalArgumentException(Textos.get("calc.factorial.negativo"));
         }
         if (n > MAX_FACTORIAL) {
-            throw new IllegalArgumentException("El número es demasiado grande (máximo " + MAX_FACTORIAL + ").");
+            throw new IllegalArgumentException(
+                    Textos.get("calc.factorial.grande", String.valueOf(MAX_FACTORIAL)));
         }
         BigInteger resultado = BigInteger.ONE;
         for (int i = 2; i <= n; i++) {
             // Permite que quien ejecute este cálculo en un hilo aparte (Task) lo aborte.
             if (Thread.currentThread().isInterrupted()) {
-                throw new CancellationException("Cálculo de factorial cancelado.");
+                throw new CancellationException(Textos.get("calc.factorial.cancelado"));
             }
             resultado = resultado.multiply(BigInteger.valueOf(i));
         }
@@ -109,13 +112,13 @@ public final class Calculadora {
      */
     public static double media(double... notas) {
         if (notas == null || notas.length == 0) {
-            throw new IllegalArgumentException("Se necesita al menos una nota.");
+            throw new IllegalArgumentException(Textos.get("calc.notas.vacio"));
         }
         double suma = 0;
         for (double nota : notas) {
             if (!Double.isFinite(nota) || nota < NOTA_MINIMA || nota > NOTA_MAXIMA) {
-                throw new IllegalArgumentException(
-                        "Cada nota debe estar entre " + (int) NOTA_MINIMA + " y " + (int) NOTA_MAXIMA + ".");
+                throw new IllegalArgumentException(Textos.get("calc.nota.rango",
+                        String.valueOf((int) NOTA_MINIMA), String.valueOf((int) NOTA_MAXIMA)));
             }
             suma += nota;
         }
@@ -129,13 +132,13 @@ public final class Calculadora {
 
     private static void exigirPositivoFinito(double valor, String nombre) {
         if (!Double.isFinite(valor) || valor <= 0) {
-            throw new IllegalArgumentException(nombre + " debe ser un número positivo.");
+            throw new IllegalArgumentException(Textos.get("calc.valor.no.positivo", nombre));
         }
     }
 
     private static void exigirNoNegativoFinito(double valor, String nombre) {
         if (!Double.isFinite(valor) || valor < 0) {
-            throw new IllegalArgumentException(nombre + " no puede ser negativo.");
+            throw new IllegalArgumentException(Textos.get("calc.valor.negativo", nombre));
         }
     }
 

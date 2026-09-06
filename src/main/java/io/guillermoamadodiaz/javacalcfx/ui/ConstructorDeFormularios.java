@@ -13,6 +13,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 
+import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
+
 /**
  * Construye y muestra la pantalla de formulario genérica que comparten todas las
  * calculadoras: encabezado, instrucciones, un campo por cada dato pedido, botón
@@ -74,7 +76,7 @@ public final class ConstructorDeFormularios {
         resultado.setMaxWidth(Double.MAX_VALUE);
         resultado.getStyleClass().add("resultado");
 
-        Button calcular = new Button("Calcular");
+        Button calcular = new Button(Textos.get("form.calcular"));
         calcular.setDefaultButton(true); // permite pulsar Enter
         calcular.setOnAction(e -> {
             List<String> valores = campos.stream()
@@ -82,12 +84,12 @@ public final class ConstructorDeFormularios {
                     .toList();
             calculos.ejecutar(
                     () -> calculo.apply(valores),
-                    () -> { calcular.setDisable(true); resultado.setText("Calculando…"); },
+                    () -> { calcular.setDisable(true); resultado.setText(Textos.get("form.calculando")); },
                     texto -> { calcular.setDisable(false); resultado.setText(texto); },
                     mensaje -> { calcular.setDisable(false); resultado.setText(mensaje); });
         });
 
-        Button volver = Botones.crear("Volver", volverAlMenu);
+        Button volver = Botones.crear(Textos.get("form.volver"), volverAlMenu);
         volver.setCancelButton(true); // permite pulsar Esc
 
         pantalla.getChildren().addAll(encabezado, instruccion);
