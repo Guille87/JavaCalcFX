@@ -4,7 +4,7 @@
 [![Cobertura](.github/badges/jacoco.svg)](https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Aplicación de escritorio escrita en **Java 17** con **JavaFX 17** que reúne
+Aplicación de escritorio escrita en **Java 17** con **JavaFX 21** que reúne
 varias calculadoras matemáticas de uso frecuente tras un menú común. Cada herramienta
 valida los datos de entrada, ejecuta el cálculo fuera del hilo de la interfaz
 para que la ventana nunca se congele y muestra el resultado (o un mensaje de
@@ -82,8 +82,8 @@ muestra **una** pantalla; `mostrar(...)` la intercambia.
 ## Requisitos
 
 - **JDK 17 o superior** (`maven.compiler.release = 17`).
-- **Maven 3.8+**. Las dependencias de JavaFX 17 (`org.openjfx`) se descargan desde
-  Maven Central; **no hace falta instalar un SDK de JavaFX aparte**.
+- **Maven 3.8+**. Las dependencias de JavaFX 21 LTS (`org.openjfx`) se descargan
+  desde Maven Central; **no hace falta instalar un SDK de JavaFX aparte**.
 
 ---
 
@@ -194,7 +194,7 @@ incluido).
 
 ```
 JavaCalcFX/
-├── pom.xml                     Java 17, JavaFX 17.0.13, JUnit 5, TestFX + Monocle, Spotless
+├── pom.xml                     Java 17, JavaFX 21 LTS, JUnit 5, TestFX + Monocle, JaCoCo, Spotless
 ├── nbactions.xml               acciones «run» / «debug» para NetBeans
 ├── LICENSE                     MIT
 ├── CLAUDE.md · ROADMAP.md      guía para agentes · plan de mejoras

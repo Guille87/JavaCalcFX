@@ -11,8 +11,8 @@ updates:
           - "org.junit*"
           - "org.testfx*"
     ignore:
-      # JavaFX y su Monocle: quedarse en la 17.x (parches sí, saltos de major no).
-      # La migración a JavaFX 21 LTS es una tarea aparte (ver ROADMAP).
+      # JavaFX: quedarse en la 21 LTS (parches sí, saltos de major no: 22+ no
+      # tienen build de Monocle y la CI tendría que pasar a xvfb).
       - dependency-name: "org.openjfx:*"
         update-types: ["version-update:semver-major"]
       - dependency-name: "org.testfx:openjfx-monocle"
