@@ -18,12 +18,17 @@ public final class Formato {
 
     /** Número con separador de miles y hasta 4 decimales (sin ceros finales). */
     public static String numero(double valor) {
-        return new DecimalFormat(PATRON_DECIMAL).format(valor);
+        return new DecimalFormat(PATRON_DECIMAL).format(normalizarCero(valor));
     }
 
     /** Número con exactamente dos decimales (p. ej. una nota media). */
     public static String dosDecimales(double valor) {
-        return String.format("%.2f", valor);
+        return String.format("%.2f", normalizarCero(valor));
+    }
+
+    /** Convierte -0.0 en 0.0 para no mostrar «-0». */
+    private static double normalizarCero(double valor) {
+        return valor + 0.0;
     }
 
     /** Entero grande con separador de miles. */
