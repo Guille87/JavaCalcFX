@@ -105,6 +105,19 @@ class InterfazTest extends ApplicationTest {
     }
 
     @Test
+    void el_boton_mostrar_pasos_despliega_el_desarrollo() throws TimeoutException {
+        clickOn("Calcular Teorema de Pitágoras");
+        clickOn(lookup(".text-field").nth(0).queryAs(TextField.class)).write("3");
+        clickOn(lookup(".text-field").nth(1).queryAs(TextField.class)).write("4");
+        clickOn("Calcular");
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> textoResultado().contains("Hipotenusa"));
+
+        clickOn("Mostrar pasos");
+        String pasos = lookup(".pasos").queryAs(Label.class).getText();
+        assertTrue(pasos.contains("h = √(9 + 16)"), "esperaba el desarrollo de Pitágoras, era: " + pasos);
+    }
+
+    @Test
     void la_cuadratica_explica_el_discriminante_y_da_las_raices_complejas() throws TimeoutException {
         clickOn("Resolver Ecuación de 2.º Grado");
         clickOn(lookup(".text-field").nth(0).queryAs(TextField.class)).write("7");

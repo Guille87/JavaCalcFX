@@ -15,6 +15,7 @@ import io.guillermoamadodiaz.javacalcfx.ui.FiltroNumerico;
 import io.guillermoamadodiaz.javacalcfx.ui.Formato;
 import io.guillermoamadodiaz.javacalcfx.ui.Navegador;
 import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoCuadratica;
+import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoPitagoras;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -213,7 +214,8 @@ public class SelectorDeOpciones extends Application {
                             Formato.numero(t.perimetro()),
                             Formato.numero(t.anguloAlfa()),
                             Formato.numero(t.anguloBeta()));
-                });
+                },
+                valores -> PasoAPasoPitagoras.desarrollo(Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1))));
     }
 
     private void pantallaCilindro() {
