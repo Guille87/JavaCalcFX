@@ -18,11 +18,10 @@ Se hace primero para que el código nuevo nazca ya con el estilo correcto.
 
 - [x] **Spotless** con `palantir-java-format`: `mvn spotless:apply` sobre el
       código actual y `spotless:check` en la CI.
-- [ ] **`.github/dependabot.yml`** — PRs de actualización para JavaFX, JUnit,
-      TestFX, Monocle y plugins de Maven.
-- [ ] **README**: badges de CI y licencia; sustituir el diagrama ASCII por
-      2–3 capturas reales.
-- [ ] **Icono de la app** (`stage.getIcons(...)`, un `.png` en `resources`).
+- [x] **`.github/dependabot.yml`** — PRs de actualización para dependencias de
+      Maven y GitHub Actions.
+- [x] **README**: badges de CI y licencia; capturas reales en vez del diagrama ASCII.
+- [x] **Icono de la app** (`stage.getIcons(...)`, PNGs en `resources/.../icons/`).
 
 ## Fase 1 · Pulido de UX
 

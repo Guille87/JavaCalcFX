@@ -1,17 +1,24 @@
 # JavaCalcFX — Calculadora Matemática
 
+[![CI](https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml/badge.svg)](https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 Aplicación de escritorio escrita en **Java 17** con **JavaFX 17** que reúne seis
 calculadoras matemáticas de uso frecuente tras un menú común. Cada herramienta
 valida los datos de entrada, ejecuta el cálculo fuera del hilo de la interfaz
 para que la ventana nunca se congele y muestra el resultado (o un mensaje de
 error legible) en la misma pantalla.
 
+| Menú | Una calculadora |
+|---|---|
+| ![Menú](docs/captura-menu.png) | ![Teorema de Pitágoras](docs/captura-pitagoras.png) |
+
 ---
 
 ## Índice
 
 - [Características](#características)
-- [Capturas del flujo](#capturas-del-flujo)
+- [Flujo](#flujo)
 - [Requisitos](#requisitos)
 - [Cómo ejecutar](#cómo-ejecutar)
 - [Cómo ejecutar los tests](#cómo-ejecutar-los-tests)
@@ -52,20 +59,11 @@ Aspectos transversales a todas las pantallas:
 
 ---
 
-## Capturas del flujo
+## Flujo
 
-```
-┌────────────────────────────┐         ┌────────────────────────────┐
-│  Menú (6 botones)          │  ───▶   │  Formulario de la opción   │
-│                            │         │  · instrucciones           │
-│  Pitágoras  Cilindro  Año  │         │  · uno o varios campos     │
-│  Factorial  Múltiplo  Aprob│  ◀───   │  · «Calcular» + resultado  │
-└────────────────────────────┘  Volver │  · «Volver»                │
-                                       └────────────────────────────┘
-```
-
-La raíz de la escena es un único contenedor que siempre muestra **una** pantalla;
-`mostrar(...)` la intercambia.
+Menú de 6 botones ⇄ pantalla de formulario (instrucciones · campos · «Calcular» +
+resultado · «Volver»). La raíz de la escena es un único contenedor que siempre
+muestra **una** pantalla; `mostrar(...)` la intercambia.
 
 ---
 
@@ -175,10 +173,12 @@ incluido).
 
 ```
 JavaCalcFX/
-├── pom.xml                     Java 17, JavaFX 17.0.13, JUnit 5, TestFX + Monocle
+├── pom.xml                     Java 17, JavaFX 17.0.13, JUnit 5, TestFX + Monocle, Spotless
 ├── nbactions.xml               acciones «run» / «debug» para NetBeans
 ├── LICENSE                     MIT
-├── CLAUDE.md                   guía para agentes de IA
+├── CLAUDE.md · ROADMAP.md      guía para agentes · plan de mejoras
+├── docs/                       capturas para el README
+├── .github/                    workflow de CI y config de Dependabot
 └── src/
     ├── main/
     │   ├── java/
@@ -192,6 +192,7 @@ JavaCalcFX/
     │   │                                         Formato, Entrada, FiltroNumerico, Botones
     │   └── resources/io/guillermoamadodiaz/javacalcfx/
     │       ├── styles.css
+    │       ├── icons/icon-*.png
     │       └── i18n/messages[_en].properties
     └── test/java/io/guillermoamadodiaz/javacalcfx/
         ├── InterfazTest.java                    TestFX: navegación y mensajes en pantalla
