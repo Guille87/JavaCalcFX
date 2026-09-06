@@ -37,9 +37,11 @@ its screen catalog).
 - **`calc/Calculadora.java`** — all mathematics as static, JavaFX-free, precondition-checked
   functions (`resolverTrianguloRectangulo`, `areaCilindro`, `esBisiesto`, `factorial`,
   `esMultiplo`, `media` (grades in `[NOTA_MINIMA, NOTA_MAXIMA]` = 0..10), `estaAprobado`,
-  `resolverEcuacionCuadratica`). Returns immutable records (`Triangulo`, `EcuacionCuadratica`
-  with `Raiz`). Invalid input throws `IllegalArgumentException` whose message comes from
-  `Textos`. Unit-tested by `CalculadoraTest`.
+  `resolverEcuacionCuadratica`, `potencia`, `raiz` (n-th root, handles odd roots of
+  negatives, Newton-refined so exact roots come out exact)). Returns immutable records
+  (`Triangulo`, `EcuacionCuadratica` with `Raiz`). Invalid input throws
+  `IllegalArgumentException` whose message comes from `Textos`. Unit-tested by
+  `CalculadoraTest`.
 - **`i18n/`** — `Textos` reads the `messages*.properties` files directly (not via
   `ResourceBundle`, whose lookup mixes in `Locale.getDefault()` and would return the wrong
   language on a machine whose default locale differs): `messages.properties` is Spanish and

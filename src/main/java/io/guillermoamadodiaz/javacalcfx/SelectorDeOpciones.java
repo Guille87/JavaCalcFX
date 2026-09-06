@@ -110,6 +110,8 @@ public class SelectorDeOpciones extends Application {
             botonMenu("multiplo", this::pantallaMultiplo),
             botonMenu("aprobado", this::pantallaAprobado),
             botonMenu("cuadratica", this::pantallaCuadratica),
+            botonMenu("potencia", this::pantallaPotencia),
+            botonMenu("raiz", this::pantallaRaiz),
         };
         for (int i = 0; i < botones.length; i++) {
             botones[i].setPrefWidth(ANCHO_BOTON_MENU);
@@ -283,6 +285,40 @@ public class SelectorDeOpciones extends Application {
     private static String formatoRaiz(Raiz raiz) {
         String signo = raiz.imaginaria() < 0 ? " - " : " + ";
         return Formato.numero(raiz.real()) + signo + Formato.numero(Math.abs(raiz.imaginaria())) + " i";
+    }
+
+    private void pantallaPotencia() {
+        formularios.mostrar(
+                Textos.get("potencia.titulo"),
+                Textos.get("potencia.instrucciones"),
+                List.of(Textos.get("potencia.campo.base"), Textos.get("potencia.campo.exponente")),
+                FiltroNumerico.Tipo.DECIMAL,
+                valores -> {
+                    double base = Entrada.doble(valores.get(0));
+                    double exponente = Entrada.doble(valores.get(1));
+                    return Textos.get(
+                            "potencia.resultado",
+                            Formato.numero(base),
+                            Formato.numero(exponente),
+                            Formato.numero(Calculadora.potencia(base, exponente)));
+                });
+    }
+
+    private void pantallaRaiz() {
+        formularios.mostrar(
+                Textos.get("raiz.titulo"),
+                Textos.get("raiz.instrucciones"),
+                List.of(Textos.get("raiz.campo.radicando"), Textos.get("raiz.campo.indice")),
+                FiltroNumerico.Tipo.DECIMAL,
+                valores -> {
+                    double radicando = Entrada.doble(valores.get(0));
+                    double indice = Entrada.doble(valores.get(1));
+                    return Textos.get(
+                            "raiz.resultado",
+                            Formato.numero(indice),
+                            Formato.numero(radicando),
+                            Formato.numero(Calculadora.raiz(radicando, indice)));
+                });
     }
 
     public static void main(String[] args) {

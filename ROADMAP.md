@@ -37,7 +37,8 @@ Patrón por cada una: método puro en `Calculadora` + test + textos `es`/`en`
 Un mini-commit por calculadora.
 
 - [x] Ecuación de 2.º grado
-- [ ] Raíz cuadrada / potencia
+- [x] Potencia (`xⁿ`) y raíz n-ésima (pantallas separadas; la raíz admite
+      índices impares de negativos)
 - [ ] MCD y MCM
 - [ ] ¿Es primo?
 - [ ] Conversor de bases (bin/oct/hex/dec)

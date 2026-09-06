@@ -161,6 +161,62 @@ public final class Calculadora {
                 discriminante, new Raiz(parteReal, parteImaginaria), new Raiz(parteReal, -parteImaginaria));
     }
 
+    /**
+     * Potencia {@code base}<sup>{@code exponente}</sup>.
+     *
+     * @throws IllegalArgumentException si algún argumento no es finito o el
+     *     resultado no es un número real finito (0 elevado a negativo, base
+     *     negativa con exponente no entero, desbordamiento…)
+     */
+    public static double potencia(double base, double exponente) {
+        exigirFinito(base, Textos.get("calc.nombre.base"));
+        exigirFinito(exponente, Textos.get("calc.nombre.exponente"));
+        double resultado = Math.pow(base, exponente);
+        if (!Double.isFinite(resultado)) {
+            throw new IllegalArgumentException(Textos.get("calc.potencia.indefinida"));
+        }
+        return resultado;
+    }
+
+    /**
+     * Raíz de índice {@code indice} de {@code radicando}. Admite índices impares
+     * de radicando negativo ({@code raiz(-8, 3) == -2}).
+     *
+     * @param indice número entero &ge; 2
+     * @throws IllegalArgumentException si el radicando no es finito, el índice no
+     *     es un entero &ge; 2, o se pide una raíz de índice par de un negativo
+     */
+    public static double raiz(double radicando, double indice) {
+        exigirFinito(radicando, Textos.get("calc.nombre.radicando"));
+        if (!Double.isFinite(indice) || indice < 2 || indice != Math.rint(indice)) {
+            throw new IllegalArgumentException(Textos.get("calc.raiz.indice"));
+        }
+        int n = (int) indice;
+        if (radicando < 0) {
+            if (n % 2 == 0) {
+                throw new IllegalArgumentException(Textos.get("calc.raiz.par.de.negativo"));
+            }
+            return -raizPositiva(-radicando, n);
+        }
+        return raizPositiva(radicando, n);
+    }
+
+    /** Raíz {@code n}-ésima de {@code x >= 0}, afinada con Newton para que las exactas lo sean. */
+    private static double raizPositiva(double x, int n) {
+        if (x == 0.0) {
+            return 0.0;
+        }
+        double r = Math.pow(x, 1.0 / n);
+        for (int i = 0; i < 3; i++) {
+            double rElevadoN1 = Math.pow(r, n - 1);
+            if (rElevadoN1 == 0.0 || !Double.isFinite(rElevadoN1)) {
+                break;
+            }
+            r -= (rElevadoN1 * r - x) / (n * rElevadoN1);
+        }
+        return r;
+    }
+
     private static void exigirFinito(double valor, String nombre) {
         if (!Double.isFinite(valor)) {
             throw new IllegalArgumentException(Textos.get("calc.valor.no.finito", nombre));
