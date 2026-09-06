@@ -8,7 +8,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>
-        <javafx.version>17.0.13</javafx.version>
+        <javafx.version>26.0.2</javafx.version>
         <junit.version>5.10.2</junit.version>
         <testfx.version>4.0.18</testfx.version>
         <monocle.version>17.0.10</monocle.version>
