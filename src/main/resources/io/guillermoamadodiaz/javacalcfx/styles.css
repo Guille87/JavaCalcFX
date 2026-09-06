@@ -18,6 +18,12 @@
     -fx-faint-focus-color: #4b9fe122;
 }
 
+/* En oscuro, el texto de ayuda (prompt) de los campos queda casi negro sobre
+   fondo oscuro: lo aclaramos a un gris legible. */
+.root.tema-oscuro .text-input {
+    -fx-prompt-text-fill: #9aa0a6;
+}
+
 .titulo {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
