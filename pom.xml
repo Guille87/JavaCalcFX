@@ -8,10 +8,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>
-        <javafx.version>17.0.20</javafx.version>
+        <javafx.version>21.0.10</javafx.version>
         <junit.version>6.1.3</junit.version>
         <testfx.version>4.0.18</testfx.version>
-        <monocle.version>17.0.10</monocle.version>
+        <monocle.version>21.0.2</monocle.version>
         <!-- Los tests de UI corren sin pantalla (Monocle). El perfil «headed» lo desactiva. -->
         <headless.args>-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dglass.platform=Monocle -Dmonocle.platform=Headless -Dprism.order=sw -Dprism.text=t2k</headless.args>
         <!-- Lo rellena jacoco:prepare-agent; el valor por defecto vacío permite `-Pheaded` sin JaCoCo. -->

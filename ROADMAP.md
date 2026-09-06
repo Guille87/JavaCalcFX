@@ -52,12 +52,14 @@ Un mini-commit por calculadora.
 
 ## Fase 3 · Calidad y modernización
 
-- [ ] **JaCoCo**: informe de cobertura + badge (opcional: umbral que rompa el build).
-- [ ] **Migrar a JavaFX 21 LTS**: `javafx.version` a `21.0.x` y
-      `openjfx-monocle` a `21.0.2` (el JDK puede seguir en 17; JavaFX 21 lo
-      admite). Quitar el `ignore` de Dependabot para `org.openjfx`. No ir a
-      25/26: no hay Monocle para esas y la CI tendría que pasar a `xvfb`.
-- [ ] **Matriz de CI**: JDK 17 y 21.
+- [x] **JaCoCo**: informe de cobertura (HTML como artefacto, comentario en las
+      PR y badge que se regenera al hacer push a `main`). Pendiente opcional: un
+      umbral que rompa el build.
+- [x] **Migrar a JavaFX 21 LTS**: `javafx.version` a `21.0.10` y
+      `openjfx-monocle` a `21.0.2` (el JDK sigue en 17; JavaFX 21 lo admite).
+      Se mantiene el `ignore` de Dependabot solo para saltos de *major* (22+ no
+      tienen Monocle y la CI tendría que pasar a `xvfb`).
+- [x] **Matriz de CI**: JDK 17 y 21.
 - [ ] Opcional: **SpotBugs** o **Error Prone** como check.
 
 ## Fase 4 · Distribución (Windows)
