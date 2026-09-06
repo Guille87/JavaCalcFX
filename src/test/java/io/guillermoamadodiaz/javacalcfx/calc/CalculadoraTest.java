@@ -405,4 +405,44 @@ class CalculadoraTest {
             assertTrue(abortado.get(), "la comprobación debe abortar al interrumpir el hilo");
         }
     }
+
+    @Nested
+    @DisplayName("Conversor de bases")
+    class ConversorDeBases {
+
+        @Test
+        void decimal_a_las_cuatro_bases() {
+            var c = Calculadora.convertirBase("255");
+            assertEquals("11111111", c.binario());
+            assertEquals("377", c.octal());
+            assertEquals("255", c.decimal());
+            assertEquals("FF", c.hexadecimal());
+        }
+
+        @Test
+        void reconoce_los_prefijos() {
+            assertEquals("255", Calculadora.convertirBase("0xFF").decimal());
+            assertEquals("255", Calculadora.convertirBase("0Xff").decimal());
+            assertEquals("255", Calculadora.convertirBase("0b11111111").decimal());
+            assertEquals("255", Calculadora.convertirBase("0o377").decimal());
+        }
+
+        @Test
+        void admite_signo() {
+            var c = Calculadora.convertirBase("-0xFF");
+            assertEquals("-255", c.decimal());
+            assertEquals("-11111111", c.binario());
+        }
+
+        @Test
+        void cero() {
+            assertEquals("0", Calculadora.convertirBase("0").hexadecimal());
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"", "0xGG", "0b102", "abc", "12.5"})
+        void texto_no_valido_se_rechaza(String texto) {
+            assertThrows(IllegalArgumentException.class, () -> Calculadora.convertirBase(texto));
+        }
+    }
 }

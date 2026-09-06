@@ -40,8 +40,9 @@ its screen catalog).
   `resolverEcuacionCuadratica`, `potencia`, `raiz` (n-th root, handles odd roots of
   negatives, Newton-refined so exact roots come out exact), `mcd`, `mcm` (`Math.absExact`
   / `multiplyExact` guarded), `analizarPrimalidad` (trial division to √n, interruptible;
-  returns the smallest proper divisor for composites)). Returns immutable records
-  (`Triangulo`, `EcuacionCuadratica` with `Raiz`, `Primalidad`). Invalid input throws
+  returns the smallest proper divisor for composites), `convertirBase` (base inferred from
+  a `0b`/`0o`/`0x` prefix)). Returns immutable records (`Triangulo`, `EcuacionCuadratica`
+  with `Raiz`, `Primalidad`, `ConversionBase`). Invalid input throws
   `IllegalArgumentException` whose message comes from `Textos`. Unit-tested by
   `CalculadoraTest`.
 - **`i18n/`** — `Textos` reads the `messages*.properties` files directly (not via
@@ -62,12 +63,13 @@ its screen catalog).
     FX thread; `cancelar()` interrupts it; `cerrar()` (called from `Application.stop()`)
     shuts the executor down. Only one calculation runs at a time.
   - `ConstructorDeFormularios` — builds the generic form screen (bold header, wrapped
-    instructions, one `TextField` per prompt with its `FiltroNumerico`, Enter-default
-    «Calcular», wrapped result label, «Volver» that also fires on Esc via a `KEY_PRESSED`
-    filter on the screen root). Wrapped in a transparent `ScrollPane` so a small window
-    scrolls instead of clipping. Focuses the first field on open. `mostrar(...)` has an
-    overload taking an extra `pasos` function: after a successful calc a «Mostrar pasos»
-    button reveals its step-by-step development.
+    instructions, one `TextField` per prompt with its `FiltroNumerico` — pass `null` for the
+    `Tipo` to skip filtering, e.g. to allow hex digits, Enter-default «Calcular», wrapped
+    result label, «Volver» that also fires on Esc via a `KEY_PRESSED` filter on the screen
+    root). Wrapped in a transparent `ScrollPane` so a small window scrolls instead of
+    clipping. Focuses the first field on open. `mostrar(...)` has an overload taking an
+    extra `pasos` function: after a successful calc a «Mostrar pasos» button reveals its
+    step-by-step development.
   - `MensajesDeError` — pure `Throwable → String` mapping (`NumberFormatException` /
     `IllegalArgumentException` / `ArithmeticException` / cancellation). Unit-tested.
   - `Formato` — pure number-to-text formatting (thread-safe: a fresh `DecimalFormat` per

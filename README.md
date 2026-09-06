@@ -46,6 +46,7 @@ error legible) en la misma pantalla.
 | **Raíz n-ésima** | Radicando y un índice entero ≥ 2 | La raíz; admite índices impares de radicando negativo (`∛-8 = -2`) |
 | **MCD y MCM** | Dos enteros | El máximo común divisor y el mínimo común múltiplo |
 | **¿Es primo?** | Un entero | Si es primo; si es compuesto, un divisor y la factorización |
+| **Conversor de bases** | Un entero (prefijos `0b`/`0o`/`0x`, o decimal) | El número en binario, octal, decimal y hexadecimal |
 
 Aspectos transversales a todas las pantallas:
 

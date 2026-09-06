@@ -113,7 +113,8 @@ public class SelectorDeOpciones extends Application {
                                 new EntradaMenu("factorial", this::pantallaFactorial),
                                 new EntradaMenu("multiplo", this::pantallaMultiplo),
                                 new EntradaMenu("mcd", this::pantallaMcd),
-                                new EntradaMenu("primo", this::pantallaPrimo))),
+                                new EntradaMenu("primo", this::pantallaPrimo),
+                                new EntradaMenu("base", this::pantallaBase))),
                 new Categoria(
                         "potencias",
                         List.of(
@@ -394,6 +395,18 @@ public class SelectorDeOpciones extends Application {
                                 Formato.entero(n / divisor));
                     }
                     return Textos.get("primo.resultado.no", Formato.entero(n));
+                });
+    }
+
+    private void pantallaBase() {
+        formularios.mostrar(
+                Textos.get("base.titulo"),
+                Textos.get("base.instrucciones"),
+                List.of(Textos.get("base.campo.numero")),
+                null, // sin filtro: el número puede llevar prefijo y dígitos hexadecimales
+                valores -> {
+                    Calculadora.ConversionBase c = Calculadora.convertirBase(valores.get(0));
+                    return Textos.get("base.resultado", c.binario(), c.octal(), c.decimal(), c.hexadecimal());
                 });
     }
 

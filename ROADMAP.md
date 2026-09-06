@@ -41,7 +41,8 @@ Un mini-commit por calculadora.
       índices impares de negativos)
 - [x] MCD y MCM
 - [x] ¿Es primo? (da un divisor y la factorización si es compuesto)
-- [ ] Conversor de bases (bin/oct/hex/dec)
+- [x] Conversor de bases (bin/oct/hex/dec; la base de entrada se infiere del
+      prefijo 0b/0o/0x)
 - [ ] Porcentajes / regla de tres
 - [ ] IMC
 - [x] **Menú agrupado por categorías** (Geometría · Aritmética · Potencias y
