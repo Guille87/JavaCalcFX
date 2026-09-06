@@ -1,8 +1,15 @@
 package io.guillermoamadodiaz.javacalcfx.i18n;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.MissingResourceException;
+import java.util.Properties;
 import java.util.prefs.Preferences;
 
 /**
@@ -10,17 +17,18 @@ import java.util.prefs.Preferences;
  *
  * <p>El idioma inicial es el que se guardó en la última sesión y, si no hay
  * ninguno, el del sistema ({@link Locale#getDefault()}). {@link #seleccionar}
- * lo cambia y lo recuerda. Si un idioma no tiene traducción se usa
- * {@code messages.properties} (español). Sin dependencias de JavaFX, para que
- * tanto la capa de dominio como la de interfaz puedan usarlo.
+ * lo cambia y lo recuerda. Los ficheros {@code messages*.properties} se leen
+ * directamente (sin {@link java.util.ResourceBundle}, cuya búsqueda depende del
+ * locale por defecto): {@code messages.properties} es español y sirve de base;
+ * cada idioma añade su fichero encima. Sin dependencias de JavaFX.
  */
 public final class Textos {
 
-    private static final String BUNDLE = "io.guillermoamadodiaz.javacalcfx.i18n.messages";
+    private static final String RUTA = "/io/guillermoamadodiaz/javacalcfx/i18n/";
     private static final String CLAVE_IDIOMA = "idioma";
 
     private static Idioma idioma = idiomaInicial();
-    private static ResourceBundle bundle = cargar(idioma.locale());
+    private static Properties textos = cargar(idioma);
 
     private Textos() {
     }
@@ -41,8 +49,30 @@ public final class Textos {
         return Idioma.desde(Locale.getDefault());
     }
 
-    private static ResourceBundle cargar(Locale locale) {
-        return ResourceBundle.getBundle(BUNDLE, locale);
+    private static Properties leer(String fichero) {
+        Properties p = new Properties();
+        try (InputStream in = Textos.class.getResourceAsStream(RUTA + fichero)) {
+            if (in == null) {
+                throw new MissingResourceException(
+                        "No se encuentra " + fichero, Textos.class.getName(), fichero);
+            }
+            try (Reader r = new InputStreamReader(in, StandardCharsets.UTF_8)) {
+                p.load(r);
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        return p;
+    }
+
+    private static Properties cargar(Idioma idioma) {
+        Properties base = leer("messages.properties"); // español, siempre presente
+        if (idioma == Idioma.ESPANOL) {
+            return base;
+        }
+        Properties p = new Properties(base); // lo que falte, se toma del español
+        p.putAll(leer("messages_" + idioma.locale().getLanguage() + ".properties"));
+        return p;
     }
 
     /** Idioma activo. */
@@ -53,7 +83,7 @@ public final class Textos {
     /** Cambia el idioma y lo recuerda para próximos arranques. */
     public static void seleccionar(Idioma nuevo) {
         idioma = nuevo;
-        bundle = cargar(nuevo.locale());
+        textos = cargar(nuevo);
         try {
             preferencias().put(CLAVE_IDIOMA, nuevo.name());
         } catch (RuntimeException ignorado) {
@@ -61,19 +91,24 @@ public final class Textos {
         }
     }
 
-    /** Cambia solo el bundle a un locale arbitrario, sin persistir. Lo usan los tests. */
+    /** Cambia el idioma sin persistirlo. Lo usan los tests. */
     public static void usarIdioma(Locale locale) {
         idioma = Idioma.desde(locale);
-        bundle = cargar(locale);
+        textos = cargar(idioma);
     }
 
     /** Texto asociado a {@code clave}. */
     public static String get(String clave) {
-        return bundle.getString(clave);
+        String valor = textos.getProperty(clave);
+        if (valor == null) {
+            throw new MissingResourceException(
+                    "Falta la clave " + clave, Textos.class.getName(), clave);
+        }
+        return valor;
     }
 
     /** Texto de {@code clave} con {@code {0}}, {@code {1}}… sustituidos por {@code args}. */
     public static String get(String clave, Object... args) {
-        return MessageFormat.format(bundle.getString(clave), args);
+        return MessageFormat.format(get(clave), args);
     }
 }

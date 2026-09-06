@@ -127,8 +127,8 @@ paquete raíz (la `Application` y su catálogo de pantallas).
   una entrada inválida, lanza `IllegalArgumentException` con un mensaje apto para
   el usuario. `resolverTrianguloRectangulo` devuelve un `record Triangulo`
   inmutable. Es la capa cubierta por tests unitarios.
-- **`i18n/`** — `Textos` carga el `ResourceBundle` `messages` (español de base,
-  inglés disponible) y resuelve claves con sustitución de parámetros vía
+- **`i18n/`** — `Textos` lee los ficheros `messages*.properties` (español de
+  base, inglés encima) y resuelve claves con sustitución de parámetros vía
   `MessageFormat`; `Idioma` es el enum del selector. El idioma se elige desde el
   menú y se recuerda entre sesiones (`java.util.prefs`).
 - **`ui/`** — piezas pequeñas con una sola responsabilidad:
@@ -170,7 +170,7 @@ JavaCalcFX/
     │   │   └── io/guillermoamadodiaz/javacalcfx/
     │   │       ├── SelectorDeOpciones.java       Application + catálogo de pantallas
     │   │       ├── calc/Calculadora.java         lógica matemática pura y validada
-    │   │       ├── i18n/                         Textos (ResourceBundle) e Idioma
+    │   │       ├── i18n/                         Textos (lector de .properties) e Idioma
     │   │       └── ui/                           Navegador, CalculosAsync,
     │   │                                         ConstructorDeFormularios, MensajesDeError,
     │   │                                         Formato, Entrada, FiltroNumerico, Botones
