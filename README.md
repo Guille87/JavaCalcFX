@@ -272,7 +272,8 @@ JavaCalcFX/
         ├── InterfazTest.java                    TestFX: navegación y mensajes en pantalla
         ├── calc/CalculadoraTest.java            JUnit 5, casos parametrizados y @Nested
         ├── i18n/{Textos,Idioma}Test.java
-        └── ui/{Formato,MensajesDeError,Entrada,FiltroNumerico,EstadoVentana,PasoAPasoCuadratica}Test.java
+        └── ui/{Formato,MensajesDeError,Entrada,FiltroNumerico,EstadoVentana,Tema,
+             PasoAPaso{Cuadratica,Pitagoras,Cilindro,Proporciones}}Test.java
 ```
 
 ---
@@ -303,22 +304,25 @@ distinto de `0` es múltiplo de `0`; por eso `esMultiplo(a, 0)` es `true` solo s
 
 ## Cómo añadir una calculadora nueva
 
-1. Añade un método puro a `Calculadora` con sus precondiciones **y un test**.
-2. Añade sus textos (título, instrucciones, campos, resultado y
-   `menu.boton.<clave>` + `.tooltip`) a `messages.properties` y
+1. Añade un método puro a `Calculadora` con sus precondiciones (lanza
+   `ErrorDeCalculo` con una clave ante una entrada inválida) **y un test**.
+2. Añade sus textos (título, instrucciones, campos, resultado, `menu.boton.<clave>`
+   + `.tooltip` y las claves de error) a `messages.properties` y
    `messages_en.properties`.
 3. Crea un método `pantallaX()` que llame a `formularios.mostrar(...)` con el
    título, las instrucciones, los `prompts`, el `Tipo` de campo y la función de
-   presentación (todo vía `Textos.get(...)`).
-4. Añade una entrada `botonMenu("<clave>", this::pantallaX)` en `mostrarMenu()`.
+   presentación (todo vía `Textos.get(...)`); opcionalmente, una función `pasos`.
+4. Añade una `EntradaMenu("<clave>", this::pantallaX)` en la `Categoria` que
+   corresponda de `catalogo()`.
 
 ---
 
 ## Contribución
 
-¡Se aceptan contribuciones! Si encuentras un problema, tienes una sugerencia o
-quieres aportar código, abre un *issue* o envía un *pull request*. Antes de
-enviarlo, ejecuta `mvn clean test` y mantén la convención de nombres en español.
+¡Se aceptan contribuciones! Abre un *issue* o envía un *pull request*. Las
+convenciones (formato, textos, mensajes de commit, cómo añadir una calculadora,
+cómo publicar una versión) están en [`CONTRIBUTING.md`](CONTRIBUTING.md); los
+cambios de cada versión, en [`CHANGELOG.md`](CHANGELOG.md).
 
 ---
 

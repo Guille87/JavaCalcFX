@@ -91,6 +91,6 @@ Explicación desarrollada del cálculo, en notación lineal, tras un botón
 - [x] Desacoplar `calc` de `Textos`: `ErrorDeCalculo` lleva la clave del mensaje
       y sus argumentos; `ui/MensajesDeError` traduce. El paquete `calc` ya no
       importa nada del resto del proyecto.
-- [ ] `CHANGELOG.md` / `CONTRIBUTING.md`.
+- [x] `CHANGELOG.md` / `CONTRIBUTING.md`.
 - [x] Copiar el resultado al portapapeles (botón «Copiar» tras un cálculo).
 - [ ] Historial de cálculos.
