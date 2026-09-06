@@ -14,6 +14,8 @@
         <monocle.version>17.0.10</monocle.version>
         <!-- Los tests de UI corren sin pantalla (Monocle). El perfil «headed» lo desactiva. -->
         <headless.args>-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dglass.platform=Monocle -Dmonocle.platform=Headless -Dprism.order=sw -Dprism.text=t2k</headless.args>
+        <!-- Lo rellena jacoco:prepare-agent; el valor por defecto vacío permite `-Pheaded` sin JaCoCo. -->
+        <jacoco.argLine/>
     </properties>
 
     <dependencies>
@@ -81,8 +83,34 @@
                 <configuration>
                     <!-- TestFX no funciona bien en el module-path: los tests van por classpath. -->
                     <useModulePath>false</useModulePath>
-                    <argLine>${headless.args}</argLine>
+                    <!-- @{jacoco.argLine} lo inyecta jacoco:prepare-agent en tiempo de ejecución. -->
+                    <argLine>@{jacoco.argLine} ${headless.args}</argLine>
                 </configuration>
+            </plugin>
+
+            <!-- Cobertura: `mvn test` genera target/site/jacoco/ (HTML + jacoco.xml). -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.13</version>
+                <configuration>
+                    <propertyName>jacoco.argLine</propertyName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>

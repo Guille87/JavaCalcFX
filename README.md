@@ -1,6 +1,7 @@
 # JavaCalcFX — Calculadora Matemática
 
 [![CI](https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml/badge.svg)](https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml)
+[![Cobertura](.github/badges/jacoco.svg)](https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Aplicación de escritorio escrita en **Java 17** con **JavaFX 17** que reúne
@@ -137,6 +138,11 @@ mediante Monocle; no hace falta configurar nada. Para verlos con ventana:
 ```bash
 mvn test -Pheaded -Dtest=InterfazTest
 ```
+
+`mvn test` genera además el informe de cobertura de JaCoCo en
+`target/site/jacoco/index.html`. La CI publica el HTML como artefacto, comenta
+la cobertura en cada *pull request* y actualiza el badge de arriba. Los tests
+se ejecutan en la CI con **JDK 17 y 21**.
 
 ---
 
