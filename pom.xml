@@ -8,7 +8,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>
-        <javafx.version>21.0.10</javafx.version>
+        <javafx.version>21.0.12</javafx.version>
         <junit.version>6.1.3</junit.version>
         <testfx.version>4.0.18</testfx.version>
         <!-- Monocle se queda en la 17.x: es compatible con JavaFX 21 en runtime y
@@ -95,7 +95,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.13</version>
+                <version>0.8.15</version>
                 <configuration>
                     <propertyName>jacoco.argLine</propertyName>
                 </configuration>
