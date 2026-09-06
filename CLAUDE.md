@@ -11,8 +11,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   `CalculadoraTest` groups cases in `@Nested` classes (`TrianguloRectangulo`, `AreaCilindro`,
   `AnioBisiesto`, `Factorial`, `Multiplos`, `Notas`), so a nested method needs the enclosing
   class: `-Dtest='CalculadoraTest$Factorial#rechaza_negativos'`.
-  Other test classes: `i18n/TextosTest` and, in `ui`, `FormatoTest`, `MensajesDeErrorTest`,
-  `EntradaTest`, `FiltroNumericoTest`.
+  Other test classes: `i18n/TextosTest`, `i18n/IdiomaTest`, and in `ui` `FormatoTest`,
+  `MensajesDeErrorTest`, `EntradaTest`, `FiltroNumericoTest`.
 
 No linter is configured. `.github/workflows/ci.yml` runs `mvn -B clean test` on JDK 17 for
 every push and pull request.
@@ -32,11 +32,14 @@ its screen catalog).
   `esMultiplo`, `media` (grades in `[NOTA_MINIMA, NOTA_MAXIMA]` = 0..10), `estaAprobado`).
   Invalid input throws `IllegalArgumentException` whose message comes from `Textos`.
   Unit-tested by `CalculadoraTest`.
-- **`i18n/Textos.java`** — loads `ResourceBundle` `messages` for `Locale.getDefault()`
-  (`messages.properties` is Spanish and the fallback; `messages_en.properties` is English).
-  `Textos.get(key)` / `Textos.get(key, args...)` (the latter via `MessageFormat` — a literal
-  `'` in a parametrized value must be doubled). `usarIdioma(Locale)` switches at runtime
-  (tests use it). All user-visible strings go through here.
+- **`i18n/`** — `Textos` loads `ResourceBundle` `messages` (`messages.properties` is Spanish
+  and the fallback; `messages_en.properties` is English). `Textos.get(key)` /
+  `Textos.get(key, args...)` (the latter via `MessageFormat` — a literal `'` in a
+  parametrized value must be doubled). `seleccionar(Idioma)` switches the language and
+  persists it via `java.util.prefs`; `idioma()` reads the current one; `usarIdioma(Locale)`
+  swaps the bundle without persisting (tests). `Idioma` is the two-value enum
+  (`ESPANOL` / `INGLES`) behind the menu's language `ComboBox`. All user-visible strings
+  go through `Textos`.
 - **`ui/` infrastructure** — small single-responsibility pieces:
   - `Navegador` — owns the root `StackPane` (always one child); `mostrar(Node)` swaps the
     screen and first runs an `alNavegar` hook (wired to cancel the in-flight calculation).
@@ -58,9 +61,10 @@ its screen catalog).
     check. Unit-tested. Each `pantallaX()` passes the `Tipo` for its fields.
   - `Botones` — button factory.
 - **`SelectorDeOpciones.java`** — thin `Application`: wires `Navegador` + `CalculosAsync` +
-  `ConstructorDeFormularios`, loads `styles.css`, builds the titled 6-button menu, and
-  defines one `pantallaX()` per calculator (each declares its title, prompts, field `Tipo`
-  and display function). `stop()` delegates to `calculos.cerrar()`.
+  `ConstructorDeFormularios`, loads `styles.css`, builds the menu (title, 6-button grid, and
+  a top-right language `ComboBox` that calls `Textos.seleccionar(...)` and rebuilds the
+  menu), and defines one `pantallaX()` per calculator (each declares its title, prompts,
+  field `Tipo` and display function). `stop()` delegates to `calculos.cerrar()`.
 - `Calculadora.factorial` polls `Thread.isInterrupted()` so a cancelled long computation
   aborts promptly.
 

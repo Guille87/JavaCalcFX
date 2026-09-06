@@ -48,6 +48,8 @@ Aspectos transversales a todas las pantallas:
   «Calcular».
 - **Formato numérico legible**: los decimales se muestran con
   `#,##0.####` en lugar de la representación cruda de `double`.
+- **Idioma**: español o inglés, seleccionable desde el menú; la elección se
+  recuerda para el siguiente arranque.
 
 ---
 
@@ -125,9 +127,10 @@ paquete raíz (la `Application` y su catálogo de pantallas).
   una entrada inválida, lanza `IllegalArgumentException` con un mensaje apto para
   el usuario. `resolverTrianguloRectangulo` devuelve un `record Triangulo`
   inmutable. Es la capa cubierta por tests unitarios.
-- **`i18n/Textos.java`** — carga el `ResourceBundle` `messages` según el idioma
-  del sistema (español de base, inglés disponible) y resuelve claves, con
-  sustitución de parámetros vía `MessageFormat`.
+- **`i18n/`** — `Textos` carga el `ResourceBundle` `messages` (español de base,
+  inglés disponible) y resuelve claves con sustitución de parámetros vía
+  `MessageFormat`; `Idioma` es el enum del selector. El idioma se elige desde el
+  menú y se recuerda entre sesiones (`java.util.prefs`).
 - **`ui/`** — piezas pequeñas con una sola responsabilidad:
   - `Navegador` — contenedor raíz (`StackPane` con un único hijo); `mostrar(Node)`
     intercambia la pantalla y antes ejecuta un *hook* (cancelar el cálculo en curso).
@@ -163,11 +166,11 @@ JavaCalcFX/
 └── src/
     ├── main/
     │   ├── java/
-    │   │   ├── module-info.java              requires javafx.controls; exporta los 4 paquetes
+    │   │   ├── module-info.java              requires javafx.controls y java.prefs; exporta los 4 paquetes
     │   │   └── io/guillermoamadodiaz/javacalcfx/
     │   │       ├── SelectorDeOpciones.java       Application + catálogo de pantallas
     │   │       ├── calc/Calculadora.java         lógica matemática pura y validada
-    │   │       ├── i18n/Textos.java              acceso al ResourceBundle
+    │   │       ├── i18n/                         Textos (ResourceBundle) e Idioma
     │   │       └── ui/                           Navegador, CalculosAsync,
     │   │                                         ConstructorDeFormularios, MensajesDeError,
     │   │                                         Formato, Entrada, FiltroNumerico, Botones
@@ -176,7 +179,7 @@ JavaCalcFX/
     │       └── i18n/messages[_en].properties
     └── test/java/io/guillermoamadodiaz/javacalcfx/
         ├── calc/CalculadoraTest.java            JUnit 5, casos parametrizados y @Nested
-        ├── i18n/TextosTest.java
+        ├── i18n/{Textos,Idioma}Test.java
         └── ui/{Formato,MensajesDeError,Entrada,FiltroNumerico}Test.java
 ```
 

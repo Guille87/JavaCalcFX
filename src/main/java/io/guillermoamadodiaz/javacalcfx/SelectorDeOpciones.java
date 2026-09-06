@@ -6,6 +6,7 @@ import java.util.List;
 
 import io.guillermoamadodiaz.javacalcfx.calc.Calculadora;
 import io.guillermoamadodiaz.javacalcfx.calc.Calculadora.Triangulo;
+import io.guillermoamadodiaz.javacalcfx.i18n.Idioma;
 import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 import io.guillermoamadodiaz.javacalcfx.ui.Botones;
 import io.guillermoamadodiaz.javacalcfx.ui.CalculosAsync;
@@ -19,8 +20,12 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -44,8 +49,11 @@ public class SelectorDeOpciones extends Application {
     private final ConstructorDeFormularios formularios =
             new ConstructorDeFormularios(navegador, calculos, this::mostrarMenu);
 
+    private Stage escenario;
+
     @Override
     public void start(Stage escenario) {
+        this.escenario = escenario;
         escenario.setTitle(Textos.get("app.titulo"));
         raiz.setPadding(new Insets(20));
 
@@ -92,9 +100,32 @@ public class SelectorDeOpciones extends Application {
             botonera.add(botones[i], i % COLUMNAS_MENU, i / COLUMNAS_MENU);
         }
 
-        VBox pantalla = new VBox(20, titulo, botonera);
-        pantalla.setAlignment(Pos.CENTER);
-        navegador.mostrar(pantalla);
+        VBox centro = new VBox(20, titulo, botonera);
+        centro.setAlignment(Pos.CENTER);
+
+        BorderPane menu = new BorderPane(centro);
+        menu.setTop(barraDeIdioma());
+        navegador.mostrar(menu);
+    }
+
+    /** Selector de idioma alineado arriba a la derecha del menú. */
+    private HBox barraDeIdioma() {
+        ComboBox<Idioma> selector = new ComboBox<>();
+        selector.getItems().setAll(Idioma.values());
+        selector.setValue(Textos.idioma());
+        selector.setTooltip(new Tooltip(Textos.get("menu.idioma.tooltip")));
+        selector.setOnAction(e -> {
+            Idioma elegido = selector.getValue();
+            if (elegido != null && elegido != Textos.idioma()) {
+                Textos.seleccionar(elegido);
+                escenario.setTitle(Textos.get("app.titulo"));
+                mostrarMenu(); // reconstruye el menú ya traducido
+            }
+        });
+
+        HBox barra = new HBox(selector);
+        barra.setAlignment(Pos.CENTER_RIGHT);
+        return barra;
     }
 
     // ------------------------------------------------------------------
