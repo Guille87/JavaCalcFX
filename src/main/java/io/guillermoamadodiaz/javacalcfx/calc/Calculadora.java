@@ -161,6 +161,47 @@ public final class Calculadora {
         return new Primalidad(true, 0);
     }
 
+    /**
+     * Convierte un entero a binario, octal, decimal y hexadecimal. La base de
+     * entrada se infiere del prefijo: {@code 0b} binario, {@code 0o} octal,
+     * {@code 0x} hexadecimal; sin prefijo, decimal. Admite signo.
+     *
+     * @throws IllegalArgumentException si el texto no es un entero válido
+     */
+    public static ConversionBase convertirBase(String texto) {
+        String limpio = texto == null ? "" : texto.trim();
+        boolean negativo = limpio.startsWith("-");
+        String cuerpo = negativo ? limpio.substring(1) : limpio;
+
+        int base = 10;
+        if (cuerpo.length() > 2 && cuerpo.charAt(0) == '0') {
+            switch (Character.toLowerCase(cuerpo.charAt(1))) {
+                case 'b' -> base = 2;
+                case 'o' -> base = 8;
+                case 'x' -> base = 16;
+                default -> {}
+            }
+            if (base != 10) {
+                cuerpo = cuerpo.substring(2);
+            }
+        }
+
+        long valor;
+        try {
+            valor = Long.parseLong(cuerpo, base);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(Textos.get("calc.base.numero.invalido"));
+        }
+        if (negativo) {
+            valor = -valor;
+        }
+        return new ConversionBase(
+                Long.toString(valor, 2),
+                Long.toString(valor, 8),
+                Long.toString(valor, 10),
+                Long.toString(valor, 16).toUpperCase());
+    }
+
     /** Nota mínima y máxima admitidas por {@link #media(double...)}. */
     public static final double NOTA_MINIMA = 0.0;
 
@@ -341,4 +382,7 @@ public final class Calculadora {
             return menorDivisorPropio > 1;
         }
     }
+
+    /** Un entero representado en las cuatro bases habituales. */
+    public record ConversionBase(String binario, String octal, String decimal, String hexadecimal) {}
 }

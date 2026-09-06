@@ -58,7 +58,7 @@ public final class ConstructorDeFormularios {
             String titulo,
             String instrucciones,
             List<String> prompts,
-            FiltroNumerico.Tipo tipoCampo,
+            FiltroNumerico.Tipo tipoCampo, // {@code null} = sin filtro (p. ej. permitir dígitos hex)
             Function<List<String>, String> calculo,
             Function<List<String>, String> pasos) {
         VBox pantalla = new VBox(ESPACIADO);
@@ -84,7 +84,9 @@ public final class ConstructorDeFormularios {
         for (String prompt : prompts) {
             TextField campo = new TextField();
             campo.setPromptText(prompt);
-            FiltroNumerico.aplicarA(campo, tipoCampo);
+            if (tipoCampo != null) {
+                FiltroNumerico.aplicarA(campo, tipoCampo);
+            }
             campos.add(campo);
         }
 
