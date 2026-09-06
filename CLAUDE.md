@@ -59,7 +59,7 @@ its screen catalog).
     instructions, one `TextField` per prompt with its `FiltroNumerico`, Enter-default
     «Calcular», wrapped result label, «Volver» that also fires on Esc via a `KEY_PRESSED`
     filter on the screen root). Wrapped in a transparent `ScrollPane` so a small window
-    scrolls instead of clipping.
+    scrolls instead of clipping. Focuses the first field on open.
   - `MensajesDeError` — pure `Throwable → String` mapping (`NumberFormatException` /
     `IllegalArgumentException` / `ArithmeticException` / cancellation). Unit-tested.
   - `Formato` — pure number-to-text formatting (thread-safe: a fresh `DecimalFormat` per
@@ -69,6 +69,9 @@ its screen catalog).
     typing, in two variants (`Tipo.ENTERO` / `Tipo.DECIMAL`); `esValido` is a pure prefix
     check. Unit-tested. Each `pantallaX()` passes the `Tipo` for its fields.
   - `Botones` — button factory (`crear(texto, accion)` / `crear(texto, tooltip, accion)`).
+  - `EstadoVentana` — persists window size/position via `java.util.prefs`; `restaurar(stage)`
+    before `show()`, `vigilar(stage)` after. Discards sizes below the minimum or a position
+    off every screen. Pure checks (`tamanoValido`, `puntoVisible`) are unit-tested.
 - **`SelectorDeOpciones.java`** — thin `Application`: wires `Navegador` + `CalculosAsync` +
   `ConstructorDeFormularios`, loads `styles.css` and the window icons (`resources/.../icons/`),
   sets a minimum window size, builds the menu (title, 6-button grid via `botonMenu(clave,

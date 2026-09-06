@@ -56,6 +56,8 @@ Aspectos transversales a todas las pantallas:
   `#,##0.####` en lugar de la representación cruda de `double`.
 - **Idioma**: español o inglés, seleccionable desde el menú; la elección se
   recuerda para el siguiente arranque.
+- **Ventana**: recuerda su tamaño y posición entre sesiones; al abrir un
+  formulario el cursor ya está en el primer campo.
 
 ---
 
@@ -189,7 +191,8 @@ JavaCalcFX/
     │   │       ├── i18n/                         Textos (lector de .properties) e Idioma
     │   │       └── ui/                           Navegador, CalculosAsync,
     │   │                                         ConstructorDeFormularios, MensajesDeError,
-    │   │                                         Formato, Entrada, FiltroNumerico, Botones
+    │   │                                         Formato, Entrada, FiltroNumerico, Botones,
+    │   │                                         EstadoVentana
     │   └── resources/io/guillermoamadodiaz/javacalcfx/
     │       ├── styles.css
     │       ├── icons/icon-*.png
@@ -198,7 +201,7 @@ JavaCalcFX/
         ├── InterfazTest.java                    TestFX: navegación y mensajes en pantalla
         ├── calc/CalculadoraTest.java            JUnit 5, casos parametrizados y @Nested
         ├── i18n/{Textos,Idioma}Test.java
-        └── ui/{Formato,MensajesDeError,Entrada,FiltroNumerico}Test.java
+        └── ui/{Formato,MensajesDeError,Entrada,FiltroNumerico,EstadoVentana}Test.java
 ```
 
 ---
