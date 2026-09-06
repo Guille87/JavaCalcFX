@@ -130,7 +130,8 @@ public class SelectorDeOpciones extends Application {
                         "otros",
                         List.of(
                                 new EntradaMenu("bisiesto", this::pantallaBisiesto),
-                                new EntradaMenu("aprobado", this::pantallaAprobado))));
+                                new EntradaMenu("aprobado", this::pantallaAprobado),
+                                new EntradaMenu("imc", this::pantallaImc))));
     }
 
     private void mostrarMenu() {
@@ -451,6 +452,22 @@ public class SelectorDeOpciones extends Application {
                             Formato.numero(b),
                             Formato.numero(c),
                             Formato.numero(Calculadora.reglaDeTres(a, b, c)));
+                });
+    }
+
+    private void pantallaImc() {
+        formularios.mostrar(
+                Textos.get("imc.titulo"),
+                Textos.get("imc.instrucciones"),
+                List.of(Textos.get("imc.campo.peso"), Textos.get("imc.campo.altura")),
+                FiltroNumerico.Tipo.DECIMAL,
+                valores -> {
+                    Calculadora.IndiceMasaCorporal r =
+                            Calculadora.imc(Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1)));
+                    return Textos.get(
+                            "imc.resultado",
+                            Formato.dosDecimales(r.valor()),
+                            Textos.get("imc.categoria." + r.categoria().name().toLowerCase()));
                 });
     }
 

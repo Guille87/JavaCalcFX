@@ -45,7 +45,7 @@ Un mini-commit por calculadora.
       prefijo 0b/0o/0x)
 - [x] Porcentaje (X % de una cantidad) y regla de tres directa (pantallas
       separadas, categoría «Proporciones y porcentajes»)
-- [ ] IMC
+- [x] IMC (peso/altura², con categoría según la OMS)
 - [x] **Menú agrupado por categorías** (Geometría · Aritmética · Potencias y
       ecuaciones · Otros). El catálogo es una lista de `Categoria` en
       `SelectorDeOpciones`.

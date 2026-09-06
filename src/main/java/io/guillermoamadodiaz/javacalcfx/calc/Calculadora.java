@@ -229,6 +229,24 @@ public final class Calculadora {
         return c * b / a;
     }
 
+    /**
+     * Índice de masa corporal: {@code IMC = peso / altura²}, con el peso en
+     * kilogramos y la altura en metros. Devuelve el valor y su categoría según
+     * los rangos de la OMS para personas adultas.
+     *
+     * @throws IllegalArgumentException si el peso o la altura no son números
+     *     finitos y positivos, o si el resultado no es finito
+     */
+    public static IndiceMasaCorporal imc(double peso, double altura) {
+        exigirPositivoFinito(peso, Textos.get("calc.nombre.peso"));
+        exigirPositivoFinito(altura, Textos.get("calc.nombre.altura"));
+        double valor = peso / (altura * altura);
+        if (!Double.isFinite(valor)) {
+            throw new IllegalArgumentException(Textos.get("calc.imc.indefinido"));
+        }
+        return new IndiceMasaCorporal(valor, CategoriaImc.de(valor));
+    }
+
     /** Nota mínima y máxima admitidas por {@link #media(double...)}. */
     public static final double NOTA_MINIMA = 0.0;
 
@@ -412,4 +430,29 @@ public final class Calculadora {
 
     /** Un entero representado en las cuatro bases habituales. */
     public record ConversionBase(String binario, String octal, String decimal, String hexadecimal) {}
+
+    /** Categoría de peso según el IMC (rangos de la OMS para personas adultas). */
+    public enum CategoriaImc {
+        BAJO_PESO,
+        NORMAL,
+        SOBREPESO,
+        OBESIDAD;
+
+        /** Clasifica un IMC ({@code >= 0}) en su categoría. */
+        static CategoriaImc de(double imc) {
+            if (imc < 18.5) {
+                return BAJO_PESO;
+            }
+            if (imc < 25.0) {
+                return NORMAL;
+            }
+            if (imc < 30.0) {
+                return SOBREPESO;
+            }
+            return OBESIDAD;
+        }
+    }
+
+    /** Resultado de {@link #imc(double, double)}: el valor y su categoría. */
+    public record IndiceMasaCorporal(double valor, CategoriaImc categoria) {}
 }

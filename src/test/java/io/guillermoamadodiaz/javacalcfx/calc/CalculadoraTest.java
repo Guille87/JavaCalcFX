@@ -474,4 +474,32 @@ class CalculadoraTest {
             assertThrows(IllegalArgumentException.class, () -> Calculadora.reglaDeTres(1, Double.POSITIVE_INFINITY, 1));
         }
     }
+
+    @Nested
+    @DisplayName("Índice de masa corporal")
+    class IndiceMasaCorporal {
+
+        @Test
+        void valor_y_formula() {
+            assertEquals(22.86, Calculadora.imc(70, 1.75).valor(), 0.01);
+        }
+
+        @ParameterizedTest
+        @CsvSource({
+            "50, 1.75, BAJO_PESO",
+            "70, 1.75, NORMAL",
+            "80, 1.75, SOBREPESO",
+            "100, 1.75, OBESIDAD",
+        })
+        void clasifica_segun_los_rangos_de_la_oms(double peso, double altura, Calculadora.CategoriaImc esperada) {
+            assertEquals(esperada, Calculadora.imc(peso, altura).categoria());
+        }
+
+        @Test
+        void rechaza_peso_o_altura_no_positivos() {
+            assertThrows(IllegalArgumentException.class, () -> Calculadora.imc(0, 1.75));
+            assertThrows(IllegalArgumentException.class, () -> Calculadora.imc(70, -1));
+            assertThrows(IllegalArgumentException.class, () -> Calculadora.imc(Double.NaN, 1.75));
+        }
+    }
 }
