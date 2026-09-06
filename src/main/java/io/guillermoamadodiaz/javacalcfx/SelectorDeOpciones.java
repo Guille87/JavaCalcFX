@@ -17,6 +17,8 @@ import io.guillermoamadodiaz.javacalcfx.ui.Navegador;
 import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoCilindro;
 import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoCuadratica;
 import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoPitagoras;
+import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoPorcentaje;
+import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoReglaDeTres;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -434,7 +436,9 @@ public class SelectorDeOpciones extends Application {
                             Formato.numero(porcentaje),
                             Formato.numero(cantidad),
                             Formato.numero(Calculadora.porcentajeDe(porcentaje, cantidad)));
-                });
+                },
+                valores ->
+                        PasoAPasoPorcentaje.desarrollo(Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1))));
     }
 
     private void pantallaReglaDeTres() {
@@ -456,7 +460,9 @@ public class SelectorDeOpciones extends Application {
                             Formato.numero(b),
                             Formato.numero(c),
                             Formato.numero(Calculadora.reglaDeTres(a, b, c)));
-                });
+                },
+                valores -> PasoAPasoReglaDeTres.desarrollo(
+                        Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1)), Entrada.doble(valores.get(2))));
     }
 
     private void pantallaImc() {
