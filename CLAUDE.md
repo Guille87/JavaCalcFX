@@ -70,9 +70,10 @@ its screen catalog).
     check. Unit-tested. Each `pantallaX()` passes the `Tipo` for its fields.
   - `Botones` — button factory (`crear(texto, accion)` / `crear(texto, tooltip, accion)`).
 - **`SelectorDeOpciones.java`** — thin `Application`: wires `Navegador` + `CalculosAsync` +
-  `ConstructorDeFormularios`, loads `styles.css`, sets a minimum window size, builds the
-  menu (title, 6-button grid via `botonMenu(clave, accion)` with per-button tooltips, and a
-  top-right language `ComboBox` that calls `Textos.seleccionar(...)` and rebuilds the menu),
+  `ConstructorDeFormularios`, loads `styles.css` and the window icons (`resources/.../icons/`),
+  sets a minimum window size, builds the menu (title, 6-button grid via `botonMenu(clave,
+  accion)` with per-button tooltips, and a top-right language `ComboBox` that calls
+  `Textos.seleccionar(...)` and rebuilds the menu),
   and defines one `pantallaX()` per calculator (each declares its title, prompts, field
   `Tipo` and display function). `stop()` delegates to `calculos.cerrar()`.
 - `Calculadora.factorial` polls `Thread.isInterrupted()` so a cancelled long computation
