@@ -49,6 +49,7 @@ error legible) en la misma pantalla.
 | **Conversor de bases** | Un entero (prefijos `0b`/`0o`/`0x`, o decimal) | El número en binario, octal, decimal y hexadecimal |
 | **Porcentaje** | Un porcentaje y una cantidad | El X % de la cantidad |
 | **Regla de tres** | Tres valores `a`, `b`, `c` | `x = c·b/a` (regla de tres directa) |
+| **IMC** | Peso en kg y altura en m (> 0) | El índice de masa corporal y su categoría (peso insuficiente / normal / sobrepeso / obesidad) según la OMS |
 
 Aspectos transversales a todas las pantallas:
 
