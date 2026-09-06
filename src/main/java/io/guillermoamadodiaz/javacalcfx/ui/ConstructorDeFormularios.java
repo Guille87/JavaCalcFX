@@ -118,5 +118,7 @@ public final class ConstructorDeFormularios {
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroll.getStyleClass().add("formulario");
         navegador.mostrar(scroll);
+
+        campos.get(0).requestFocus(); // el cursor ya está en el primer campo
     }
 }

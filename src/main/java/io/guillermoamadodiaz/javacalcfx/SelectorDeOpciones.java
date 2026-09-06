@@ -8,6 +8,7 @@ import io.guillermoamadodiaz.javacalcfx.ui.Botones;
 import io.guillermoamadodiaz.javacalcfx.ui.CalculosAsync;
 import io.guillermoamadodiaz.javacalcfx.ui.ConstructorDeFormularios;
 import io.guillermoamadodiaz.javacalcfx.ui.Entrada;
+import io.guillermoamadodiaz.javacalcfx.ui.EstadoVentana;
 import io.guillermoamadodiaz.javacalcfx.ui.FiltroNumerico;
 import io.guillermoamadodiaz.javacalcfx.ui.Formato;
 import io.guillermoamadodiaz.javacalcfx.ui.Navegador;
@@ -75,7 +76,9 @@ public class SelectorDeOpciones extends Application {
         escenario.setScene(escena);
         escenario.setMinWidth(655);
         escenario.setMinHeight(490);
+        EstadoVentana.restaurar(escenario);
         escenario.show();
+        EstadoVentana.vigilar(escenario);
     }
 
     @Override

@@ -45,6 +45,14 @@ class InterfazTest extends ApplicationTest {
     }
 
     @Test
+    void el_foco_empieza_en_el_primer_campo() {
+        clickOn("Calcular Área de Cilindro");
+        WaitForAsyncUtils.waitForFxEvents();
+        TextField primero = lookup(".text-field").nth(0).queryAs(TextField.class);
+        assertTrue(primero.isFocused(), "el primer campo debe tener el foco al abrir el formulario");
+    }
+
+    @Test
     void abrir_una_calculadora_y_volver_con_el_boton() {
         clickOn("Determinar Año Bisiesto");
         verifyThat(".encabezado", hasText("Año Bisiesto"));
