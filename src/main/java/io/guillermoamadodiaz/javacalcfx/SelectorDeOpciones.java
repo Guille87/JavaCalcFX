@@ -112,7 +112,8 @@ public class SelectorDeOpciones extends Application {
                         List.of(
                                 new EntradaMenu("factorial", this::pantallaFactorial),
                                 new EntradaMenu("multiplo", this::pantallaMultiplo),
-                                new EntradaMenu("mcd", this::pantallaMcd))),
+                                new EntradaMenu("mcd", this::pantallaMcd),
+                                new EntradaMenu("primo", this::pantallaPrimo))),
                 new Categoria(
                         "potencias",
                         List.of(
@@ -369,6 +370,30 @@ public class SelectorDeOpciones extends Application {
                             Formato.entero(b),
                             Formato.entero(Calculadora.mcd(a, b)),
                             Formato.entero(Calculadora.mcm(a, b)));
+                });
+    }
+
+    private void pantallaPrimo() {
+        formularios.mostrar(
+                Textos.get("primo.titulo"),
+                Textos.get("primo.instrucciones"),
+                List.of(Textos.get("primo.campo.numero")),
+                FiltroNumerico.Tipo.ENTERO,
+                valores -> {
+                    long n = Entrada.largo(valores.get(0));
+                    Calculadora.Primalidad p = Calculadora.analizarPrimalidad(n);
+                    if (p.primo()) {
+                        return Textos.get("primo.resultado.si", Formato.entero(n));
+                    }
+                    if (p.compuesto()) {
+                        long divisor = p.menorDivisorPropio();
+                        return Textos.get(
+                                "primo.resultado.compuesto",
+                                Formato.entero(n),
+                                Formato.entero(divisor),
+                                Formato.entero(n / divisor));
+                    }
+                    return Textos.get("primo.resultado.no", Formato.entero(n));
                 });
     }
 

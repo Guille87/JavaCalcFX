@@ -39,8 +39,9 @@ its screen catalog).
   `esMultiplo`, `media` (grades in `[NOTA_MINIMA, NOTA_MAXIMA]` = 0..10), `estaAprobado`,
   `resolverEcuacionCuadratica`, `potencia`, `raiz` (n-th root, handles odd roots of
   negatives, Newton-refined so exact roots come out exact), `mcd`, `mcm` (`Math.absExact`
-  / `multiplyExact` guarded)). Returns immutable records
-  (`Triangulo`, `EcuacionCuadratica` with `Raiz`). Invalid input throws
+  / `multiplyExact` guarded), `analizarPrimalidad` (trial division to √n, interruptible;
+  returns the smallest proper divisor for composites)). Returns immutable records
+  (`Triangulo`, `EcuacionCuadratica` with `Raiz`, `Primalidad`). Invalid input throws
   `IllegalArgumentException` whose message comes from `Textos`. Unit-tested by
   `CalculadoraTest`.
 - **`i18n/`** — `Textos` reads the `messages*.properties` files directly (not via

@@ -45,6 +45,7 @@ error legible) en la misma pantalla.
 | **Potencia** | Base y exponente (cualquier real) | `base^exponente` |
 | **Raíz n-ésima** | Radicando y un índice entero ≥ 2 | La raíz; admite índices impares de radicando negativo (`∛-8 = -2`) |
 | **MCD y MCM** | Dos enteros | El máximo común divisor y el mínimo común múltiplo |
+| **¿Es primo?** | Un entero | Si es primo; si es compuesto, un divisor y la factorización |
 
 Aspectos transversales a todas las pantallas:
 
