@@ -1,5 +1,6 @@
 package io.guillermoamadodiaz.javacalcfx.calc;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -191,6 +192,64 @@ class CalculadoraTest {
         @Test
         void media_admite_los_extremos_del_rango() {
             assertEquals(5.0, Calculadora.media(0, 10, 0, 10, 5), EPS);
+        }
+    }
+
+    @Nested
+    @DisplayName("Ecuación de segundo grado")
+    class EcuacionSegundoGrado {
+
+        private double[] raicesReales(double a, double b, double c) {
+            var e = Calculadora.resolverEcuacionCuadratica(a, b, c);
+            double[] r = {e.x1().real(), e.x2().real()};
+            java.util.Arrays.sort(r);
+            return r;
+        }
+
+        @Test
+        void dos_raices_reales_distintas() {
+            var e = Calculadora.resolverEcuacionCuadratica(1, -5, 6); // x²-5x+6 -> 2 y 3
+            assertTrue(e.tieneRaicesReales());
+            assertFalse(e.tieneRaizDoble());
+            assertArrayEquals(new double[] {2, 3}, raicesReales(1, -5, 6), EPS);
+        }
+
+        @Test
+        void raiz_doble() {
+            var e = Calculadora.resolverEcuacionCuadratica(1, -4, 4); // (x-2)²
+            assertTrue(e.tieneRaizDoble());
+            assertEquals(2.0, e.x1().real(), EPS);
+            assertEquals(e.x1(), e.x2());
+        }
+
+        @Test
+        void raices_complejas_conjugadas() {
+            var e = Calculadora.resolverEcuacionCuadratica(1, 0, 1); // x²+1 -> ±i
+            assertFalse(e.tieneRaicesReales());
+            assertEquals(0.0, e.x1().real(), EPS);
+            assertEquals(1.0, Math.abs(e.x1().imaginaria()), EPS);
+            assertEquals(e.x1().real(), e.x2().real(), EPS);
+            assertEquals(-e.x1().imaginaria(), e.x2().imaginaria(), EPS);
+        }
+
+        @Test
+        void a_cero_no_es_de_segundo_grado() {
+            assertThrows(IllegalArgumentException.class, () -> Calculadora.resolverEcuacionCuadratica(0, 2, 1));
+        }
+
+        @Test
+        void rechaza_coeficientes_no_finitos() {
+            assertThrows(
+                    IllegalArgumentException.class, () -> Calculadora.resolverEcuacionCuadratica(1, Double.NaN, 1));
+        }
+
+        @Test
+        void formula_estable_con_b_muy_grande() {
+            // x² + 1e8·x + 1 = 0 : raíces ≈ -1e8 y ≈ -1e-8. La fórmula ingenua pierde
+            // toda la precisión de la raíz pequeña por cancelación catastrófica.
+            double[] r = raicesReales(1, 1e8, 1);
+            assertEquals(-1e8, r[0], 1.0);
+            assertEquals(-1e-8, r[1], 1e-12);
         }
     }
 }

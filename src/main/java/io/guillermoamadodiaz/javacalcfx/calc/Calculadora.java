@@ -128,6 +128,45 @@ public final class Calculadora {
         return media >= 5.0;
     }
 
+    /**
+     * Resuelve la ecuación de segundo grado {@code a·x² + b·x + c = 0}.
+     *
+     * <p>Usa una fórmula numéricamente estable (evita la cancelación catastrófica
+     * de {@code (-b ± √Δ) / 2a} cuando {@code b²} domina a {@code 4ac}).
+     *
+     * @throws IllegalArgumentException si {@code a} es 0 (no sería de segundo
+     *     grado) o si algún coeficiente no es finito
+     */
+    public static EcuacionCuadratica resolverEcuacionCuadratica(double a, double b, double c) {
+        exigirFinito(a, Textos.get("calc.nombre.coefA"));
+        exigirFinito(b, Textos.get("calc.nombre.coefB"));
+        exigirFinito(c, Textos.get("calc.nombre.coefC"));
+        if (a == 0.0) {
+            throw new IllegalArgumentException(Textos.get("calc.cuadratica.no.cuadratica"));
+        }
+
+        double discriminante = b * b - 4 * a * c;
+        if (discriminante == 0.0) {
+            Raiz doble = new Raiz(-b / (2 * a), 0);
+            return new EcuacionCuadratica(discriminante, doble, doble);
+        }
+        if (discriminante > 0) {
+            double raizDelta = Math.sqrt(discriminante);
+            double q = -0.5 * (b + Math.copySign(raizDelta, b));
+            return new EcuacionCuadratica(discriminante, new Raiz(q / a, 0), new Raiz(c / q, 0));
+        }
+        double parteReal = -b / (2 * a);
+        double parteImaginaria = Math.sqrt(-discriminante) / (2 * a);
+        return new EcuacionCuadratica(
+                discriminante, new Raiz(parteReal, parteImaginaria), new Raiz(parteReal, -parteImaginaria));
+    }
+
+    private static void exigirFinito(double valor, String nombre) {
+        if (!Double.isFinite(valor)) {
+            throw new IllegalArgumentException(Textos.get("calc.valor.no.finito", nombre));
+        }
+    }
+
     private static void exigirPositivoFinito(double valor, String nombre) {
         if (!Double.isFinite(valor) || valor <= 0) {
             throw new IllegalArgumentException(Textos.get("calc.valor.no.positivo", nombre));
@@ -152,4 +191,22 @@ public final class Calculadora {
             double perimetro,
             double anguloAlfa,
             double anguloBeta) {}
+
+    /** Una raíz: {@code real + imaginaria·i}. Si {@link #esReal()}, {@code imaginaria == 0}. */
+    public record Raiz(double real, double imaginaria) {
+        public boolean esReal() {
+            return imaginaria == 0.0;
+        }
+    }
+
+    /** Solución de {@link #resolverEcuacionCuadratica(double, double, double)}. */
+    public record EcuacionCuadratica(double discriminante, Raiz x1, Raiz x2) {
+        public boolean tieneRaicesReales() {
+            return discriminante >= 0.0;
+        }
+
+        public boolean tieneRaizDoble() {
+            return discriminante == 0.0;
+        }
+    }
 }
