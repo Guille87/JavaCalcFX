@@ -12,8 +12,9 @@ and the project follows [semantic versioning](https://semver.org/).
 ### Added
 
 - **Settings screen**: a ⚙ button in the menu's top bar opens a screen that
-  gathers the options. So far: language (moved off the top bar), theme, and a
-  «Reopen the last calculator on start» toggle.
+  gathers the options. So far: language (moved off the top bar), theme, a
+  «Reopen the last calculator on start» toggle, a «Remember the window size and
+  position» toggle and a «Reset window» button.
 
 ### Changed
 

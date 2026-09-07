@@ -31,4 +31,18 @@ class SettingsTest {
         Settings.setRememberLastCalculator(false);
         assertFalse(Settings.rememberLastCalculator());
     }
+
+    @Test
+    void remember_window_defaults_to_true() {
+        assertTrue(Settings.rememberWindow());
+    }
+
+    @Test
+    void remember_window_can_be_turned_off_and_on() {
+        Settings.setRememberWindow(false);
+        assertFalse(Settings.rememberWindow());
+
+        Settings.setRememberWindow(true);
+        assertTrue(Settings.rememberWindow());
+    }
 }

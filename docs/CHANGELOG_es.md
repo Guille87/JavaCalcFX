@@ -13,7 +13,9 @@ y el proyecto sigue [versionado semántico](https://semver.org/lang/es/).
 
 - **Pantalla de ajustes**: un botón ⚙ en la barra superior del menú abre una
   pantalla que reúne las opciones. De momento: idioma (sale de la barra
-  superior), tema, y un interruptor «Reabrir la última calculadora al arrancar».
+  superior), tema, un interruptor «Reabrir la última calculadora al arrancar»,
+  un interruptor «Recordar el tamaño y la posición de la ventana» y un botón
+  «Restablecer ventana».
 
 ### Cambiado
 

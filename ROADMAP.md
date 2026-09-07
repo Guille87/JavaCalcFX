@@ -33,7 +33,7 @@ tests for `ui/Settings` and a `UiTest` case for the navigation.
       bar).
 - [x] **Remember the last calculator on exit** — on/off. When off,
       `LastCalculator` records nothing and the app always starts on the menu.
-- [ ] **Remember the window size and position** — on/off, plus a **«Reset
+- [x] **Remember the window size and position** — on/off, plus a **«Reset
       window»** button.
 - [ ] **History**
   - [ ] enable / disable — when off, nothing is recorded.

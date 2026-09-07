@@ -13,6 +13,7 @@ public final class Settings {
             Preferences.userNodeForPackage(Settings.class).node("settings");
 
     private static final String REMEMBER_LAST_CALCULATOR = "remember-last-calculator";
+    private static final String REMEMBER_WINDOW = "remember-window";
 
     private Settings() {}
 
@@ -23,5 +24,14 @@ public final class Settings {
 
     public static void setRememberLastCalculator(boolean value) {
         PREFS.putBoolean(REMEMBER_LAST_CALCULATOR, value);
+    }
+
+    /** Whether the window's size and position are remembered between sessions (default: {@code true}). */
+    public static boolean rememberWindow() {
+        return PREFS.getBoolean(REMEMBER_WINDOW, true);
+    }
+
+    public static void setRememberWindow(boolean value) {
+        PREFS.putBoolean(REMEMBER_WINDOW, value);
     }
 }

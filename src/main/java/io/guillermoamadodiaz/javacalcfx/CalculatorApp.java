@@ -264,12 +264,20 @@ public class CalculatorApp extends Application {
         rememberLast.setSelected(Settings.rememberLastCalculator());
         rememberLast.setOnAction(e -> Settings.setRememberLastCalculator(rememberLast.isSelected()));
 
+        CheckBox rememberWindow = new CheckBox(Messages.get("settings.remember.window"));
+        rememberWindow.setSelected(Settings.rememberWindow());
+        rememberWindow.setOnAction(e -> Settings.setRememberWindow(rememberWindow.isSelected()));
+
+        Button resetWindow = Buttons.create(Messages.get("settings.reset.window"), () -> WindowState.reset(stage));
+
         GridPane rows = new GridPane();
         rows.setHgap(12);
         rows.setVgap(12);
         rows.addRow(0, new Label(Messages.get("settings.language")), language);
         rows.addRow(1, new Label(Messages.get("settings.theme")), theme);
         rows.add(rememberLast, 0, 2, 2, 1);
+        rows.add(rememberWindow, 0, 3, 2, 1);
+        rows.add(resetWindow, 0, 4, 2, 1);
 
         Button back = Buttons.create(Messages.get("form.back"), Messages.get("form.back.tooltip"), this::showMenu);
         back.setCancelButton(true); // Esc

@@ -44,6 +44,7 @@ class UiTest extends ApplicationTest {
     void resetState() {
         History.clear();
         Settings.setRememberLastCalculator(true);
+        Settings.setRememberWindow(true);
     }
 
     @AfterAll
@@ -228,12 +229,20 @@ class UiTest extends ApplicationTest {
     @Test
     void turning_off_the_remember_setting_stops_recording_the_last_calculator() {
         clickOn("Settings");
-        clickOn("Reopen the last calculator on start"); // checked by default -> unchecks it
+        clickOn("Reopen the last calculator on start"); // checked here (resetState) -> unchecks it
         clickOn("Back");
 
         clickOn("Factorial");
         WaitForAsyncUtils.waitForFxEvents();
         assertTrue(LastCalculator.remembered().isEmpty(), "with the setting off, nothing is remembered");
+    }
+
+    @Test
+    void the_settings_screen_has_the_window_options() {
+        clickOn("Settings");
+        assertTrue(lookup("Remember the window size and position").tryQuery().isPresent());
+        clickOn("Reset window");
+        verifyThat(".header", hasText("Settings")); // no crash; still on the settings screen
     }
 
     @Test
