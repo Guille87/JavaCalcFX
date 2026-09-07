@@ -2,8 +2,9 @@
 
 <p align="center"><a href="ROADMAP.md">English</a> · <a href="docs/ROADMAP_es.md">Español</a></p>
 
-Planned improvements for JavaCalcFX, ordered from lowest to highest risk. They
-are ticked off as they are completed.
+Living document — it has no end date. Ideas are added freely and move
+**Ideas → Next up → Done** as they progress. The details of each shipped change
+live in the [CHANGELOG](CHANGELOG.md).
 
 ## Decisions made
 
@@ -14,7 +15,75 @@ are ticked off as they are completed.
 
 ---
 
-## Phase 0 · Base tooling
+## Next up
+
+Short, committed shortlist.
+
+### Settings screen (v1)
+
+A **⚙** button in the menu's top bar opens a settings screen that gathers the
+options currently scattered around the UI, plus a few new ones. A new
+`ui/Settings` centralizes the `java.util.prefs` reads/writes, the way `ui/Theme`
+and `ui/LastCalculator` already do. New keys in both `messages*.properties`, unit
+tests for `ui/Settings` and a `UiTest` case for the navigation.
+
+- [ ] **⚙ button + `settingsScreen()`**, with «Back» / Esc like any other screen.
+- [ ] **Language** — moved here from the top bar (the `ComboBox` leaves the menu).
+- [ ] **Theme** — light / dark, moved here (a quick toggle may still stay in the
+      bar).
+- [ ] **Remember the last calculator on exit** — on/off. When off,
+      `LastCalculator` records nothing and the app always starts on the menu.
+- [ ] **Remember the window size and position** — on/off, plus a **«Reset
+      window»** button.
+- [ ] **History**
+  - [ ] enable / disable — when off, nothing is recorded.
+  - [ ] max entries — 10 / 25 / 50 / 100.
+  - [ ] clear the history on exit — on/off.
+- [ ] **«Restore defaults»** — clears every settings subnode (light theme,
+      default language, history on, …).
+- [ ] **About** — version (from `pom.xml`), MIT license, link to the repository.
+
+---
+
+## Ideas / backlog
+
+No commitment; anything worth remembering.
+
+- [ ] **Interface scale** — small / medium / large (`-fx-font-size` on `.root`).
+- [ ] **Angle unit** — degrees or radians for the Pythagoras angles.
+- [ ] **Default BMI system** — metric or imperial as the initial mode.
+- [ ] **Decimals shown** — 2–6, and/or a thousands-separator toggle (`Format`
+      already centralizes this).
+- [ ] **«Follow the OS theme»** — detection in JavaFX is limited; investigate.
+- [ ] **Copy format** — copy just the number vs. the full labeled result.
+- [ ] **Coverage threshold** that breaks the build (JaCoCo `check` goal).
+- [ ] **`0.2.0-SNAPSHOT` version convention** between releases (today the build
+      version is always the last tag).
+- [ ] **Linux / macOS packaging** — extend `release.yml` beyond `windows-latest`.
+- [ ] **More calculators** — combinatorics, unit conversions, simple statistics…
+
+---
+
+## Done
+
+Since `0.1.0`, outside the original plan. See the [CHANGELOG](CHANGELOG.md) for
+the details of each.
+
+- **English conventions** — class, method and test names, comments and i18n keys
+  migrated to English; English as the default language.
+- **BMI in cm + metric/imperial selector**, with the data carried across
+  converted on switching systems (`calc/Conversions` +
+  `FormBuilder.showWithModes`).
+- **History**: a date on each entry and no consecutive duplicates.
+
+---
+
+<details>
+<summary>Historical plan — phases 0–6 (how the app was built up to <code>0.1.0</code>)</summary>
+
+Ordered from lowest to highest risk; all completed.
+
+### Phase 0 · Base tooling
 
 - [x] **Spotless** with `palantir-java-format`: `mvn spotless:apply` over the
       current code and `spotless:check` in CI.
@@ -24,7 +93,7 @@ are ticked off as they are completed.
       diagram.
 - [x] **App icon** (`stage.getIcons(...)`, PNGs in `resources/.../icons/`).
 
-## Phase 1 · UX polish
+### Phase 1 · UX polish
 
 - [x] **Persist window size and position** between sessions (`ui/WindowState`,
       with `java.util.prefs`).
@@ -32,7 +101,7 @@ are ticked off as they are completed.
       reopens that screen; going back to the menu forgets it.
 - [x] The **first field gets the focus** when a form opens.
 
-## Phase 2 · More calculators
+### Phase 2 · More calculators
 
 Pattern for each: pure method in `Calculator` + test + text in `en`/`es`
 (including `menu.button.<key>` and `.tooltip`) + `xScreen()` + `menuButton`. One
@@ -51,11 +120,10 @@ mini-commit per calculator.
 - [x] **Category-grouped menu** (Geometry · Arithmetic · Powers and equations ·
       Other). The catalog is a list of `Category` in `CalculatorApp`.
 
-## Phase 3 · Quality and modernization
+### Phase 3 · Quality and modernization
 
 - [x] **JaCoCo**: coverage report (HTML as an artifact, a PR comment and a badge
-      regenerated on push to `main`). Optional pending: a threshold that breaks
-      the build.
+      regenerated on push to `main`).
 - [x] **Migrate to JavaFX 21 LTS**: `javafx.version` to `21.0.10` (the JDK stays
       at 17; JavaFX 21 supports it). `openjfx-monocle` stays at `17.0.10`: it is
       compatible with JavaFX 21 and its bytecode runs on JDK 17, whereas 21.x
@@ -64,7 +132,7 @@ mini-commit per calculator.
 - [x] **SpotBugs** as a CI check (effort Max, threshold Medium, production code
       only; false positives in `spotbugs-exclude.xml`).
 
-## Phase 4 · Distribution (Windows)
+### Phase 4 · Distribution (Windows)
 
 - [x] **`javafx:jlink`** — self-contained runtime in `target/JavaCalcFX`.
 - [x] **`jpackage`** (`dist` profile): portable app-image by default, `.msi`
@@ -72,10 +140,9 @@ mini-commit per calculator.
 - [x] **Release workflow** (`release.yml`): on pushing a `vX.Y.Z` tag on
       `windows-latest`, it builds the `.msi` and the portable zip and attaches
       them to the GitHub Release.
-- [x] **Versioning**: `pom.xml` at `0.1.0`. Optional pending: a
-      `0.2.0-SNAPSHOT` convention between releases.
+- [x] **Versioning**: `pom.xml` at `0.1.0`.
 
-## Phase 5 · Step by step
+### Phase 5 · Step by step
 
 A worked explanation of the calculation, in linear notation, behind a «Show
 steps» button. Deterministic, tested templates, not symbolic algebra.
@@ -86,7 +153,7 @@ steps» button. Deterministic, tested templates, not symbolic algebra.
       `ui/XSteps` per calculator). For «prime», «leap year», etc. it adds
       nothing.
 
-## Phase 6 · Optional
+### Phase 6 · Optional
 
 - [x] **Dark mode** with a persisted toggle (`ui/Theme` + `dark-theme` class in
       `styles.css` + button in the menu's top bar).
@@ -98,14 +165,4 @@ steps» button. Deterministic, tested templates, not symbolic algebra.
 - [x] Calculation history (`ui/History`, persisted; screen reachable from the
       menu bar, with a «Clear» button).
 
----
-
-## Later improvements
-
-Outside the original plan, as they come up.
-
-- [x] **BMI**: height in centimeters and a measurement-system selector (metric /
-      imperial), with the data carried across converted on switching systems.
-      `calc/Conversions` + `FormBuilder.showWithModes`.
-- [x] **English conventions**: class, method and test names, comments and i18n
-      keys migrated to English; English as the default language.
+</details>

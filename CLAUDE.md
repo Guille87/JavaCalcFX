@@ -165,6 +165,8 @@ each with a language-selector line linking to the Spanish version under `docs/`
 (`README_es.md`, `CONTRIBUTING_es.md`, `CHANGELOG_es.md`, `ROADMAP_es.md`). Keep both
 languages of a doc in sync when editing. README screenshots live in `docs/`
 (`menu.png`, `pythagorean-theorem.png`) — from the root README the path is
-`docs/screenshots/*.png`, from `docs/README_es.md` it is `screenshots/*.png`. `ROADMAP` records the
-original plan (Phases 0–6 all done) plus a post-plan section; `CHANGELOG` has an
-`## [Unreleased]` / `## [Sin publicar]` section to keep current. Version is `0.1.0`.
+`docs/screenshots/*.png`, from `docs/README_es.md` it is `screenshots/*.png`. `ROADMAP` is a
+living document: `## Next up` (committed shortlist), `## Ideas / backlog`
+(uncommitted), `## Done` (post-`0.1.0`), and the original phases 0–6 collapsed in
+a `<details>` block — move items between sections as they progress. `CHANGELOG`
+has an `## [Unreleased]` / `## [Sin publicar]` section to keep current. Version is `0.1.0`.
