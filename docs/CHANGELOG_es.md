@@ -14,8 +14,9 @@ y el proyecto sigue [versionado semántico](https://semver.org/lang/es/).
 - **Pantalla de ajustes**: un botón ⚙ en la barra superior del menú abre una
   pantalla que reúne las opciones. De momento: idioma (sale de la barra
   superior), tema, un interruptor «Reabrir la última calculadora al arrancar»,
-  un interruptor «Recordar el tamaño y la posición de la ventana» y un botón
-  «Restablecer ventana».
+  un interruptor «Recordar el tamaño y la posición de la ventana» con un botón
+  «Restablecer ventana», y opciones de historial (guardar historial sí/no,
+  tamaño 10 / 25 / 50 / 100, vaciar al cerrar sí/no).
 
 ### Cambiado
 

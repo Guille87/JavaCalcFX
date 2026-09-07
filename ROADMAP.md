@@ -35,10 +35,10 @@ tests for `ui/Settings` and a `UiTest` case for the navigation.
       `LastCalculator` records nothing and the app always starts on the menu.
 - [x] **Remember the window size and position** — on/off, plus a **«Reset
       window»** button.
-- [ ] **History**
-  - [ ] enable / disable — when off, nothing is recorded.
-  - [ ] max entries — 10 / 25 / 50 / 100.
-  - [ ] clear the history on exit — on/off.
+- [x] **History**
+  - [x] enable / disable — when off, nothing is recorded.
+  - [x] max entries — 10 / 25 / 50 / 100.
+  - [x] clear the history on exit — on/off.
 - [ ] **«Restore defaults»** — clears every settings subnode (light theme,
       default language, history on, …).
 - [ ] **About** — version (from `pom.xml`), MIT license, link to the repository.

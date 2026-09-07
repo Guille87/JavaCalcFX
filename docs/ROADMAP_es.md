@@ -38,10 +38,10 @@ para la navegación.
       `LastCalculator` no registra nada y la app siempre arranca en el menú.
 - [x] **Recordar tamaño y posición de la ventana** — on/off, más un botón
       **«Restablecer ventana»**.
-- [ ] **Historial**
-  - [ ] activar / desactivar — si está en off, no se registra nada.
-  - [ ] número máximo de entradas — 10 / 25 / 50 / 100.
-  - [ ] vaciar el historial al cerrar — on/off.
+- [x] **Historial**
+  - [x] activar / desactivar — si está en off, no se registra nada.
+  - [x] número máximo de entradas — 10 / 25 / 50 / 100.
+  - [x] vaciar el historial al cerrar — on/off.
 - [ ] **«Restablecer ajustes»** — borra todos los subnodos de ajustes (tema
       claro, idioma por defecto, historial activado, …).
 - [ ] **Acerca de** — versión (desde `pom.xml`), licencia MIT, enlace al

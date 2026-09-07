@@ -105,6 +105,9 @@ public class CalculatorApp extends Application {
 
     @Override
     public void stop() {
+        if (Settings.clearHistoryOnExit()) {
+            History.clear();
+        }
         calculations.close();
     }
 
@@ -270,6 +273,23 @@ public class CalculatorApp extends Application {
 
         Button resetWindow = Buttons.create(Messages.get("settings.reset.window"), () -> WindowState.reset(stage));
 
+        CheckBox historyEnabled = new CheckBox(Messages.get("settings.history.enabled"));
+        historyEnabled.setSelected(Settings.historyEnabled());
+        historyEnabled.setOnAction(e -> Settings.setHistoryEnabled(historyEnabled.isSelected()));
+
+        ComboBox<Integer> historyMax = new ComboBox<>();
+        historyMax.getItems().setAll(10, 25, 50, 100);
+        historyMax.setValue(Settings.historyMax());
+        historyMax.setOnAction(e -> Settings.setHistoryMax(historyMax.getValue()));
+        historyMax.disableProperty().bind(historyEnabled.selectedProperty().not());
+
+        CheckBox clearHistoryOnExit = new CheckBox(Messages.get("settings.history.clear.on.exit"));
+        clearHistoryOnExit.setSelected(Settings.clearHistoryOnExit());
+        clearHistoryOnExit.setOnAction(e -> Settings.setClearHistoryOnExit(clearHistoryOnExit.isSelected()));
+        clearHistoryOnExit
+                .disableProperty()
+                .bind(historyEnabled.selectedProperty().not());
+
         GridPane rows = new GridPane();
         rows.setHgap(12);
         rows.setVgap(12);
@@ -278,6 +298,9 @@ public class CalculatorApp extends Application {
         rows.add(rememberLast, 0, 2, 2, 1);
         rows.add(rememberWindow, 0, 3, 2, 1);
         rows.add(resetWindow, 0, 4, 2, 1);
+        rows.add(historyEnabled, 0, 5, 2, 1);
+        rows.addRow(6, new Label(Messages.get("settings.history.max")), historyMax);
+        rows.add(clearHistoryOnExit, 0, 7, 2, 1);
 
         Button back = Buttons.create(Messages.get("form.back"), Messages.get("form.back.tooltip"), this::showMenu);
         back.setCancelButton(true); // Esc

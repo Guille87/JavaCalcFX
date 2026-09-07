@@ -22,7 +22,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   `ProportionsAndPercentages`, `BodyMassIndex`), so select one with the enclosing class:
   `-Dtest='CalculatorTest$Factorial#rejects_negatives'`. Other test classes:
   `calc/ConversionsTest`; `i18n/{Messages,Language}Test`; in `ui` `Format`, `ErrorMessages`,
-  `Input`, `NumericFilter`, `WindowState`, `Theme`, `History`, `LastCalculator`, and
+  `Input`, `NumericFilter`, `WindowState`, `Theme`, `History`, `LastCalculator`, `Settings`, and
   `{Cylinder,Quadratic,Pythagoras,Proportions}StepsTest`; and root `UiTest` (TestFX).
 - `UiTest` drives the real UI headless via Monocle (surefire `argLine` in the POM, plus
   `useModulePath=false` so TestFX isn't on the module path). `mvn test -Pheaded` shows a
@@ -122,18 +122,24 @@ Single-module JavaFX desktop app in four packages: `calc` (pure domain), `i18n`
     `applyTo(Scene)` toggles the `dark-theme` style class on the scene root. `styles.css`
     redefines `-fx-base`/`-fx-background`/`-fx-control-inner-background` (+ prompt-text
     fill) for `.root.dark-theme`; Modena derives the rest.
-  - `History` — the last `MAX` (25) calculations (`Entry` = title + result + `Instant`,
-    most recent first), persisted to a `java.util.prefs` subnode as one string (results
-    trimmed to `MAX_RESULT`=300 so a huge factorial can't overflow the prefs limit; legacy
-    2-field entries load with a null `timestamp`). `record` collapses a repeat of the
-    current head (same title+result) into a timestamp refresh. `FormBuilder` calls
-    `History.record(title, text)` after every successful calc;
-    `CalculatorApp.historyScreen()` renders it with the date.
+  - `History` — the last `Settings.historyMax()` (default 25) calculations (`Entry` = title
+    + result + `Instant`, most recent first), persisted to a `java.util.prefs` subnode as
+    one string (results trimmed to `MAX_RESULT`=300 so a huge factorial can't overflow the
+    prefs limit; legacy 2-field entries load with a null `timestamp`). `record` collapses a
+    repeat of the current head into a timestamp refresh and is a no-op while
+    `Settings.historyEnabled()` is off. `FormBuilder` calls `History.record(title, text)`
+    after every successful calc; `CalculatorApp.historyScreen()` renders it with the date;
+    `CalculatorApp.stop()` clears it when `Settings.clearHistoryOnExit()`.
   - `LastCalculator` — `remember`/`remembered`/`forget` a calculator key in a
-    `java.util.prefs` subnode. `catalog()`'s `menuEntry(...)` factory records on open;
-    `showMenu()` calls `forget()`; `start()` reads it before `showMenu()` and reopens that
-    screen via `openCalculator(key)`. `UiTest.start()` clears it so each test begins on the
-    menu.
+    `java.util.prefs` subnode; `remember` is a no-op unless `Settings.rememberLastCalculator()`
+    (off by default). `catalog()`'s `menuEntry(...)` factory records on open; `showMenu()`
+    calls `forget()`; `start()` reads it before `showMenu()` and reopens that screen via
+    `openCalculator(key)`. `UiTest.start()` clears it so each test begins on the menu.
+  - `Settings` — user options in their own `java.util.prefs` subnode (`node("settings")`),
+    each a getter/setter with a default: `rememberLastCalculator` (false), `rememberWindow`
+    (true), `historyEnabled` (true), `historyMax` (25), `clearHistoryOnExit` (false). The
+    settings screen (`CalculatorApp.settingsScreen()`, a ⚙ button in the top bar) is the UI;
+    `Theme`/`Messages` keep their own prefs and their own controls on that screen.
   - `{Quadratic,Pythagoras,Cylinder,Percentage,RuleOfThree}Steps` — pure, deterministic
     templates rendering a calculation step by step in linear notation. Each calls its
     `Calculator` method (for validation + values) then fills fixed templates. Unit-tested.

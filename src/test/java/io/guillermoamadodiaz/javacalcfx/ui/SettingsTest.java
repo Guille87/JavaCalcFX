@@ -1,5 +1,6 @@
 package io.guillermoamadodiaz.javacalcfx.ui;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -44,5 +45,23 @@ class SettingsTest {
 
         Settings.setRememberWindow(true);
         assertTrue(Settings.rememberWindow());
+    }
+
+    @Test
+    void history_defaults_enabled_with_max_25_and_no_clear_on_exit() {
+        assertTrue(Settings.historyEnabled());
+        assertEquals(25, Settings.historyMax());
+        assertFalse(Settings.clearHistoryOnExit());
+    }
+
+    @Test
+    void history_options_can_be_changed() {
+        Settings.setHistoryEnabled(false);
+        Settings.setHistoryMax(50);
+        Settings.setClearHistoryOnExit(true);
+
+        assertFalse(Settings.historyEnabled());
+        assertEquals(50, Settings.historyMax());
+        assertTrue(Settings.clearHistoryOnExit());
     }
 }

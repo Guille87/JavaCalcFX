@@ -6,20 +6,30 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Instant;
+import java.util.prefs.Preferences;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class HistoryTest {
 
+    private static final int MAX = Settings.DEFAULT_HISTORY_MAX; // 25
+
     @BeforeEach
     void startClean() {
+        Settings.setHistoryEnabled(true);
+        Settings.setHistoryMax(MAX);
         History.clear();
     }
 
     @AfterAll
     static void cleanUp() {
         History.clear();
+        try {
+            Preferences.userNodeForPackage(Settings.class).node("settings").clear();
+        } catch (Exception ignored) {
+            // no persistence available in the test environment
+        }
     }
 
     @Test
@@ -34,12 +44,12 @@ class HistoryTest {
 
     @Test
     void does_not_exceed_the_maximum_and_drops_the_oldest() {
-        for (int i = 1; i <= History.MAX + 5; i++) {
+        for (int i = 1; i <= MAX + 5; i++) {
             History.record("Cálculo " + i, "resultado " + i);
         }
         var recent = History.recent();
-        assertEquals(History.MAX, recent.size());
-        assertEquals("Cálculo " + (History.MAX + 5), recent.get(0).title());
+        assertEquals(MAX, recent.size());
+        assertEquals("Cálculo " + (MAX + 5), recent.get(0).title());
         assertFalse(recent.stream().anyMatch(e -> e.title().equals("Cálculo 1")));
     }
 
@@ -83,5 +93,22 @@ class HistoryTest {
         assertNotNull(timestamp);
         assertFalse(timestamp.isBefore(before.minusSeconds(1)));
         assertFalse(timestamp.isAfter(Instant.now().plusSeconds(1)));
+    }
+
+    @Test
+    void a_disabled_history_records_nothing() {
+        Settings.setHistoryEnabled(false);
+        History.record("Factorial", "El factorial de 5 es 120");
+        assertTrue(History.recent().isEmpty());
+    }
+
+    @Test
+    void lowering_the_maximum_trims_on_the_next_record() {
+        for (int i = 1; i <= MAX; i++) {
+            History.record("Cálculo " + i, "resultado " + i);
+        }
+        Settings.setHistoryMax(10);
+        History.record("Cálculo nuevo", "resultado nuevo");
+        assertEquals(10, History.recent().size());
     }
 }

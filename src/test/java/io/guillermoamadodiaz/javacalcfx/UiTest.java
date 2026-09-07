@@ -42,9 +42,12 @@ class UiTest extends ApplicationTest {
 
     @BeforeEach
     void resetState() {
-        History.clear();
         Settings.setRememberLastCalculator(true);
         Settings.setRememberWindow(true);
+        Settings.setHistoryEnabled(true);
+        Settings.setHistoryMax(Settings.DEFAULT_HISTORY_MAX);
+        Settings.setClearHistoryOnExit(false);
+        History.clear();
     }
 
     @AfterAll
@@ -243,6 +246,21 @@ class UiTest extends ApplicationTest {
         assertTrue(lookup("Remember the window size and position").tryQuery().isPresent());
         clickOn("Reset window");
         verifyThat(".header", hasText("Settings")); // no crash; still on the settings screen
+    }
+
+    @Test
+    void turning_off_the_history_stops_recording_calculations() throws TimeoutException {
+        clickOn("Settings");
+        clickOn("Keep a calculation history"); // checked here (resetState) -> unchecks it
+        clickOn("Back");
+
+        clickOn("Pythagorean Theorem");
+        clickOn(lookup(".text-field").nth(0).queryAs(TextField.class)).write("3");
+        clickOn(lookup(".text-field").nth(1).queryAs(TextField.class)).write("4");
+        clickOn("Calculate");
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> resultText().contains("Hypotenuse"));
+
+        assertTrue(History.recent().isEmpty(), "with the history off, nothing is recorded");
     }
 
     @Test

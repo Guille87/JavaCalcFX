@@ -8,9 +8,11 @@ import java.util.stream.Collectors;
 
 /**
  * History of the latest calculations: the screen title, the result that was
- * shown and when. The most recent goes first and at most {@link #MAX} are kept.
- * Repeating the same calculation (same title and result) does not add a new
- * entry: it just refreshes the timestamp of the one already at the top.
+ * shown and when. The most recent goes first and at most
+ * {@link Settings#historyMax()} are kept. Repeating the same calculation (same
+ * title and result) does not add a new entry: it just refreshes the timestamp of
+ * the one already at the top. Nothing is recorded while
+ * {@link Settings#historyEnabled()} is off.
  *
  * <p>It is saved between sessions with {@link Preferences} in its own subnode, as
  * a single string (entries separated by {@code RS}, fields by {@code US}). The
@@ -18,9 +20,6 @@ import java.util.stream.Collectors;
  * cannot overflow the preferences size limit.
  */
 public final class History {
-
-    /** Maximum number of calculations remembered. */
-    public static final int MAX = 25;
 
     /** Maximum length of the result stored per entry. */
     public static final int MAX_RESULT = 300;
@@ -46,8 +45,11 @@ public final class History {
         return List.copyOf(entries);
     }
 
-    /** Records a calculation (puts it first) and persists it. */
+    /** Records a calculation (puts it first) and persists it, unless the history is off. */
     public static synchronized void record(String title, String result) {
+        if (!Settings.historyEnabled()) {
+            return;
+        }
         Entry fresh = new Entry(title, trim(result), Instant.now());
         if (!entries.isEmpty()
                 && entries.get(0).title().equals(fresh.title())
@@ -55,10 +57,8 @@ public final class History {
             entries.set(0, fresh); // same calculation repeated: only the timestamp changes
         } else {
             entries.add(0, fresh);
-            while (entries.size() > MAX) {
-                entries.remove(entries.size() - 1);
-            }
         }
+        trimToMax();
         save();
     }
 
@@ -72,6 +72,12 @@ public final class History {
         return text.length() <= MAX_RESULT ? text : text.substring(0, MAX_RESULT) + "…";
     }
 
+    private static void trimToMax() {
+        while (entries.size() > Settings.historyMax()) {
+            entries.remove(entries.size() - 1);
+        }
+    }
+
     private static List<Entry> load() {
         List<Entry> list = new ArrayList<>();
         try {
@@ -83,6 +89,9 @@ public final class History {
                         list.add(new Entry(fields[0], fields[1], timestampOf(fields)));
                     }
                 }
+            }
+            while (list.size() > Settings.historyMax()) {
+                list.remove(list.size() - 1); // the saved max may have been lowered
             }
         } catch (RuntimeException ignored) {
             // preferences unavailable or value corrupt: start with no history
