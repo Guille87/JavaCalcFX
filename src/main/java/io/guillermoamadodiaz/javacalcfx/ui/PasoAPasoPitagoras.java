@@ -1,7 +1,7 @@
 package io.guillermoamadodiaz.javacalcfx.ui;
 
-import io.guillermoamadodiaz.javacalcfx.calc.Calculadora;
-import io.guillermoamadodiaz.javacalcfx.calc.Calculadora.Triangulo;
+import io.guillermoamadodiaz.javacalcfx.calc.Calculator;
+import io.guillermoamadodiaz.javacalcfx.calc.Calculator.Triangle;
 import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 
 /**
@@ -18,7 +18,7 @@ public final class PasoAPasoPitagoras {
 
     /** @throws IllegalArgumentException si algún cateto no es un número finito y positivo */
     public static String desarrollo(double a, double b) {
-        Triangulo t = Calculadora.resolverTrianguloRectangulo(a, b); // valida a y b
+        Triangle t = Calculator.solveRightTriangle(a, b); // valida a y b
 
         StringBuilder sb = new StringBuilder();
         sb.append(Textos.get("pitagoras.pasos.hipotenusa")).append('\n');
@@ -26,17 +26,17 @@ public final class PasoAPasoPitagoras {
         sb.append("h = √((%s)² + (%s)²)\n".formatted(n(a), n(b)));
         sb.append("h = √(%s + %s)\n".formatted(n(a * a), n(b * b)));
         sb.append("h = √%s\n".formatted(n(a * a + b * b)));
-        sb.append("h = %s\n\n".formatted(n(t.hipotenusa())));
+        sb.append("h = %s\n\n".formatted(n(t.hypotenuse())));
 
         sb.append(Textos.get("pitagoras.pasos.area")).append('\n');
         sb.append("A = (a · b) / 2 = (%s · %s) / 2 = %s\n\n".formatted(n(a), n(b), n(t.area())));
 
         sb.append(Textos.get("pitagoras.pasos.perimetro")).append('\n');
-        sb.append("P = a + b + h = %s + %s + %s = %s\n\n".formatted(n(a), n(b), n(t.hipotenusa()), n(t.perimetro())));
+        sb.append("P = a + b + h = %s + %s + %s = %s\n\n".formatted(n(a), n(b), n(t.hypotenuse()), n(t.perimeter())));
 
         sb.append(Textos.get("pitagoras.pasos.angulos")).append('\n');
-        sb.append("α = arctan(b / a) = arctan(%s / %s) ≅ %s°\n".formatted(n(b), n(a), n(t.anguloAlfa())));
-        sb.append("β = 90° − α ≅ %s°".formatted(n(t.anguloBeta())));
+        sb.append("α = arctan(b / a) = arctan(%s / %s) ≅ %s°\n".formatted(n(b), n(a), n(t.angleAlpha())));
+        sb.append("β = 90° − α ≅ %s°".formatted(n(t.angleBeta())));
         return sb.toString();
     }
 

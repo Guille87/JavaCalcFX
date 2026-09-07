@@ -1,6 +1,6 @@
 package io.guillermoamadodiaz.javacalcfx.ui;
 
-import io.guillermoamadodiaz.javacalcfx.calc.Calculadora;
+import io.guillermoamadodiaz.javacalcfx.calc.Calculator;
 import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 
 /**
@@ -18,7 +18,7 @@ public final class PasoAPasoCilindro {
 
     /** @throws IllegalArgumentException si el radio o la altura no son finitos y &ge; 0 */
     public static String desarrollo(double radio, double altura) {
-        double area = Calculadora.areaCilindro(radio, altura); // valida radio y altura
+        double area = Calculator.cylinderArea(radio, altura); // valida radio y altura
         double bases = 2 * Math.PI * radio * radio;
         double lateral = 2 * Math.PI * radio * altura;
 

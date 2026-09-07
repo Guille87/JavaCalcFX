@@ -1,7 +1,7 @@
 package io.guillermoamadodiaz.javacalcfx.ui;
 
-import io.guillermoamadodiaz.javacalcfx.calc.Calculadora;
-import io.guillermoamadodiaz.javacalcfx.calc.Calculadora.EcuacionCuadratica;
+import io.guillermoamadodiaz.javacalcfx.calc.Calculator;
+import io.guillermoamadodiaz.javacalcfx.calc.Calculator.QuadraticEquation;
 import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 
 /**
@@ -18,8 +18,8 @@ public final class PasoAPasoCuadratica {
 
     /** @throws IllegalArgumentException si {@code a == 0} o algún coeficiente no es finito */
     public static String desarrollo(double a, double b, double c) {
-        EcuacionCuadratica ecuacion = Calculadora.resolverEcuacionCuadratica(a, b, c); // valida a, b, c
-        double disc = ecuacion.discriminante();
+        QuadraticEquation ecuacion = Calculator.solveQuadratic(a, b, c); // valida a, b, c
+        double disc = ecuacion.discriminant();
         double dosA = 2 * a;
 
         StringBuilder sb = new StringBuilder();
@@ -40,7 +40,7 @@ public final class PasoAPasoCuadratica {
 
         double raiz = Math.sqrt(disc);
         sb.append("x = (%s ± %s) / %s\n".formatted(n(-b), n(raiz), n(dosA)));
-        if (ecuacion.tieneRaizDoble()) {
+        if (ecuacion.hasDoubleRoot()) {
             sb.append("x = %s / %s = %s".formatted(n(-b), n(dosA), n(-b / dosA)));
         } else {
             sb.append("x₁ = (%s + %s) / %s = %s\n".formatted(n(-b), n(raiz), n(dosA), n((-b + raiz) / dosA)));

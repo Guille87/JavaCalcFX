@@ -1,6 +1,6 @@
 package io.guillermoamadodiaz.javacalcfx.ui;
 
-import io.guillermoamadodiaz.javacalcfx.calc.Calculadora;
+import io.guillermoamadodiaz.javacalcfx.calc.Calculator;
 import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 
 /**
@@ -16,7 +16,7 @@ public final class PasoAPasoReglaDeTres {
 
     /** @throws IllegalArgumentException si {@code a} es 0 o algún dato no es finito */
     public static String desarrollo(double a, double b, double c) {
-        double x = Calculadora.reglaDeTres(a, b, c); // valida a, b, c
+        double x = Calculator.ruleOfThree(a, b, c); // valida a, b, c
 
         StringBuilder sb = new StringBuilder();
         sb.append(Textos.get("regladetres.pasos.intro")).append('\n');

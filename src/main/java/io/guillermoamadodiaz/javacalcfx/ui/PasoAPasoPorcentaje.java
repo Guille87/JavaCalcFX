@@ -1,6 +1,6 @@
 package io.guillermoamadodiaz.javacalcfx.ui;
 
-import io.guillermoamadodiaz.javacalcfx.calc.Calculadora;
+import io.guillermoamadodiaz.javacalcfx.calc.Calculator;
 import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 
 /**
@@ -16,7 +16,7 @@ public final class PasoAPasoPorcentaje {
 
     /** @throws IllegalArgumentException si algún dato no es un número finito */
     public static String desarrollo(double porcentaje, double cantidad) {
-        double x = Calculadora.porcentajeDe(porcentaje, cantidad); // valida los datos
+        double x = Calculator.percentageOf(porcentaje, cantidad); // valida los datos
 
         StringBuilder sb = new StringBuilder();
         sb.append(Textos.get("porcentaje.pasos.intro")).append('\n');
