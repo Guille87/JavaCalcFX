@@ -1,7 +1,7 @@
 package io.guillermoamadodiaz.javacalcfx.ui;
 
 import io.guillermoamadodiaz.javacalcfx.calc.Calculator;
-import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
+import io.guillermoamadodiaz.javacalcfx.i18n.Messages;
 
 /**
  * Desarrollo paso a paso de la regla de tres directa: plantea la proporción
@@ -19,7 +19,7 @@ public final class PasoAPasoReglaDeTres {
         double x = Calculator.ruleOfThree(a, b, c); // valida a, b, c
 
         StringBuilder sb = new StringBuilder();
-        sb.append(Textos.get("regladetres.pasos.intro")).append('\n');
+        sb.append(Messages.get("regladetres.pasos.intro")).append('\n');
         sb.append("%s → %s\n".formatted(n(a), n(b)));
         sb.append("%s → x\n\n".formatted(n(c)));
         sb.append("x = (c · b) / a\n");

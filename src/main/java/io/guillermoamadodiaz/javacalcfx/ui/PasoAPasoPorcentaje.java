@@ -1,7 +1,7 @@
 package io.guillermoamadodiaz.javacalcfx.ui;
 
 import io.guillermoamadodiaz.javacalcfx.calc.Calculator;
-import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
+import io.guillermoamadodiaz.javacalcfx.i18n.Messages;
 
 /**
  * Desarrollo paso a paso del porcentaje de una cantidad: sustituye los datos en
@@ -19,7 +19,7 @@ public final class PasoAPasoPorcentaje {
         double x = Calculator.percentageOf(porcentaje, cantidad); // valida los datos
 
         StringBuilder sb = new StringBuilder();
-        sb.append(Textos.get("porcentaje.pasos.intro")).append('\n');
+        sb.append(Messages.get("porcentaje.pasos.intro")).append('\n');
         sb.append("x = (p / 100) · c\n");
         sb.append("x = (%s / 100) · %s\n".formatted(n(porcentaje), n(cantidad)));
         sb.append("x = %s · %s\n".formatted(n(porcentaje / 100.0), n(cantidad)));

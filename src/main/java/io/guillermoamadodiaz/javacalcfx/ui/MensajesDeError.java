@@ -1,7 +1,7 @@
 package io.guillermoamadodiaz.javacalcfx.ui;
 
 import io.guillermoamadodiaz.javacalcfx.calc.CalculationError;
-import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
+import io.guillermoamadodiaz.javacalcfx.i18n.Messages;
 import java.util.List;
 import java.util.concurrent.CancellationException;
 
@@ -21,21 +21,21 @@ public final class MensajesDeError {
             return ""; // el cálculo se canceló: no hay nada que mostrar
         }
         if (ex instanceof NumberFormatException) {
-            return Textos.get("error.numeros.invalidos");
+            return Messages.get("error.numeros.invalidos");
         }
         if (ex instanceof CalculationError error) {
-            return Textos.get("error.prefijo", Textos.get(error.key(), traducirArgumentos(error.arguments())));
+            return Messages.get("error.prefijo", Messages.get(error.key(), traducirArgumentos(error.arguments())));
         }
         if (ex instanceof IllegalArgumentException || ex instanceof ArithmeticException) {
-            return Textos.get("error.prefijo", ex.getMessage());
+            return Messages.get("error.prefijo", ex.getMessage());
         }
-        return Textos.get("error.inesperado", String.valueOf(ex));
+        return Messages.get("error.inesperado", String.valueOf(ex));
     }
 
     /** Traduce los argumentos que son a su vez claves de texto ({@link CalculationError.Name}). */
     private static Object[] traducirArgumentos(List<Object> argumentos) {
         return argumentos.stream()
-                .map(arg -> arg instanceof CalculationError.Name nombre ? Textos.get(nombre.key()) : arg)
+                .map(arg -> arg instanceof CalculationError.Name nombre ? Messages.get(nombre.key()) : arg)
                 .toArray();
     }
 }

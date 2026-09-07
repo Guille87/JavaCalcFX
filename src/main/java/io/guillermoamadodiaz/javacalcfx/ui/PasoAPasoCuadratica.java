@@ -2,7 +2,7 @@ package io.guillermoamadodiaz.javacalcfx.ui;
 
 import io.guillermoamadodiaz.javacalcfx.calc.Calculator;
 import io.guillermoamadodiaz.javacalcfx.calc.Calculator.QuadraticEquation;
-import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
+import io.guillermoamadodiaz.javacalcfx.i18n.Messages;
 
 /**
  * Desarrollo paso a paso de la fórmula cuadrática, en notación lineal.
@@ -31,7 +31,7 @@ public final class PasoAPasoCuadratica {
         if (disc < 0) {
             double re = -b / dosA;
             double im = Math.sqrt(-disc) / dosA;
-            sb.append(Textos.get("cuadratica.pasos.sin.reales")).append('\n');
+            sb.append(Messages.get("cuadratica.pasos.sin.reales")).append('\n');
             sb.append("x = %s / %s ± (√%s / %s)·i\n".formatted(n(-b), n(dosA), n(-disc), n(dosA)));
             sb.append("x₁ = %s + %s i\n".formatted(n(re), n(im)));
             sb.append("x₂ = %s - %s i".formatted(n(re), n(im)));

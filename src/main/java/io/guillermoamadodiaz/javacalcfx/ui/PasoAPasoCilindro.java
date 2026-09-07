@@ -1,7 +1,7 @@
 package io.guillermoamadodiaz.javacalcfx.ui;
 
 import io.guillermoamadodiaz.javacalcfx.calc.Calculator;
-import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
+import io.guillermoamadodiaz.javacalcfx.i18n.Messages;
 
 /**
  * Desarrollo paso a paso del área total de un cilindro, en notación lineal:
@@ -23,13 +23,13 @@ public final class PasoAPasoCilindro {
         double lateral = 2 * Math.PI * radio * altura;
 
         StringBuilder sb = new StringBuilder();
-        sb.append(Textos.get("cilindro.pasos.formula")).append('\n');
+        sb.append(Messages.get("cilindro.pasos.formula")).append('\n');
         sb.append("A = 2·π·r·(r + h)\n");
         sb.append("A = 2·π·(%s)·((%s) + (%s))\n".formatted(n(radio), n(radio), n(altura)));
         sb.append("A = 2·π·(%s)·(%s)\n".formatted(n(radio), n(radio + altura)));
         sb.append("A ≅ %s\n\n".formatted(n(area)));
 
-        sb.append(Textos.get("cilindro.pasos.desglose")).append('\n');
+        sb.append(Messages.get("cilindro.pasos.desglose")).append('\n');
         sb.append("bases   = 2·π·(%s)² ≅ %s\n".formatted(n(radio), n(bases)));
         sb.append("lateral = 2·π·(%s)·(%s) ≅ %s".formatted(n(radio), n(altura), n(lateral)));
         return sb.toString();

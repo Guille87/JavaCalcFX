@@ -1,6 +1,6 @@
 package io.guillermoamadodiaz.javacalcfx.ui;
 
-import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
+import io.guillermoamadodiaz.javacalcfx.i18n.Messages;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -103,9 +103,9 @@ public final class ConstructorDeFormularios {
         SeccionPasos seccion = pasos == null ? null : new SeccionPasos();
         BotonCopiar copiar = new BotonCopiar(resultado);
 
-        Button calcular = new Button(Textos.get("form.calcular"));
+        Button calcular = new Button(Messages.get("form.calcular"));
         calcular.setDefaultButton(true); // permite pulsar Enter
-        calcular.setTooltip(new Tooltip(Textos.get("form.calcular.tooltip")));
+        calcular.setTooltip(new Tooltip(Messages.get("form.calcular.tooltip")));
         calcular.setOnAction(e -> {
             List<String> valores = campos.stream()
                     .map(c -> c.getText() == null ? "" : c.getText().trim())
@@ -118,7 +118,7 @@ public final class ConstructorDeFormularios {
                     () -> calculo.apply(valores),
                     () -> {
                         calcular.setDisable(true);
-                        resultado.setText(Textos.get("form.calculando"));
+                        resultado.setText(Messages.get("form.calculando"));
                     },
                     texto -> {
                         calcular.setDisable(false);
@@ -137,7 +137,7 @@ public final class ConstructorDeFormularios {
                     });
         });
 
-        Button volver = Botones.crear(Textos.get("form.volver"), Textos.get("form.volver.tooltip"), volverAlMenu);
+        Button volver = Botones.crear(Messages.get("form.volver"), Messages.get("form.volver.tooltip"), volverAlMenu);
         volver.setCancelButton(true); // permite pulsar Esc
 
         pantalla.getChildren().addAll(encabezado, instruccion);
@@ -258,9 +258,9 @@ public final class ConstructorDeFormularios {
         aplicarModo.run();
         selector.setOnAction(e -> aplicarModo.run());
 
-        Button calcular = new Button(Textos.get("form.calcular"));
+        Button calcular = new Button(Messages.get("form.calcular"));
         calcular.setDefaultButton(true);
-        calcular.setTooltip(new Tooltip(Textos.get("form.calcular.tooltip")));
+        calcular.setTooltip(new Tooltip(Messages.get("form.calcular.tooltip")));
         calcular.setOnAction(e -> {
             List<String> valores = campos.stream()
                     .map(c -> c.getText() == null ? "" : c.getText().trim())
@@ -271,7 +271,7 @@ public final class ConstructorDeFormularios {
                     () -> calculo.apply(valores),
                     () -> {
                         calcular.setDisable(true);
-                        resultado.setText(Textos.get("form.calculando"));
+                        resultado.setText(Messages.get("form.calculando"));
                     },
                     texto -> {
                         calcular.setDisable(false);
@@ -287,7 +287,7 @@ public final class ConstructorDeFormularios {
                     });
         });
 
-        Button volver = Botones.crear(Textos.get("form.volver"), Textos.get("form.volver.tooltip"), volverAlMenu);
+        Button volver = Botones.crear(Messages.get("form.volver"), Messages.get("form.volver.tooltip"), volverAlMenu);
         volver.setCancelButton(true);
 
         pantalla.getChildren()
@@ -374,7 +374,7 @@ public final class ConstructorDeFormularios {
         private void mostrarDetalle(boolean visible) {
             detalle.setVisible(visible);
             detalle.setManaged(visible);
-            boton.setText(Textos.get(visible ? "form.pasos.ocultar" : "form.pasos.mostrar"));
+            boton.setText(Messages.get(visible ? "form.pasos.ocultar" : "form.pasos.mostrar"));
         }
     }
 
@@ -385,7 +385,7 @@ public final class ConstructorDeFormularios {
 
         BotonCopiar(Label resultado) {
             boton = Botones.crear(
-                    Textos.get("form.copiar"), Textos.get("form.copiar.tooltip"), () -> copiar(resultado));
+                    Messages.get("form.copiar"), Messages.get("form.copiar.tooltip"), () -> copiar(resultado));
             ocultar();
         }
 
@@ -397,7 +397,7 @@ public final class ConstructorDeFormularios {
         void mostrar() {
             boton.setVisible(true);
             boton.setManaged(true);
-            boton.setText(Textos.get("form.copiar"));
+            boton.setText(Messages.get("form.copiar"));
         }
 
         private void copiar(Label resultado) {
@@ -405,9 +405,9 @@ public final class ConstructorDeFormularios {
             contenido.putString(resultado.getText() == null ? "" : resultado.getText());
             Clipboard.getSystemClipboard().setContent(contenido);
 
-            boton.setText(Textos.get("form.copiar.hecho"));
+            boton.setText(Messages.get("form.copiar.hecho"));
             PauseTransition volver = new PauseTransition(Duration.seconds(1.5));
-            volver.setOnFinished(e -> boton.setText(Textos.get("form.copiar")));
+            volver.setOnFinished(e -> boton.setText(Messages.get("form.copiar")));
             volver.play();
         }
     }

@@ -3,7 +3,7 @@ package io.guillermoamadodiaz.javacalcfx.ui;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
+import io.guillermoamadodiaz.javacalcfx.i18n.Messages;
 import java.util.Locale;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ class PasoAPasoCuadraticaTest {
 
     @BeforeAll
     static void enEspanol() {
-        Textos.usarIdioma(Locale.forLanguageTag("es"));
+        Messages.useLocale(Locale.forLanguageTag("es"));
     }
 
     @Test

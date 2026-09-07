@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.LabeledMatchers.hasText;
 
-import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
+import io.guillermoamadodiaz.javacalcfx.i18n.Messages;
 import io.guillermoamadodiaz.javacalcfx.ui.EstadoVentana;
 import io.guillermoamadodiaz.javacalcfx.ui.Historial;
 import io.guillermoamadodiaz.javacalcfx.ui.Tema;
@@ -35,7 +35,7 @@ class InterfazTest extends ApplicationTest {
 
     @BeforeAll
     static void enEspanol() {
-        Textos.usarIdioma(Locale.forLanguageTag("es"));
+        Messages.useLocale(Locale.forLanguageTag("es"));
     }
 
     @BeforeEach
