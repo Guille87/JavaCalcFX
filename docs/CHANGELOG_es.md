@@ -9,6 +9,12 @@ y el proyecto sigue [versionado semántico](https://semver.org/lang/es/).
 
 ## [Sin publicar]
 
+### Arreglado
+
+- El historial de cálculos se guarda ahora codificado en Base64, para que sus
+  separadores internos no rompan la serialización a XML de `java.util.prefs` en
+  Linux/macOS.
+
 ## [0.3.0] - 2026-09-07
 
 ### Añadido

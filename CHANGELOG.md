@@ -9,6 +9,12 @@ and the project follows [semantic versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- The calculation history is now Base64-encoded before it is stored, so its
+  internal separators no longer break `java.util.prefs`' XML serialization on
+  Linux/macOS.
+
 ## [0.3.0] - 2026-09-07
 
 ### Added

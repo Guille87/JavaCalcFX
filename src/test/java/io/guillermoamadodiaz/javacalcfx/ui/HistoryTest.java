@@ -111,4 +111,19 @@ class HistoryTest {
         History.record("Cálculo nuevo", "resultado nuevo");
         assertEquals(10, History.recent().size());
     }
+
+    @Test
+    void the_persisted_value_is_xml_safe() {
+        // java.util.prefs serializes its values to XML on flush; the RS/US separators
+        // History uses internally are not valid XML characters, so the stored value
+        // must be encoded (Base64).
+        History.record("Factorial", "El factorial de 5 es 120");
+        String stored =
+                Preferences.userNodeForPackage(History.class).node("history").get("entries", "");
+
+        assertFalse(stored.isEmpty());
+        assertFalse(
+                stored.chars().anyMatch(c -> c < 0x20 && c != '\t' && c != '\n' && c != '\r'),
+                "the stored value must contain no control characters");
+    }
 }

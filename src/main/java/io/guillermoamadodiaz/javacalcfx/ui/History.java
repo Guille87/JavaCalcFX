@@ -1,7 +1,9 @@
 package io.guillermoamadodiaz.javacalcfx.ui;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
@@ -14,10 +16,12 @@ import java.util.stream.Collectors;
  * the one already at the top. Nothing is recorded while
  * {@link Settings#historyEnabled()} is off.
  *
- * <p>It is saved between sessions with {@link Preferences} in its own subnode, as
- * a single string (entries separated by {@code RS}, fields by {@code US}). The
- * result is trimmed to {@link #MAX_RESULT} characters so a huge factorial, say,
- * cannot overflow the preferences size limit.
+ * <p>It is saved between sessions with {@link Preferences} in its own subnode. The
+ * entries are joined into one string (separated by {@code RS}, fields by
+ * {@code US}) and then Base64-encoded, because {@link Preferences} serializes its
+ * values to XML on flush and the {@code RS}/{@code US} control characters are not
+ * valid XML. The result is trimmed to {@link #MAX_RESULT} characters so a huge
+ * factorial, say, cannot overflow the preferences size limit.
  */
 public final class History {
 
@@ -81,7 +85,7 @@ public final class History {
     private static List<Entry> load() {
         List<Entry> list = new ArrayList<>();
         try {
-            String raw = PREFS.get(KEY, "");
+            String raw = decode(PREFS.get(KEY, ""));
             if (!raw.isEmpty()) {
                 for (String chunk : raw.split(ENTRY_SEPARATOR, -1)) {
                     String[] fields = chunk.split(FIELD_SEPARATOR, -1);
@@ -112,9 +116,22 @@ public final class History {
 
     private static void save() {
         try {
-            PREFS.put(KEY, entries.stream().map(History::serialize).collect(Collectors.joining(ENTRY_SEPARATOR)));
+            String raw = entries.stream().map(History::serialize).collect(Collectors.joining(ENTRY_SEPARATOR));
+            PREFS.put(KEY, Base64.getEncoder().encodeToString(raw.getBytes(StandardCharsets.UTF_8)));
         } catch (RuntimeException ignored) {
             // if it cannot be persisted (or does not fit), the history still holds for this session
+        }
+    }
+
+    /** Base64 back to the joined string; falls back to the raw value for entries saved before 0.3.1. */
+    private static String decode(String stored) {
+        if (stored.isEmpty()) {
+            return "";
+        }
+        try {
+            return new String(Base64.getDecoder().decode(stored), StandardCharsets.UTF_8);
+        } catch (IllegalArgumentException notBase64) {
+            return stored;
         }
     }
 
