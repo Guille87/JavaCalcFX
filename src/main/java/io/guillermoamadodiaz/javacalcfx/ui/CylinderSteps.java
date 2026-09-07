@@ -23,13 +23,13 @@ public final class CylinderSteps {
         double lateral = 2 * Math.PI * radius * height;
 
         StringBuilder sb = new StringBuilder();
-        sb.append(Messages.get("cilindro.pasos.formula")).append('\n');
+        sb.append(Messages.get("cylinder.steps.formula")).append('\n');
         sb.append("A = 2·π·r·(r + h)\n");
         sb.append("A = 2·π·(%s)·((%s) + (%s))\n".formatted(n(radius), n(radius), n(height)));
         sb.append("A = 2·π·(%s)·(%s)\n".formatted(n(radius), n(radius + height)));
         sb.append("A ≅ %s\n\n".formatted(n(area)));
 
-        sb.append(Messages.get("cilindro.pasos.desglose")).append('\n');
+        sb.append(Messages.get("cylinder.steps.breakdown")).append('\n');
         sb.append("bases   = 2·π·(%s)² ≅ %s\n".formatted(n(radius), n(bases)));
         sb.append("lateral = 2·π·(%s)·(%s) ≅ %s".formatted(n(radius), n(height), n(lateral)));
         return sb.toString();

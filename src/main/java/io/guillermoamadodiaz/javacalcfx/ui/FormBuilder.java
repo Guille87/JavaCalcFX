@@ -103,9 +103,9 @@ public final class FormBuilder {
         StepsSection section = steps == null ? null : new StepsSection();
         CopyButton copy = new CopyButton(result);
 
-        Button calculate = new Button(Messages.get("form.calcular"));
+        Button calculate = new Button(Messages.get("form.calculate"));
         calculate.setDefaultButton(true); // allows pressing Enter
-        calculate.setTooltip(new Tooltip(Messages.get("form.calcular.tooltip")));
+        calculate.setTooltip(new Tooltip(Messages.get("form.calculate.tooltip")));
         calculate.setOnAction(e -> {
             List<String> values = fields.stream()
                     .map(c -> c.getText() == null ? "" : c.getText().trim())
@@ -118,7 +118,7 @@ public final class FormBuilder {
                     () -> calculation.apply(values),
                     () -> {
                         calculate.setDisable(true);
-                        result.setText(Messages.get("form.calculando"));
+                        result.setText(Messages.get("form.calculating"));
                     },
                     text -> {
                         calculate.setDisable(false);
@@ -137,7 +137,7 @@ public final class FormBuilder {
                     });
         });
 
-        Button back = Buttons.create(Messages.get("form.volver"), Messages.get("form.volver.tooltip"), backToMenu);
+        Button back = Buttons.create(Messages.get("form.back"), Messages.get("form.back.tooltip"), backToMenu);
         back.setCancelButton(true); // allows pressing Esc
 
         screen.getChildren().addAll(header, instruction);
@@ -254,9 +254,9 @@ public final class FormBuilder {
         applyMode.run();
         selector.setOnAction(e -> applyMode.run());
 
-        Button calculate = new Button(Messages.get("form.calcular"));
+        Button calculate = new Button(Messages.get("form.calculate"));
         calculate.setDefaultButton(true);
-        calculate.setTooltip(new Tooltip(Messages.get("form.calcular.tooltip")));
+        calculate.setTooltip(new Tooltip(Messages.get("form.calculate.tooltip")));
         calculate.setOnAction(e -> {
             List<String> values = fields.stream()
                     .map(c -> c.getText() == null ? "" : c.getText().trim())
@@ -267,7 +267,7 @@ public final class FormBuilder {
                     () -> calculation.apply(values),
                     () -> {
                         calculate.setDisable(true);
-                        result.setText(Messages.get("form.calculando"));
+                        result.setText(Messages.get("form.calculating"));
                     },
                     text -> {
                         calculate.setDisable(false);
@@ -283,7 +283,7 @@ public final class FormBuilder {
                     });
         });
 
-        Button back = Buttons.create(Messages.get("form.volver"), Messages.get("form.volver.tooltip"), backToMenu);
+        Button back = Buttons.create(Messages.get("form.back"), Messages.get("form.back.tooltip"), backToMenu);
         back.setCancelButton(true);
 
         screen.getChildren()
@@ -370,7 +370,7 @@ public final class FormBuilder {
         private void showDetail(boolean visible) {
             detail.setVisible(visible);
             detail.setManaged(visible);
-            button.setText(Messages.get(visible ? "form.pasos.ocultar" : "form.pasos.mostrar"));
+            button.setText(Messages.get(visible ? "form.steps.hide" : "form.steps.show"));
         }
     }
 
@@ -380,8 +380,7 @@ public final class FormBuilder {
         private final Button button;
 
         CopyButton(Label result) {
-            button = Buttons.create(
-                    Messages.get("form.copiar"), Messages.get("form.copiar.tooltip"), () -> copy(result));
+            button = Buttons.create(Messages.get("form.copy"), Messages.get("form.copy.tooltip"), () -> copy(result));
             hide();
         }
 
@@ -393,7 +392,7 @@ public final class FormBuilder {
         void show() {
             button.setVisible(true);
             button.setManaged(true);
-            button.setText(Messages.get("form.copiar"));
+            button.setText(Messages.get("form.copy"));
         }
 
         private void copy(Label result) {
@@ -401,9 +400,9 @@ public final class FormBuilder {
             content.putString(result.getText() == null ? "" : result.getText());
             Clipboard.getSystemClipboard().setContent(content);
 
-            button.setText(Messages.get("form.copiar.hecho"));
+            button.setText(Messages.get("form.copy.done"));
             PauseTransition revert = new PauseTransition(Duration.seconds(1.5));
-            revert.setOnFinished(e -> button.setText(Messages.get("form.copiar")));
+            revert.setOnFinished(e -> button.setText(Messages.get("form.copy")));
             revert.play();
         }
     }

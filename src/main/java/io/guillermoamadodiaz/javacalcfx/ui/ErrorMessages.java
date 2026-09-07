@@ -21,15 +21,15 @@ public final class ErrorMessages {
             return ""; // the calculation was cancelled: nothing to show
         }
         if (ex instanceof NumberFormatException) {
-            return Messages.get("error.numeros.invalidos");
+            return Messages.get("error.invalid.numbers");
         }
         if (ex instanceof CalculationError error) {
-            return Messages.get("error.prefijo", Messages.get(error.key(), translateArguments(error.arguments())));
+            return Messages.get("error.prefix", Messages.get(error.key(), translateArguments(error.arguments())));
         }
         if (ex instanceof IllegalArgumentException || ex instanceof ArithmeticException) {
-            return Messages.get("error.prefijo", ex.getMessage());
+            return Messages.get("error.prefix", ex.getMessage());
         }
-        return Messages.get("error.inesperado", String.valueOf(ex));
+        return Messages.get("error.unexpected", String.valueOf(ex));
     }
 
     /** Translates the arguments that are themselves text keys ({@link CalculationError.Name}). */

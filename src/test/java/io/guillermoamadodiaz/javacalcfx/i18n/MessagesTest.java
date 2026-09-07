@@ -54,19 +54,19 @@ class MessagesTest {
     @Test
     void resolves_text_in_spanish() {
         Messages.useLocale(Locale.forLanguageTag("es"));
-        assertEquals("Calcular", Messages.get("form.calcular"));
+        assertEquals("Calcular", Messages.get("form.calculate"));
     }
 
     @Test
     void resolves_text_in_english() {
         Messages.useLocale(Locale.ENGLISH);
-        assertEquals("Calculate", Messages.get("form.calcular"));
+        assertEquals("Calculate", Messages.get("form.calculate"));
     }
 
     @Test
     void an_unknown_language_falls_back_to_the_spanish_base() {
         Messages.useLocale(Locale.forLanguageTag("de"));
-        assertEquals("Volver", Messages.get("form.volver"));
+        assertEquals("Volver", Messages.get("form.back"));
     }
 
     /** Regression: asking for Spanish must yield Spanish even if the default locale is another. */
@@ -76,11 +76,11 @@ class MessagesTest {
         try {
             Locale.setDefault(Locale.ENGLISH);
             Messages.useLocale(Locale.forLanguageTag("es"));
-            assertEquals("Calcular", Messages.get("form.calcular"));
+            assertEquals("Calcular", Messages.get("form.calculate"));
 
             Locale.setDefault(Locale.forLanguageTag("es"));
             Messages.useLocale(Locale.ENGLISH);
-            assertEquals("Calculate", Messages.get("form.calcular"));
+            assertEquals("Calculate", Messages.get("form.calculate"));
         } finally {
             Locale.setDefault(previous);
         }
@@ -89,7 +89,7 @@ class MessagesTest {
     @Test
     void substitutes_the_parameters() {
         Messages.useLocale(Locale.forLanguageTag("es"));
-        assertEquals("El año 2024 es bisiesto.", Messages.get("bisiesto.resultado.si", "2024"));
+        assertEquals("El año 2024 es bisiesto.", Messages.get("leapyear.result.yes", "2024"));
     }
 
     @Test

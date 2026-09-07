@@ -74,7 +74,7 @@ public class CalculatorApp extends Application {
     @Override
     public void start(Stage stage) {
         this.stage = stage;
-        stage.setTitle(Messages.get("app.titulo"));
+        stage.setTitle(Messages.get("app.title"));
         for (int px : ICON_SIZES) {
             var url = getClass().getResource("icons/icon-" + px + ".png");
             if (url != null) {
@@ -119,35 +119,35 @@ public class CalculatorApp extends Application {
     private List<Category> catalog() {
         return List.of(
                 new Category(
-                        "geometria",
+                        "geometry",
                         List.of(
-                                menuEntry("pitagoras", this::pythagorasScreen),
-                                menuEntry("cilindro", this::cylinderScreen))),
+                                menuEntry("pythagoras", this::pythagorasScreen),
+                                menuEntry("cylinder", this::cylinderScreen))),
                 new Category(
-                        "aritmetica",
+                        "arithmetic",
                         List.of(
                                 menuEntry("factorial", this::factorialScreen),
-                                menuEntry("multiplo", this::multipleScreen),
-                                menuEntry("mcd", this::gcdScreen),
-                                menuEntry("primo", this::primeScreen),
+                                menuEntry("multiple", this::multipleScreen),
+                                menuEntry("gcd", this::gcdScreen),
+                                menuEntry("prime", this::primeScreen),
                                 menuEntry("base", this::baseScreen))),
                 new Category(
-                        "potencias",
+                        "powers",
                         List.of(
-                                menuEntry("potencia", this::powerScreen),
-                                menuEntry("raiz", this::rootScreen),
-                                menuEntry("cuadratica", this::quadraticScreen))),
+                                menuEntry("power", this::powerScreen),
+                                menuEntry("root", this::rootScreen),
+                                menuEntry("quadratic", this::quadraticScreen))),
                 new Category(
-                        "proporciones",
+                        "proportions",
                         List.of(
-                                menuEntry("porcentaje", this::percentageScreen),
-                                menuEntry("regladetres", this::ruleOfThreeScreen))),
+                                menuEntry("percentage", this::percentageScreen),
+                                menuEntry("ruleofthree", this::ruleOfThreeScreen))),
                 new Category(
-                        "otros",
+                        "other",
                         List.of(
-                                menuEntry("bisiesto", this::leapYearScreen),
-                                menuEntry("aprobado", this::gradesScreen),
-                                menuEntry("imc", this::bmiScreen))));
+                                menuEntry("leapyear", this::leapYearScreen),
+                                menuEntry("grades", this::gradesScreen),
+                                menuEntry("bmi", this::bmiScreen))));
     }
 
     /** Menu entry that, when opened, remembers the calculator for the next start. */
@@ -169,14 +169,14 @@ public class CalculatorApp extends Application {
     private void showMenu() {
         LastCalculator.forget(); // we are on the menu: no «last calculator» to reopen
 
-        Label title = new Label(Messages.get("menu.titulo"));
+        Label title = new Label(Messages.get("menu.title"));
         title.getStyleClass().add("titulo");
 
         VBox categories = new VBox(16);
         categories.setAlignment(Pos.TOP_LEFT);
         categories.setMaxWidth(MENU_WIDTH);
         for (Category category : catalog()) {
-            Label name = new Label(Messages.get("menu.categoria." + category.key()));
+            Label name = new Label(Messages.get("menu.category." + category.key()));
             name.getStyleClass().add("categoria");
 
             FlowPane buttons = new FlowPane(10, 10);
@@ -202,10 +202,10 @@ public class CalculatorApp extends Application {
         navigator.show(menu);
     }
 
-    /** Menu button from its key: uses {@code menu.boton.<key>[.tooltip]}. */
+    /** Menu button from its key: uses {@code menu.button.<key>[.tooltip]}. */
     private Button menuButton(String key, Runnable action) {
         return Buttons.create(
-                Messages.get("menu.boton." + key), Messages.get("menu.boton." + key + ".tooltip"), action);
+                Messages.get("menu.button." + key), Messages.get("menu.button." + key + ".tooltip"), action);
     }
 
     /** The menu's top bar: history, theme and language, top right. */
@@ -213,25 +213,25 @@ public class CalculatorApp extends Application {
         ComboBox<Language> selector = new ComboBox<>();
         selector.getItems().setAll(Language.values());
         selector.setValue(Messages.language());
-        selector.setTooltip(new Tooltip(Messages.get("menu.idioma.tooltip")));
+        selector.setTooltip(new Tooltip(Messages.get("menu.language.tooltip")));
         selector.setOnAction(e -> {
             Language chosen = selector.getValue();
             if (chosen != null && chosen != Messages.language()) {
                 Messages.select(chosen);
-                stage.setTitle(Messages.get("app.titulo"));
+                stage.setTitle(Messages.get("app.title"));
                 showMenu(); // rebuilds the menu already translated
             }
         });
 
-        String key = Theme.isDark() ? "menu.tema.claro" : "menu.tema.oscuro";
-        Button theme = Buttons.create(Messages.get(key), Messages.get("menu.tema.tooltip"), () -> {
+        String key = Theme.isDark() ? "menu.theme.light" : "menu.theme.dark";
+        Button theme = Buttons.create(Messages.get(key), Messages.get("menu.theme.tooltip"), () -> {
             Theme.toggle();
             Theme.applyTo(stage.getScene());
             showMenu(); // rebuilds the bar with the correct label
         });
 
-        Button history = Buttons.create(
-                Messages.get("menu.historial"), Messages.get("menu.historial.tooltip"), this::historyScreen);
+        Button history =
+                Buttons.create(Messages.get("menu.history"), Messages.get("menu.history.tooltip"), this::historyScreen);
 
         HBox bar = new HBox(8, history, theme, selector);
         bar.setAlignment(Pos.CENTER_RIGHT);
@@ -240,17 +240,17 @@ public class CalculatorApp extends Application {
 
     /** Screen with the latest calculations ({@link History}). */
     private void historyScreen() {
-        Label header = new Label(Messages.get("historial.titulo"));
+        Label header = new Label(Messages.get("history.title"));
         header.getStyleClass().add("encabezado");
 
         List<History.Entry> entries = History.recent();
 
-        Button clear = Buttons.create(Messages.get("historial.vaciar"), () -> {
+        Button clear = Buttons.create(Messages.get("history.clear"), () -> {
             History.clear();
             historyScreen();
         });
         clear.setDisable(entries.isEmpty());
-        Button back = Buttons.create(Messages.get("form.volver"), Messages.get("form.volver.tooltip"), this::showMenu);
+        Button back = Buttons.create(Messages.get("form.back"), Messages.get("form.back.tooltip"), this::showMenu);
         back.setCancelButton(true); // Esc
 
         VBox content = new VBox(16, header, new HBox(8, clear, back));
@@ -259,7 +259,7 @@ public class CalculatorApp extends Application {
         content.setPadding(new Insets(20));
 
         if (entries.isEmpty()) {
-            Label empty = new Label(Messages.get("historial.vacio"));
+            Label empty = new Label(Messages.get("history.empty"));
             empty.getStyleClass().add("categoria");
             content.getChildren().add(empty);
         } else {
@@ -304,15 +304,15 @@ public class CalculatorApp extends Application {
 
     private void pythagorasScreen() {
         forms.show(
-                Messages.get("pitagoras.titulo"),
-                Messages.get("pitagoras.instrucciones"),
-                List.of(Messages.get("pitagoras.campo.catetoA"), Messages.get("pitagoras.campo.catetoB")),
+                Messages.get("pythagoras.title"),
+                Messages.get("pythagoras.instructions"),
+                List.of(Messages.get("pythagoras.field.legA"), Messages.get("pythagoras.field.legB")),
                 NumericFilter.Type.DECIMAL,
                 values -> {
                     Triangle t =
                             Calculator.solveRightTriangle(Input.asDouble(values.get(0)), Input.asDouble(values.get(1)));
                     return Messages.get(
-                            "pitagoras.resultado",
+                            "pythagoras.result",
                             Format.number(t.hypotenuse()),
                             Format.number(t.area()),
                             Format.number(t.perimeter()),
@@ -324,12 +324,12 @@ public class CalculatorApp extends Application {
 
     private void cylinderScreen() {
         forms.show(
-                Messages.get("cilindro.titulo"),
-                Messages.get("cilindro.instrucciones"),
-                List.of(Messages.get("cilindro.campo.radio"), Messages.get("cilindro.campo.altura")),
+                Messages.get("cylinder.title"),
+                Messages.get("cylinder.instructions"),
+                List.of(Messages.get("cylinder.field.radius"), Messages.get("cylinder.field.height")),
                 NumericFilter.Type.DECIMAL,
                 values -> Messages.get(
-                        "cilindro.resultado",
+                        "cylinder.result",
                         Format.number(
                                 Calculator.cylinderArea(Input.asDouble(values.get(0)), Input.asDouble(values.get(1))))),
                 values -> CylinderSteps.explain(Input.asDouble(values.get(0)), Input.asDouble(values.get(1))));
@@ -337,40 +337,40 @@ public class CalculatorApp extends Application {
 
     private void leapYearScreen() {
         forms.show(
-                Messages.get("bisiesto.titulo"),
-                Messages.get("bisiesto.instrucciones"),
-                List.of(Messages.get("bisiesto.campo.anio")),
+                Messages.get("leapyear.title"),
+                Messages.get("leapyear.instructions"),
+                List.of(Messages.get("leapyear.field.year")),
                 NumericFilter.Type.INTEGER,
                 values -> {
                     int year = Input.asInt(values.get(0));
-                    String key = Calculator.isLeapYear(year) ? "bisiesto.resultado.si" : "bisiesto.resultado.no";
+                    String key = Calculator.isLeapYear(year) ? "leapyear.result.yes" : "leapyear.result.no";
                     return Messages.get(key, String.valueOf(year));
                 });
     }
 
     private void factorialScreen() {
         forms.show(
-                Messages.get("factorial.titulo"),
-                Messages.get("factorial.instrucciones"),
-                List.of(Messages.get("factorial.campo.numero")),
+                Messages.get("factorial.title"),
+                Messages.get("factorial.instructions"),
+                List.of(Messages.get("factorial.field.number")),
                 NumericFilter.Type.INTEGER,
                 values -> {
                     int n = Input.asInt(values.get(0));
                     BigInteger factorial = Calculator.factorial(n);
-                    return Messages.get("factorial.resultado", String.valueOf(n), Format.bigInteger(factorial));
+                    return Messages.get("factorial.result", String.valueOf(n), Format.bigInteger(factorial));
                 });
     }
 
     private void multipleScreen() {
         forms.show(
-                Messages.get("multiplo.titulo"),
-                Messages.get("multiplo.instrucciones"),
-                List.of(Messages.get("multiplo.campo.primero"), Messages.get("multiplo.campo.segundo")),
+                Messages.get("multiple.title"),
+                Messages.get("multiple.instructions"),
+                List.of(Messages.get("multiple.field.first"), Messages.get("multiple.field.second")),
                 NumericFilter.Type.INTEGER,
                 values -> {
                     long a = Input.asLong(values.get(0));
                     long b = Input.asLong(values.get(1));
-                    String key = Calculator.isMultiple(a, b) ? "multiplo.resultado.si" : "multiplo.resultado.no";
+                    String key = Calculator.isMultiple(a, b) ? "multiple.result.yes" : "multiple.result.no";
                     return Messages.get(key, String.valueOf(a), String.valueOf(b));
                 });
     }
@@ -378,11 +378,11 @@ public class CalculatorApp extends Application {
     private void gradesScreen() {
         List<String> prompts = new ArrayList<>(PASSING_GRADES);
         for (int i = 1; i <= PASSING_GRADES; i++) {
-            prompts.add(Messages.get("aprobado.campo.nota", i));
+            prompts.add(Messages.get("grades.field.grade", i));
         }
         forms.show(
-                Messages.get("aprobado.titulo"),
-                Messages.get("aprobado.instrucciones", String.valueOf((int) Calculator.MIN_GRADE), String.valueOf((int)
+                Messages.get("grades.title"),
+                Messages.get("grades.instructions", String.valueOf((int) Calculator.MIN_GRADE), String.valueOf((int)
                         Calculator.MAX_GRADE)),
                 prompts,
                 NumericFilter.Type.DECIMAL,
@@ -390,21 +390,19 @@ public class CalculatorApp extends Application {
                     double[] grades =
                             values.stream().mapToDouble(Input::asDouble).toArray();
                     double mean = Calculator.mean(grades);
-                    String key = Calculator.isPassing(mean)
-                            ? "aprobado.resultado.aprobado"
-                            : "aprobado.resultado.suspendido";
+                    String key = Calculator.isPassing(mean) ? "grades.result.pass" : "grades.result.fail";
                     return Messages.get(key, Format.twoDecimals(mean));
                 });
     }
 
     private void quadraticScreen() {
         forms.show(
-                Messages.get("cuadratica.titulo"),
-                Messages.get("cuadratica.instrucciones"),
+                Messages.get("quadratic.title"),
+                Messages.get("quadratic.instructions"),
                 List.of(
-                        Messages.get("cuadratica.campo.a"),
-                        Messages.get("cuadratica.campo.b"),
-                        Messages.get("cuadratica.campo.c")),
+                        Messages.get("quadratic.field.a"),
+                        Messages.get("quadratic.field.b"),
+                        Messages.get("quadratic.field.c")),
                 NumericFilter.Type.DECIMAL,
                 values -> {
                     QuadraticEquation e = Calculator.solveQuadratic(
@@ -413,17 +411,16 @@ public class CalculatorApp extends Application {
                             Input.asDouble(values.get(2)));
                     String delta = Format.number(e.discriminant());
                     if (e.hasDoubleRoot()) {
-                        return Messages.get("cuadratica.resultado.doble", Format.number(e.x1().real()));
+                        return Messages.get("quadratic.result.double", Format.number(e.x1().real()));
                     }
                     if (e.hasRealRoots()) {
                         return Messages.get(
-                                "cuadratica.resultado.reales",
+                                "quadratic.result.real",
                                 delta,
                                 Format.number(e.x1().real()),
                                 Format.number(e.x2().real()));
                     }
-                    return Messages.get(
-                            "cuadratica.resultado.complejas", delta, formatRoot(e.x1()), formatRoot(e.x2()));
+                    return Messages.get("quadratic.result.complex", delta, formatRoot(e.x1()), formatRoot(e.x2()));
                 },
                 values -> QuadraticSteps.explain(
                         Input.asDouble(values.get(0)), Input.asDouble(values.get(1)), Input.asDouble(values.get(2))));
@@ -437,15 +434,15 @@ public class CalculatorApp extends Application {
 
     private void powerScreen() {
         forms.show(
-                Messages.get("potencia.titulo"),
-                Messages.get("potencia.instrucciones"),
-                List.of(Messages.get("potencia.campo.base"), Messages.get("potencia.campo.exponente")),
+                Messages.get("power.title"),
+                Messages.get("power.instructions"),
+                List.of(Messages.get("power.field.base"), Messages.get("power.field.exponent")),
                 NumericFilter.Type.DECIMAL,
                 values -> {
                     double base = Input.asDouble(values.get(0));
                     double exponent = Input.asDouble(values.get(1));
                     return Messages.get(
-                            "potencia.resultado",
+                            "power.result",
                             Format.number(base),
                             Format.number(exponent),
                             Format.number(Calculator.power(base, exponent)));
@@ -454,15 +451,15 @@ public class CalculatorApp extends Application {
 
     private void rootScreen() {
         forms.show(
-                Messages.get("raiz.titulo"),
-                Messages.get("raiz.instrucciones"),
-                List.of(Messages.get("raiz.campo.radicando"), Messages.get("raiz.campo.indice")),
+                Messages.get("root.title"),
+                Messages.get("root.instructions"),
+                List.of(Messages.get("root.field.radicand"), Messages.get("root.field.index")),
                 NumericFilter.Type.DECIMAL,
                 values -> {
                     double radicand = Input.asDouble(values.get(0));
                     double index = Input.asDouble(values.get(1));
                     return Messages.get(
-                            "raiz.resultado",
+                            "root.result",
                             Format.number(index),
                             Format.number(radicand),
                             Format.number(Calculator.nthRoot(radicand, index)));
@@ -471,15 +468,15 @@ public class CalculatorApp extends Application {
 
     private void gcdScreen() {
         forms.show(
-                Messages.get("mcd.titulo"),
-                Messages.get("mcd.instrucciones"),
-                List.of(Messages.get("mcd.campo.a"), Messages.get("mcd.campo.b")),
+                Messages.get("gcd.title"),
+                Messages.get("gcd.instructions"),
+                List.of(Messages.get("gcd.field.a"), Messages.get("gcd.field.b")),
                 NumericFilter.Type.INTEGER,
                 values -> {
                     long a = Input.asLong(values.get(0));
                     long b = Input.asLong(values.get(1));
                     return Messages.get(
-                            "mcd.resultado",
+                            "gcd.result",
                             Format.integer(a),
                             Format.integer(b),
                             Format.integer(Calculator.gcd(a, b)),
@@ -489,51 +486,51 @@ public class CalculatorApp extends Application {
 
     private void primeScreen() {
         forms.show(
-                Messages.get("primo.titulo"),
-                Messages.get("primo.instrucciones"),
-                List.of(Messages.get("primo.campo.numero")),
+                Messages.get("prime.title"),
+                Messages.get("prime.instructions"),
+                List.of(Messages.get("prime.field.number")),
                 NumericFilter.Type.INTEGER,
                 values -> {
                     long n = Input.asLong(values.get(0));
                     Calculator.Primality p = Calculator.analyzePrimality(n);
                     if (p.prime()) {
-                        return Messages.get("primo.resultado.si", Format.integer(n));
+                        return Messages.get("prime.result.yes", Format.integer(n));
                     }
                     if (p.isComposite()) {
                         long divisor = p.smallestProperDivisor();
                         return Messages.get(
-                                "primo.resultado.compuesto",
+                                "prime.result.composite",
                                 Format.integer(n),
                                 Format.integer(divisor),
                                 Format.integer(n / divisor));
                     }
-                    return Messages.get("primo.resultado.no", Format.integer(n));
+                    return Messages.get("prime.result.no", Format.integer(n));
                 });
     }
 
     private void baseScreen() {
         forms.show(
-                Messages.get("base.titulo"),
-                Messages.get("base.instrucciones"),
-                List.of(Messages.get("base.campo.numero")),
+                Messages.get("base.title"),
+                Messages.get("base.instructions"),
+                List.of(Messages.get("base.field.number")),
                 null, // no filter: the number may carry a prefix and hexadecimal digits
                 values -> {
                     Calculator.BaseConversion c = Calculator.convertBase(values.get(0));
-                    return Messages.get("base.resultado", c.binary(), c.octal(), c.decimal(), c.hex());
+                    return Messages.get("base.result", c.binary(), c.octal(), c.decimal(), c.hex());
                 });
     }
 
     private void percentageScreen() {
         forms.show(
-                Messages.get("porcentaje.titulo"),
-                Messages.get("porcentaje.instrucciones"),
-                List.of(Messages.get("porcentaje.campo.porcentaje"), Messages.get("porcentaje.campo.cantidad")),
+                Messages.get("percentage.title"),
+                Messages.get("percentage.instructions"),
+                List.of(Messages.get("percentage.field.percentage"), Messages.get("percentage.field.amount")),
                 NumericFilter.Type.DECIMAL,
                 values -> {
                     double percentage = Input.asDouble(values.get(0));
                     double amount = Input.asDouble(values.get(1));
                     return Messages.get(
-                            "porcentaje.resultado",
+                            "percentage.result",
                             Format.number(percentage),
                             Format.number(amount),
                             Format.number(Calculator.percentageOf(percentage, amount)));
@@ -543,19 +540,19 @@ public class CalculatorApp extends Application {
 
     private void ruleOfThreeScreen() {
         forms.show(
-                Messages.get("regladetres.titulo"),
-                Messages.get("regladetres.instrucciones"),
+                Messages.get("ruleofthree.title"),
+                Messages.get("ruleofthree.instructions"),
                 List.of(
-                        Messages.get("regladetres.campo.a"),
-                        Messages.get("regladetres.campo.b"),
-                        Messages.get("regladetres.campo.c")),
+                        Messages.get("ruleofthree.field.a"),
+                        Messages.get("ruleofthree.field.b"),
+                        Messages.get("ruleofthree.field.c")),
                 NumericFilter.Type.DECIMAL,
                 values -> {
                     double a = Input.asDouble(values.get(0));
                     double b = Input.asDouble(values.get(1));
                     double c = Input.asDouble(values.get(2));
                     return Messages.get(
-                            "regladetres.resultado",
+                            "ruleofthree.result",
                             Format.number(a),
                             Format.number(b),
                             Format.number(c),
@@ -568,19 +565,19 @@ public class CalculatorApp extends Application {
     private void bmiScreen() {
         // Common representation between the two modes: {weight in kg, height in m}.
         FormBuilder.Mode metric = new FormBuilder.Mode(
-                Messages.get("imc.sistema.metrico"),
-                List.of(Messages.get("imc.campo.peso.kg"), Messages.get("imc.campo.altura.cm")),
+                Messages.get("bmi.system.metric"),
+                List.of(Messages.get("bmi.field.weight.kg"), Messages.get("bmi.field.height.cm")),
                 values ->
                         bmiResult(Input.asDouble(values.get(0)), Conversions.cmToMeters(Input.asDouble(values.get(1)))),
                 values -> toCommon(values, v -> new double[] {v[0], Conversions.cmToMeters(v[1])}),
                 common -> List.of(rounded(common[0], 1), rounded(Conversions.metersToCm(common[1]), 0)));
 
         FormBuilder.Mode imperial = new FormBuilder.Mode(
-                Messages.get("imc.sistema.imperial"),
+                Messages.get("bmi.system.imperial"),
                 List.of(
-                        Messages.get("imc.campo.peso.lb"),
-                        Messages.get("imc.campo.altura.pies"),
-                        Messages.get("imc.campo.altura.pulgadas")),
+                        Messages.get("bmi.field.weight.lb"),
+                        Messages.get("bmi.field.height.feet"),
+                        Messages.get("bmi.field.height.inches")),
                 values -> bmiResult(
                         Conversions.poundsToKilos(Input.asDouble(values.get(0))),
                         Conversions.feetInchesToMeters(Input.asDouble(values.get(1)), Input.asDouble(values.get(2)))),
@@ -595,9 +592,9 @@ public class CalculatorApp extends Application {
                 });
 
         forms.showWithModes(
-                Messages.get("imc.titulo"),
-                Messages.get("imc.instrucciones"),
-                Messages.get("imc.sistema"),
+                Messages.get("bmi.title"),
+                Messages.get("bmi.instructions"),
+                Messages.get("bmi.system"),
                 List.of(metric, imperial),
                 NumericFilter.Type.DECIMAL);
     }
@@ -605,9 +602,9 @@ public class CalculatorApp extends Application {
     private String bmiResult(double weightKg, double heightM) {
         Calculator.BodyMassIndex r = Calculator.bmi(weightKg, heightM);
         return Messages.get(
-                "imc.resultado",
+                "bmi.result",
                 Format.twoDecimals(r.value()),
-                Messages.get("imc.categoria." + r.category().name().toLowerCase()));
+                Messages.get("bmi.category." + r.category().name().toLowerCase()));
     }
 
     /** Parses the fields and applies {@code toCommon}; empty if a field is missing or invalid. */

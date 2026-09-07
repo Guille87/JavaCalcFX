@@ -20,7 +20,7 @@ public final class RuleOfThreeSteps {
         double x = Calculator.ruleOfThree(a, b, c); // validates a, b, c
 
         StringBuilder sb = new StringBuilder();
-        sb.append(Messages.get("regladetres.pasos.intro")).append('\n');
+        sb.append(Messages.get("ruleofthree.steps.intro")).append('\n');
         sb.append("%s → %s\n".formatted(n(a), n(b)));
         sb.append("%s → x\n\n".formatted(n(c)));
         sb.append("x = (c · b) / a\n");

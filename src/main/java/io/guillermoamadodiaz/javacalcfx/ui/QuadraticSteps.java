@@ -31,7 +31,7 @@ public final class QuadraticSteps {
         if (disc < 0) {
             double re = -b / twoA;
             double im = Math.sqrt(-disc) / twoA;
-            sb.append(Messages.get("cuadratica.pasos.sin.reales")).append('\n');
+            sb.append(Messages.get("quadratic.steps.no.real")).append('\n');
             sb.append("x = %s / %s ± (√%s / %s)·i\n".formatted(n(-b), n(twoA), n(-disc), n(twoA)));
             sb.append("x₁ = %s + %s i\n".formatted(n(re), n(im)));
             sb.append("x₂ = %s - %s i".formatted(n(re), n(im)));

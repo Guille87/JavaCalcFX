@@ -24,13 +24,13 @@ class LastCalculatorTest {
         LastCalculator.remember("factorial");
         assertEquals("factorial", LastCalculator.remembered().orElseThrow());
 
-        LastCalculator.remember("cuadratica");
-        assertEquals("cuadratica", LastCalculator.remembered().orElseThrow());
+        LastCalculator.remember("quadratic");
+        assertEquals("quadratic", LastCalculator.remembered().orElseThrow());
     }
 
     @Test
     void forgetting_clears_what_was_remembered() {
-        LastCalculator.remember("imc");
+        LastCalculator.remember("bmi");
         LastCalculator.forget();
         assertTrue(LastCalculator.remembered().isEmpty());
     }

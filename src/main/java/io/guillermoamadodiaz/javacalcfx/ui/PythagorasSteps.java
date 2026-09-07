@@ -21,20 +21,20 @@ public final class PythagorasSteps {
         Triangle t = Calculator.solveRightTriangle(a, b); // validates a and b
 
         StringBuilder sb = new StringBuilder();
-        sb.append(Messages.get("pitagoras.pasos.hipotenusa")).append('\n');
+        sb.append(Messages.get("pythagoras.steps.hypotenuse")).append('\n');
         sb.append("h = √(a² + b²)\n");
         sb.append("h = √((%s)² + (%s)²)\n".formatted(n(a), n(b)));
         sb.append("h = √(%s + %s)\n".formatted(n(a * a), n(b * b)));
         sb.append("h = √%s\n".formatted(n(a * a + b * b)));
         sb.append("h = %s\n\n".formatted(n(t.hypotenuse())));
 
-        sb.append(Messages.get("pitagoras.pasos.area")).append('\n');
+        sb.append(Messages.get("pythagoras.steps.area")).append('\n');
         sb.append("A = (a · b) / 2 = (%s · %s) / 2 = %s\n\n".formatted(n(a), n(b), n(t.area())));
 
-        sb.append(Messages.get("pitagoras.pasos.perimetro")).append('\n');
+        sb.append(Messages.get("pythagoras.steps.perimeter")).append('\n');
         sb.append("P = a + b + h = %s + %s + %s = %s\n\n".formatted(n(a), n(b), n(t.hypotenuse()), n(t.perimeter())));
 
-        sb.append(Messages.get("pitagoras.pasos.angulos")).append('\n');
+        sb.append(Messages.get("pythagoras.steps.angles")).append('\n');
         sb.append("α = arctan(b / a) = arctan(%s / %s) ≅ %s°\n".formatted(n(b), n(a), n(t.angleAlpha())));
         sb.append("β = 90° − α ≅ %s°".formatted(n(t.angleBeta())));
         return sb.toString();

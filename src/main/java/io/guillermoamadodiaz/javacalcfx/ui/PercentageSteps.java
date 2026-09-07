@@ -19,7 +19,7 @@ public final class PercentageSteps {
         double x = Calculator.percentageOf(percentage, amount); // validates the data
 
         StringBuilder sb = new StringBuilder();
-        sb.append(Messages.get("porcentaje.pasos.intro")).append('\n');
+        sb.append(Messages.get("percentage.steps.intro")).append('\n');
         sb.append("x = (p / 100) · c\n");
         sb.append("x = (%s / 100) · %s\n".formatted(n(percentage), n(amount)));
         sb.append("x = %s · %s\n".formatted(n(percentage / 100.0), n(amount)));
