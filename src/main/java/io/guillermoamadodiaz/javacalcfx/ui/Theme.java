@@ -14,7 +14,7 @@ import javafx.scene.Scene;
 public final class Theme {
 
     /** Style class that turns on dark mode (see {@code styles.css}). */
-    public static final String DARK_CLASS = "tema-oscuro";
+    public static final String DARK_CLASS = "dark-theme";
 
     private static final Preferences PREFS =
             Preferences.userNodeForPackage(Theme.class).node("tema");

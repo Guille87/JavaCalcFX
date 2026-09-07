@@ -3,11 +3,11 @@
 }
 
 /*
- * Modo oscuro: se activa añadiendo la clase «tema-oscuro» a la raíz de la escena
- * (lo hace ui/Tema). Modena deriva casi todos los colores de estas tres
- * variables, así que con redefinirlas basta; el texto se aclara solo.
+ * Dark mode: turned on by adding the «dark-theme» class to the scene root
+ * (ui/Theme does it). Modena derives almost every color from these three
+ * variables, so redefining them is enough; the text lightens on its own.
  */
-.root.tema-oscuro {
+.root.dark-theme {
     -fx-base: #3b3f42;
     -fx-background: #2b2d30;
     -fx-control-inner-background: #313438;
@@ -19,51 +19,51 @@
 }
 
 /*
- * Texto de ayuda (prompt) de los campos: siempre visible —también con el campo
- * enfocado, mientras no se escriba nada— y con un gris bien legible en ambos
- * temas (el de Modena por defecto es demasiado tenue).
+ * Field prompt text: always visible —including when the field is focused, as
+ * long as nothing is typed— and a well-legible gray in both themes (Modena's
+ * default is too faint).
  */
 .text-input {
     -fx-prompt-text-fill: #6f7276;
 }
-.root.tema-oscuro .text-input {
+.root.dark-theme .text-input {
     -fx-prompt-text-fill: #9aa0a6;
 }
 
-.titulo {
+.title {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
 }
 
-.encabezado {
+.header {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
 }
 
-/* Nombre de cada categoría en el menú. */
-.categoria {
+/* Name of each category in the menu. */
+.category {
     -fx-font-size: 14px;
     -fx-font-weight: bold;
     -fx-opacity: 0.7;
 }
 
-.label.resultado {
+.label.result {
     -fx-font-size: 14px;
 }
 
-/* Título de cada cálculo en la pantalla de historial. */
-.historial-titulo {
+/* Title of each calculation on the history screen. */
+.history-title {
     -fx-font-weight: bold;
 }
 
-/* Fecha y hora de cada cálculo en el historial: pequeña y atenuada. */
-.historial-fecha {
+/* Date and time of each calculation in the history: small and dimmed. */
+.history-date {
     -fx-font-size: 11px;
     -fx-opacity: 0.6;
 }
 
-/* Desarrollo paso a paso: monoespaciado para que la notación quede alineada. */
-.label.pasos {
+/* Step-by-step explanation: monospaced so the notation stays aligned. */
+.label.steps {
     -fx-font-family: "Consolas", "DejaVu Sans Mono", "Courier New", monospace;
     -fx-font-size: 12px;
 }
@@ -72,11 +72,11 @@
     -fx-cursor: hand;
 }
 
-/* El formulario va en un ScrollPane; que se vea como el fondo de la ventana. */
-.formulario,
-.formulario > .viewport {
+/* The form sits in a ScrollPane; make it look like the window background. */
+.form,
+.form > .viewport {
     -fx-background-color: transparent;
 }
-.formulario {
+.form {
     -fx-padding: 0;
 }

@@ -170,14 +170,14 @@ public class CalculatorApp extends Application {
         LastCalculator.forget(); // we are on the menu: no «last calculator» to reopen
 
         Label title = new Label(Messages.get("menu.title"));
-        title.getStyleClass().add("titulo");
+        title.getStyleClass().add("title");
 
         VBox categories = new VBox(16);
         categories.setAlignment(Pos.TOP_LEFT);
         categories.setMaxWidth(MENU_WIDTH);
         for (Category category : catalog()) {
             Label name = new Label(Messages.get("menu.category." + category.key()));
-            name.getStyleClass().add("categoria");
+            name.getStyleClass().add("category");
 
             FlowPane buttons = new FlowPane(10, 10);
             for (MenuEntry entry : category.entries()) {
@@ -195,7 +195,7 @@ public class CalculatorApp extends Application {
         ScrollPane scroll = new ScrollPane(new StackPane(center));
         scroll.setFitToWidth(true);
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scroll.getStyleClass().add("formulario"); // transparent background, no border
+        scroll.getStyleClass().add("form"); // transparent background, no border
 
         BorderPane menu = new BorderPane(scroll);
         menu.setTop(topBar());
@@ -241,7 +241,7 @@ public class CalculatorApp extends Application {
     /** Screen with the latest calculations ({@link History}). */
     private void historyScreen() {
         Label header = new Label(Messages.get("history.title"));
-        header.getStyleClass().add("encabezado");
+        header.getStyleClass().add("header");
 
         List<History.Entry> entries = History.recent();
 
@@ -260,21 +260,21 @@ public class CalculatorApp extends Application {
 
         if (entries.isEmpty()) {
             Label empty = new Label(Messages.get("history.empty"));
-            empty.getStyleClass().add("categoria");
+            empty.getStyleClass().add("category");
             content.getChildren().add(empty);
         } else {
             VBox list = new VBox(14);
             for (History.Entry entry : entries) {
                 Label title = new Label(entry.title());
-                title.getStyleClass().add("historial-titulo");
+                title.getStyleClass().add("history-title");
                 Label result = new Label(entry.result());
                 result.setWrapText(true);
-                result.getStyleClass().add("resultado");
+                result.getStyleClass().add("result");
 
                 VBox block = new VBox(2, title);
                 if (entry.timestamp() != null) {
                     Label date = new Label(readableDate(entry.timestamp()));
-                    date.getStyleClass().add("historial-fecha");
+                    date.getStyleClass().add("history-date");
                     block.getChildren().add(date);
                 }
                 block.getChildren().add(result);
@@ -286,7 +286,7 @@ public class CalculatorApp extends Application {
         ScrollPane scroll = new ScrollPane(new StackPane(content));
         scroll.setFitToWidth(true);
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scroll.getStyleClass().add("formulario");
+        scroll.getStyleClass().add("form");
         navigator.show(scroll);
     }
 

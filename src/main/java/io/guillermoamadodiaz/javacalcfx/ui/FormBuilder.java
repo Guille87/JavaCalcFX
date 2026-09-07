@@ -79,7 +79,7 @@ public final class FormBuilder {
         escGoesBackToMenu(screen);
 
         Label header = new Label(title);
-        header.getStyleClass().add("encabezado");
+        header.getStyleClass().add("header");
 
         Label instruction = new Label(instructions);
         instruction.setWrapText(true);
@@ -98,7 +98,7 @@ public final class FormBuilder {
         Label result = new Label();
         result.setWrapText(true);
         result.setMaxWidth(Double.MAX_VALUE);
-        result.getStyleClass().add("resultado");
+        result.getStyleClass().add("result");
 
         StepsSection section = steps == null ? null : new StepsSection();
         CopyButton copy = new CopyButton(result);
@@ -191,7 +191,7 @@ public final class FormBuilder {
         escGoesBackToMenu(screen);
 
         Label header = new Label(title);
-        header.getStyleClass().add("encabezado");
+        header.getStyleClass().add("header");
 
         Label instruction = new Label(instructions);
         instruction.setWrapText(true);
@@ -215,7 +215,7 @@ public final class FormBuilder {
         Label result = new Label();
         result.setWrapText(true);
         result.setMaxWidth(Double.MAX_VALUE);
-        result.getStyleClass().add("resultado");
+        result.getStyleClass().add("result");
         CopyButton copy = new CopyButton(result);
 
         List<TextField> fields = new ArrayList<>();
@@ -331,7 +331,7 @@ public final class FormBuilder {
         ScrollPane scroll = new ScrollPane(centerer);
         scroll.setFitToWidth(true);
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scroll.getStyleClass().add("formulario");
+        scroll.getStyleClass().add("form");
         navigator.show(scroll);
     }
 
@@ -344,7 +344,7 @@ public final class FormBuilder {
         StepsSection() {
             detail.setWrapText(true);
             detail.setMaxWidth(Double.MAX_VALUE);
-            detail.getStyleClass().add("pasos");
+            detail.getStyleClass().add("steps");
             button.setOnAction(e -> showDetail(!detail.isVisible()));
             hide();
         }

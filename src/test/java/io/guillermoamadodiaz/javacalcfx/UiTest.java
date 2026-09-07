@@ -67,19 +67,19 @@ class UiTest extends ApplicationTest {
     }
 
     private String resultText() {
-        return lookup(".resultado").queryAs(Label.class).getText();
+        return lookup(".result").queryAs(Label.class).getText();
     }
 
     @Test
     void the_menu_shows_the_title_and_the_calculators() {
-        verifyThat(".titulo", hasText("Calculadora Matemática"));
+        verifyThat(".title", hasText("Calculadora Matemática"));
         assertTrue(lookup("Calcular Teorema de Pitágoras").tryQuery().isPresent());
         assertTrue(lookup("Determinar Aprobado").tryQuery().isPresent());
     }
 
     @Test
     void the_menu_groups_the_calculators_by_category() {
-        assertTrue(lookup(".categoria").queryAll().size() >= 3);
+        assertTrue(lookup(".category").queryAll().size() >= 3);
         assertTrue(lookup("Geometría").tryQuery().isPresent());
         assertTrue(lookup("Aritmética").tryQuery().isPresent());
     }
@@ -95,10 +95,10 @@ class UiTest extends ApplicationTest {
     @Test
     void open_a_calculator_and_go_back_with_the_button() {
         clickOn("Calcular Área de Cilindro");
-        verifyThat(".encabezado", hasText("Área de Cilindro"));
+        verifyThat(".header", hasText("Área de Cilindro"));
 
         clickOn("Volver");
-        verifyThat(".titulo", hasText("Calculadora Matemática"));
+        verifyThat(".title", hasText("Calculadora Matemática"));
     }
 
     @Test
@@ -107,7 +107,7 @@ class UiTest extends ApplicationTest {
         clickOn(".text-field").write("5");
         press(KeyCode.ESCAPE).release(KeyCode.ESCAPE);
 
-        verifyThat(".titulo", hasText("Calculadora Matemática"));
+        verifyThat(".title", hasText("Calculadora Matemática"));
     }
 
     @Test
@@ -130,7 +130,7 @@ class UiTest extends ApplicationTest {
         WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> resultText().contains("Hipotenusa"));
 
         clickOn("Mostrar pasos");
-        String steps = lookup(".pasos").queryAs(Label.class).getText();
+        String steps = lookup(".steps").queryAs(Label.class).getText();
         assertTrue(steps.contains("h = √(9 + 16)"), "expected the Pythagoras explanation, was: " + steps);
     }
 
@@ -164,16 +164,16 @@ class UiTest extends ApplicationTest {
         clickOn("Volver");
         clickOn("Historial");
 
-        verifyThat(".encabezado", hasText("Historial de cálculos"));
-        assertEquals(1, lookup(".historial-titulo").queryAll().size(), "the repeated calculation must not duplicate");
-        assertTrue(lookup(".historial-fecha").tryQuery().isPresent(), "each entry carries its date");
-        String result = lookup(".resultado").nth(0).queryAs(Label.class).getText();
+        verifyThat(".header", hasText("Historial de cálculos"));
+        assertEquals(1, lookup(".history-title").queryAll().size(), "the repeated calculation must not duplicate");
+        assertTrue(lookup(".history-date").tryQuery().isPresent(), "each entry carries its date");
+        String result = lookup(".result").nth(0).queryAs(Label.class).getText();
         assertTrue(result.contains("Hipotenusa: 5"), "was: " + result);
 
         clickOn("Vaciar historial");
         WaitForAsyncUtils.waitForFxEvents();
         assertTrue(History.recent().isEmpty(), "«Clear history» must delete the calculations");
-        assertTrue(lookup(".historial-titulo").tryQuery().isEmpty(), "the screen must be left with no entries");
+        assertTrue(lookup(".history-title").tryQuery().isEmpty(), "the screen must be left with no entries");
     }
 
     @Test
@@ -231,7 +231,7 @@ class UiTest extends ApplicationTest {
     }
 
     private boolean darkMode() {
-        return lookup(".titulo").query().getScene().getRoot().getStyleClass().contains(Theme.DARK_CLASS);
+        return lookup(".title").query().getScene().getRoot().getStyleClass().contains(Theme.DARK_CLASS);
     }
 
     @Test
