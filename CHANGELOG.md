@@ -21,6 +21,10 @@ y el proyecto sigue [versionado semántico](https://semver.org/lang/es/).
 
 ### Cambiado
 
+- **IMC**: la altura se introduce en **centímetros** (antes en metros) y hay un
+  selector de sistema de medida: **métrico** (kg, cm) o **imperial** (lb, pies y
+  pulgadas). El IMC y su categoría son los mismos; solo cambian los datos de
+  entrada.
 - `Formato` usa siempre `Locale.ROOT`: los números se muestran con punto decimal
   y coma para los miles, con independencia del idioma del sistema. Antes, en un
   equipo con configuración regional española, el resultado salía con coma

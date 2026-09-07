@@ -97,3 +97,12 @@ Explicación desarrollada del cálculo, en notación lineal, tras un botón
 - [x] Copiar el resultado al portapapeles (botón «Copiar» tras un cálculo).
 - [x] Historial de cálculos (`ui/Historial`, persistido; pantalla accesible
       desde la barra del menú, con botón «Vaciar»).
+
+---
+
+## Mejoras posteriores
+
+Fuera del plan original, según van surgiendo.
+
+- [x] **IMC**: altura en centímetros y selector de sistema de medida (métrico /
+      imperial). `calc/Conversiones` + `ConstructorDeFormularios.mostrarConModos`.

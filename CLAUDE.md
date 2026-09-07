@@ -22,7 +22,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   `Primos`, `ConversorDeBases`, `ProporcionesYPorcentajes`, `IndiceMasaCorporal`), so
   select one with the enclosing class:
   `-Dtest='CalculadoraTest$Factorial#rechaza_negativos'`. Other test classes:
-  `i18n/{Textos,Idioma}Test`; in `ui` `Formato`, `MensajesDeError`, `Entrada`,
+  `calc/ConversionesTest`; `i18n/{Textos,Idioma}Test`; in `ui` `Formato`, `MensajesDeError`, `Entrada`,
   `FiltroNumerico`, `EstadoVentana`, `Tema`, `Historial`, `UltimaCalculadora`, and
   `PasoAPaso{Cuadratica,Pitagoras,Cilindro,
   Proporciones}Test`; and root `InterfazTest` (TestFX).
@@ -68,9 +68,10 @@ Single-module JavaFX desktop app in four packages: `calc` (pure domain), `i18n`
   Newton-refined so exact roots come out exact), `mcd`, `mcm` (`absExact`/`multiplyExact`
   guarded), `analizarPrimalidad` (trial division to √n, interruptible; smallest proper
   divisor for composites), `convertirBase` (base inferred from a `0b`/`0o`/`0x` prefix),
-  `porcentajeDe`, `reglaDeTres`, `imc` (with `CategoriaImc` per WHO ranges). Returns
+  `porcentajeDe`, `reglaDeTres`, `imc` (kg + m; `CategoriaImc` per WHO ranges). Returns
   immutable records (`Triangulo`, `EcuacionCuadratica`/`Raiz`, `Primalidad`,
-  `ConversionBase`, `IndiceMasaCorporal`). Interruptible loops (`factorial`,
+  `ConversionBase`, `IndiceMasaCorporal`). `Conversiones` turns lb / ft+in / cm into
+  SI units (kg, m) so `imc` serves both metric and imperial input. Interruptible loops (`factorial`,
   `analizarPrimalidad`) throw a bare `CancellationException` when `Thread.isInterrupted()`.
   Invalid input throws **`ErrorDeCalculo`** (a subclass of `IllegalArgumentException`)
   carrying the *message key* (`clave()`) and its `argumentos()`, never translated text; an
@@ -96,8 +97,10 @@ Single-module JavaFX desktop app in four packages: `calc` (pure domain), `i18n`
     to skip filtering, e.g. hex digits; Enter-default «Calcular»; wrapped result label;
     «Volver» that also fires on Esc via a capture-phase `KEY_PRESSED` filter). In a
     transparent `ScrollPane`; focuses the first field. After a successful calc it shows a
-    **«Copiar»** button (`BotonCopiar` → system clipboard); the `mostrar(...)` overload
-    that also takes a `pasos` function additionally shows a **«Mostrar pasos»** toggle.
+    **«Copiar»** button (`BotonCopiar` → system clipboard) and records the calc in
+    `Historial`; the `mostrar(...)` overload that also takes a `pasos` function shows a
+    **«Mostrar pasos»** toggle. `mostrarConModos(...)` is the variant with a `ComboBox<Modo>`
+    that swaps the fields + calc function (IMC uses it for metric/imperial); no pasos there.
   - `MensajesDeError` — pure `Throwable → String`. This is where `ErrorDeCalculo.clave()`
     (and any `Nombre` args) get translated via `Textos`; `NumberFormatException` →
     generic message; cancellation → `""`. Unit-tested.
@@ -141,8 +144,9 @@ on bad input (with a test); add its strings to both `messages*.properties` (incl
 `menu.boton.<clave>` and `.tooltip`, plus any `calc.*` error keys); add a `pantallaX()`
 calling `formularios.mostrar(titulo, instrucciones, prompts, FiltroNumerico.Tipo, calculo
 [, pasos])` with text via `Textos.get(...)`; and an `EntradaMenu("<clave>",
-this::pantallaX)` in the right `Categoria`. If it warrants a step-by-step, add a pure
-`ui/PasoAPasoX` and pass it as the `pasos` argument.
+this::pantallaX)` in the right `Categoria` (via the `entrada(...)` factory). If it warrants
+a step-by-step, add a pure `ui/PasoAPasoX` and pass it as the `pasos` argument; if it needs
+an input-mode selector, use `formularios.mostrarConModos(...)` instead.
 
 Identifiers and comments are in Spanish (keep that convention); user-visible strings live
 in `messages*.properties`. `TextosTest` guards that the two bundles have identical keys and

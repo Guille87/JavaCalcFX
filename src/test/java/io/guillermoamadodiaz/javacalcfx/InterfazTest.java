@@ -14,6 +14,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.prefs.Preferences;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
@@ -170,6 +171,24 @@ class InterfazTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
         assertTrue(Historial.reciente().isEmpty(), "«Vaciar historial» debe borrar los cálculos");
         assertTrue(lookup(".historial-titulo").tryQuery().isEmpty(), "la pantalla debe quedar sin entradas");
+    }
+
+    @Test
+    void el_imc_cambia_los_campos_segun_el_sistema_de_medida() throws TimeoutException {
+        clickOn("Calcular IMC");
+        WaitForAsyncUtils.waitForFxEvents();
+        assertEquals(2, lookup(".text-field").queryAll().size(), "métrico: peso y altura");
+
+        clickOn(lookup(".text-field").nth(0).queryAs(TextField.class)).write("70");
+        clickOn(lookup(".text-field").nth(1).queryAs(TextField.class)).write("175");
+        clickOn("Calcular");
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> textoResultado().contains("IMC"));
+        assertTrue(textoResultado().contains("22.86"), "70 kg / 175 cm ≈ 22.86, era: " + textoResultado());
+
+        ComboBox<?> selector = lookup(".combo-box").queryAs(ComboBox.class);
+        interact(() -> selector.getSelectionModel().select(1)); // imperial
+        WaitForAsyncUtils.waitForFxEvents();
+        assertEquals(3, lookup(".text-field").queryAll().size(), "imperial: peso, pies y pulgadas");
     }
 
     @Test

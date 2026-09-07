@@ -3,11 +3,13 @@ package io.guillermoamadodiaz.javacalcfx.ui;
 import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -19,6 +21,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 
 /**
  * Construye y muestra la pantalla de formulario genérica que comparten todas las
@@ -32,6 +35,9 @@ import javafx.util.Duration;
  * dominio están en la función que recibe cada pantalla, y sus errores se muestran
  * en la misma etiqueta. Si la pantalla aporta una función {@code pasos}, tras un
  * cálculo correcto aparece un botón «Mostrar pasos» que despliega su desarrollo.
+ * {@link #mostrarConModos} es una variante con un selector que cambia los campos
+ * y el cálculo (p. ej. sistema de medida). Tras un cálculo correcto siempre
+ * aparece «Copiar» y la operación queda registrada en el {@link Historial}.
  */
 public final class ConstructorDeFormularios {
 
@@ -69,13 +75,7 @@ public final class ConstructorDeFormularios {
         pantalla.setPadding(RELLENO);
         pantalla.setAlignment(Pos.TOP_CENTER);
         pantalla.setMaxWidth(ANCHO_MAXIMO);
-        // Esc vuelve al menú aunque el foco esté en un TextField (que consumiría la tecla).
-        pantalla.addEventFilter(KeyEvent.KEY_PRESSED, evento -> {
-            if (evento.getCode() == KeyCode.ESCAPE) {
-                volverAlMenu.run();
-                evento.consume();
-            }
-        });
+        escVuelveAlMenu(pantalla);
 
         Label encabezado = new Label(titulo);
         encabezado.getStyleClass().add("encabezado");
@@ -147,14 +147,152 @@ public final class ConstructorDeFormularios {
         }
         pantalla.getChildren().add(volver);
 
+        mostrarEnScroll(pantalla);
+        campos.get(0).requestFocus(); // el cursor ya está en el primer campo
+    }
+
+    /**
+     * Registro de un «modo» de un formulario con selector: su nombre visible, los
+     * campos que pide y el cálculo que hace con esos campos.
+     */
+    public record Modo(String nombre, List<String> prompts, Function<List<String>, String> calculo) {}
+
+    /**
+     * Variante del formulario con un {@link ComboBox} de modos (p. ej. sistema de
+     * medida): al cambiar de modo se reconstruyen los campos y se usa su cálculo.
+     * No admite «paso a paso». El primer modo de la lista es el inicial.
+     */
+    public void mostrarConModos(
+            String titulo,
+            String instrucciones,
+            String etiquetaModos,
+            List<Modo> modos,
+            FiltroNumerico.Tipo tipoCampo) {
+        VBox pantalla = new VBox(ESPACIADO);
+        pantalla.setPadding(RELLENO);
+        pantalla.setAlignment(Pos.TOP_CENTER);
+        pantalla.setMaxWidth(ANCHO_MAXIMO);
+        escVuelveAlMenu(pantalla);
+
+        Label encabezado = new Label(titulo);
+        encabezado.getStyleClass().add("encabezado");
+
+        Label instruccion = new Label(instrucciones);
+        instruccion.setWrapText(true);
+        instruccion.setMaxWidth(Double.MAX_VALUE);
+
+        ComboBox<Modo> selector = new ComboBox<>();
+        selector.getItems().setAll(modos);
+        selector.setMaxWidth(Double.MAX_VALUE);
+        selector.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Modo modo) {
+                return modo == null ? "" : modo.nombre();
+            }
+
+            @Override
+            public Modo fromString(String texto) {
+                return null;
+            }
+        });
+
+        Label resultado = new Label();
+        resultado.setWrapText(true);
+        resultado.setMaxWidth(Double.MAX_VALUE);
+        resultado.getStyleClass().add("resultado");
+        BotonCopiar copiar = new BotonCopiar(resultado);
+
+        List<TextField> campos = new ArrayList<>();
+        VBox camposBox = new VBox(ESPACIADO);
+        AtomicReference<Function<List<String>, String>> calculoActual = new AtomicReference<>();
+
+        Runnable aplicarModo = () -> {
+            Modo modo = selector.getValue();
+            campos.clear();
+            camposBox.getChildren().clear();
+            for (String prompt : modo.prompts()) {
+                TextField campo = new TextField();
+                campo.setPromptText(prompt);
+                if (tipoCampo != null) {
+                    FiltroNumerico.aplicarA(campo, tipoCampo);
+                }
+                campos.add(campo);
+                camposBox.getChildren().add(campo);
+            }
+            calculoActual.set(modo.calculo());
+            resultado.setText("");
+            copiar.ocultar();
+            campos.get(0).requestFocus();
+        };
+        selector.getSelectionModel().selectFirst();
+        aplicarModo.run();
+        selector.setOnAction(e -> aplicarModo.run());
+
+        Button calcular = new Button(Textos.get("form.calcular"));
+        calcular.setDefaultButton(true);
+        calcular.setTooltip(new Tooltip(Textos.get("form.calcular.tooltip")));
+        calcular.setOnAction(e -> {
+            List<String> valores = campos.stream()
+                    .map(c -> c.getText() == null ? "" : c.getText().trim())
+                    .toList();
+            Function<List<String>, String> calculo = calculoActual.get();
+            copiar.ocultar();
+            calculos.ejecutar(
+                    () -> calculo.apply(valores),
+                    () -> {
+                        calcular.setDisable(true);
+                        resultado.setText(Textos.get("form.calculando"));
+                    },
+                    texto -> {
+                        calcular.setDisable(false);
+                        resultado.setText(texto);
+                        if (!texto.isBlank()) {
+                            Historial.registrar(titulo, texto);
+                            copiar.mostrar();
+                        }
+                    },
+                    mensaje -> {
+                        calcular.setDisable(false);
+                        resultado.setText(mensaje);
+                    });
+        });
+
+        Button volver = Botones.crear(Textos.get("form.volver"), Textos.get("form.volver.tooltip"), volverAlMenu);
+        volver.setCancelButton(true);
+
+        pantalla.getChildren()
+                .addAll(
+                        encabezado,
+                        instruccion,
+                        new VBox(4, new Label(etiquetaModos), selector),
+                        camposBox,
+                        calcular,
+                        resultado,
+                        copiar.boton,
+                        volver);
+
+        mostrarEnScroll(pantalla);
+        campos.get(0).requestFocus();
+    }
+
+    /** Esc vuelve al menú aunque el foco esté en un {@link TextField} (que consumiría la tecla). */
+    private void escVuelveAlMenu(VBox pantalla) {
+        pantalla.addEventFilter(KeyEvent.KEY_PRESSED, evento -> {
+            if (evento.getCode() == KeyCode.ESCAPE) {
+                volverAlMenu.run();
+                evento.consume();
+            }
+        });
+    }
+
+    /** Envuelve el formulario en el {@link ScrollPane} transparente y lo muestra. */
+    private void mostrarEnScroll(VBox pantalla) {
         StackPane centrador = new StackPane(pantalla); // mantiene el formulario centrado
         ScrollPane scroll = new ScrollPane(centrador);
         scroll.setFitToWidth(true);
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroll.getStyleClass().add("formulario");
         navegador.mostrar(scroll);
-
-        campos.get(0).requestFocus(); // el cursor ya está en el primer campo
     }
 
     /** Botón «Mostrar / Ocultar pasos» y la etiqueta con el desarrollo. */

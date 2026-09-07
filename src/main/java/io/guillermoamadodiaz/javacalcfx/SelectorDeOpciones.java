@@ -4,6 +4,7 @@ import io.guillermoamadodiaz.javacalcfx.calc.Calculadora;
 import io.guillermoamadodiaz.javacalcfx.calc.Calculadora.EcuacionCuadratica;
 import io.guillermoamadodiaz.javacalcfx.calc.Calculadora.Raiz;
 import io.guillermoamadodiaz.javacalcfx.calc.Calculadora.Triangulo;
+import io.guillermoamadodiaz.javacalcfx.calc.Conversiones;
 import io.guillermoamadodiaz.javacalcfx.i18n.Idioma;
 import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 import io.guillermoamadodiaz.javacalcfx.ui.Botones;
@@ -545,19 +546,37 @@ public class SelectorDeOpciones extends Application {
     }
 
     private void pantallaImc() {
-        formularios.mostrar(
+        ConstructorDeFormularios.Modo metrico = new ConstructorDeFormularios.Modo(
+                Textos.get("imc.sistema.metrico"),
+                List.of(Textos.get("imc.campo.peso.kg"), Textos.get("imc.campo.altura.cm")),
+                valores -> resultadoImc(
+                        Entrada.doble(valores.get(0)), Conversiones.centimetrosAMetros(Entrada.doble(valores.get(1)))));
+
+        ConstructorDeFormularios.Modo imperial = new ConstructorDeFormularios.Modo(
+                Textos.get("imc.sistema.imperial"),
+                List.of(
+                        Textos.get("imc.campo.peso.lb"),
+                        Textos.get("imc.campo.altura.pies"),
+                        Textos.get("imc.campo.altura.pulgadas")),
+                valores -> resultadoImc(
+                        Conversiones.librasAKilos(Entrada.doble(valores.get(0))),
+                        Conversiones.piesYPulgadasAMetros(
+                                Entrada.doble(valores.get(1)), Entrada.doble(valores.get(2)))));
+
+        formularios.mostrarConModos(
                 Textos.get("imc.titulo"),
                 Textos.get("imc.instrucciones"),
-                List.of(Textos.get("imc.campo.peso"), Textos.get("imc.campo.altura")),
-                FiltroNumerico.Tipo.DECIMAL,
-                valores -> {
-                    Calculadora.IndiceMasaCorporal r =
-                            Calculadora.imc(Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1)));
-                    return Textos.get(
-                            "imc.resultado",
-                            Formato.dosDecimales(r.valor()),
-                            Textos.get("imc.categoria." + r.categoria().name().toLowerCase()));
-                });
+                Textos.get("imc.sistema"),
+                List.of(metrico, imperial),
+                FiltroNumerico.Tipo.DECIMAL);
+    }
+
+    private String resultadoImc(double pesoKg, double alturaM) {
+        Calculadora.IndiceMasaCorporal r = Calculadora.imc(pesoKg, alturaM);
+        return Textos.get(
+                "imc.resultado",
+                Formato.dosDecimales(r.valor()),
+                Textos.get("imc.categoria." + r.categoria().name().toLowerCase()));
     }
 
     public static void main(String[] args) {

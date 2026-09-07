@@ -52,7 +52,7 @@ error legible) en la misma pantalla.
 | **Conversor de bases** | Un entero (prefijos `0b`/`0o`/`0x`, o decimal) | El número en binario, octal, decimal y hexadecimal |
 | **Porcentaje** | Un porcentaje y una cantidad | El X % de la cantidad, con **paso a paso** opcional |
 | **Regla de tres** | Tres valores `a`, `b`, `c` | `x = c·b/a` (regla de tres directa), con **paso a paso** opcional |
-| **IMC** | Peso en kg y altura en m (> 0) | El índice de masa corporal y su categoría (peso insuficiente / normal / sobrepeso / obesidad) según la OMS |
+| **IMC** | Peso y altura, en sistema métrico (kg, cm) o imperial (lb, pies y pulgadas) | El índice de masa corporal y su categoría (peso insuficiente / normal / sobrepeso / obesidad) según la OMS |
 
 Aspectos transversales a todas las pantallas:
 
@@ -207,7 +207,9 @@ paquete raíz (la `Application` y su catálogo de pantallas).
   método comprueba sus precondiciones y, ante una entrada inválida, lanza
   `ErrorDeCalculo` con la *clave* del mensaje y sus argumentos; la interfaz
   (`ui/MensajesDeError`) es quien lo traduce. Devuelve `record`s inmutables
-  (`Triangulo`, `EcuacionCuadratica`…). Es la capa cubierta por tests unitarios.
+  (`Triangulo`, `EcuacionCuadratica`…). `Conversiones` pasa libras/pies/pulgadas/
+  centímetros a las unidades del SI para reutilizar la misma lógica (lo usa el
+  IMC). Es la capa cubierta por tests unitarios.
 - **`i18n/`** — `Textos` lee los ficheros `messages*.properties` (español de
   base, inglés encima) y resuelve claves con sustitución de parámetros vía
   `MessageFormat`; `Idioma` es el enum del selector. El idioma se elige desde el
@@ -221,8 +223,10 @@ paquete raíz (la `Application` y su catálogo de pantallas).
     ejecutor. Solo hay un cálculo a la vez.
   - `ConstructorDeFormularios` — arma la pantalla de formulario genérica (dentro de
     un `ScrollPane`, con el foco en el primer campo). Tras un cálculo correcto
-    ofrece un botón «Copiar» (resultado al portapapeles) y, si la pantalla lo
-    aporta, «Mostrar pasos».
+    ofrece un botón «Copiar» (resultado al portapapeles), registra el cálculo en
+    el `Historial` y, si la pantalla lo aporta, «Mostrar pasos». `mostrarConModos`
+    es una variante con un selector que cambia los campos y el cálculo (lo usa el
+    IMC para métrico/imperial).
   - `MensajesDeError` — función pura `Throwable → String` (probada con tests).
   - `Formato` — formateo numérico puro y seguro entre hilos, con `Locale.ROOT`
     (punto decimal) para no depender del idioma del sistema (probado con tests).
