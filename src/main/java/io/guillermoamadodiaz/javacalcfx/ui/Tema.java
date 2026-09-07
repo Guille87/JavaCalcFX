@@ -9,7 +9,7 @@ import javafx.scene.Scene;
  * <p>El modo oscuro se activa añadiendo la clase de estilo {@link #CLASE_OSCURO}
  * a la raíz de la escena; los colores están en {@code styles.css}. La preferencia
  * se persiste con {@link Preferences} (en un subnodo propio para que no la borre
- * la limpieza de {@link EstadoVentana} en los tests).
+ * la limpieza de {@link WindowState} en los tests).
  */
 public final class Tema {
 

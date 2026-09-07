@@ -6,10 +6,10 @@ import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.LabeledMatchers.hasText;
 
 import io.guillermoamadodiaz.javacalcfx.i18n.Messages;
-import io.guillermoamadodiaz.javacalcfx.ui.EstadoVentana;
 import io.guillermoamadodiaz.javacalcfx.ui.Historial;
 import io.guillermoamadodiaz.javacalcfx.ui.Tema;
 import io.guillermoamadodiaz.javacalcfx.ui.UltimaCalculadora;
+import io.guillermoamadodiaz.javacalcfx.ui.WindowState;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -48,7 +48,7 @@ class InterfazTest extends ApplicationTest {
         Historial.limpiar();
         UltimaCalculadora.olvidar();
         try {
-            Preferences.userNodeForPackage(EstadoVentana.class).clear();
+            Preferences.userNodeForPackage(WindowState.class).clear();
             Preferences.userNodeForPackage(Tema.class).node("tema").clear();
             Preferences.userNodeForPackage(Historial.class).node("historial").clear();
         } catch (Exception ignorado) {

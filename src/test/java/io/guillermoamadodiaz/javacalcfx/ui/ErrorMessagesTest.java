@@ -11,67 +11,66 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class MensajesDeErrorTest {
+class ErrorMessagesTest {
 
     @BeforeAll
-    static void fijarIdioma() {
+    static void pinLanguage() {
         Messages.useLocale(Locale.forLanguageTag("es"));
     }
 
     @AfterAll
-    static void restaurarIdioma() {
+    static void restoreLanguage() {
         Messages.useLocale(Locale.getDefault());
     }
 
     @Test
-    void cancelacion_no_produce_mensaje() {
-        assertEquals("", MensajesDeError.describir(new CancellationException()));
+    void cancellation_produces_no_message() {
+        assertEquals("", ErrorMessages.describe(new CancellationException()));
     }
 
     @Test
-    void numero_invalido_da_mensaje_generico() {
+    void an_invalid_number_gives_a_generic_message() {
         assertEquals(
                 "Por favor ingresa números válidos en todos los campos.",
-                MensajesDeError.describir(new NumberFormatException("For input string: \"x\"")));
+                ErrorMessages.describe(new NumberFormatException("For input string: \"x\"")));
     }
 
     @Test
-    void argumento_ilegal_conserva_el_mensaje_de_dominio() {
+    void an_illegal_argument_keeps_the_domain_message() {
         assertEquals(
                 "Error: El radio no puede ser negativo.",
-                MensajesDeError.describir(new IllegalArgumentException("El radio no puede ser negativo.")));
+                ErrorMessages.describe(new IllegalArgumentException("El radio no puede ser negativo.")));
     }
 
     @Test
-    void error_de_calculo_se_traduce_por_su_clave() {
+    void a_calculation_error_is_translated_by_its_key() {
         assertEquals(
                 "Error: El año debe ser mayor que cero.",
-                MensajesDeError.describir(new CalculationError("calc.year.not.positive")));
+                ErrorMessages.describe(new CalculationError("calc.year.not.positive")));
     }
 
     @Test
-    void error_de_calculo_traduce_tambien_el_nombre_del_dato() {
+    void a_calculation_error_also_translates_the_value_name() {
         assertEquals(
                 "Error: El radio no puede ser negativo.",
-                MensajesDeError.describir(
+                ErrorMessages.describe(
                         new CalculationError("calc.value.negative", new CalculationError.Name("calc.name.radius"))));
     }
 
     @Test
-    void error_de_calculo_con_argumento_literal() {
+    void a_calculation_error_with_a_literal_argument() {
         assertEquals(
                 "Error: El número es demasiado grande (máximo 100000).",
-                MensajesDeError.describir(new CalculationError("calc.factorial.large", "100000")));
+                ErrorMessages.describe(new CalculationError("calc.factorial.large", "100000")));
     }
 
     @Test
-    void aritmetica_se_trata_como_error_de_dominio() {
-        assertTrue(
-                MensajesDeError.describir(new ArithmeticException("/ by zero")).startsWith("Error: "));
+    void arithmetic_is_treated_as_a_domain_error() {
+        assertTrue(ErrorMessages.describe(new ArithmeticException("/ by zero")).startsWith("Error: "));
     }
 
     @Test
-    void excepcion_inesperada_se_marca_como_tal() {
-        assertTrue(MensajesDeError.describir(new IllegalStateException("boom")).startsWith("Error inesperado: "));
+    void an_unexpected_exception_is_marked_as_such() {
+        assertTrue(ErrorMessages.describe(new IllegalStateException("boom")).startsWith("Error inesperado: "));
     }
 }

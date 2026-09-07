@@ -7,15 +7,14 @@ import io.guillermoamadodiaz.javacalcfx.calc.Calculator.Triangle;
 import io.guillermoamadodiaz.javacalcfx.calc.Conversions;
 import io.guillermoamadodiaz.javacalcfx.i18n.Language;
 import io.guillermoamadodiaz.javacalcfx.i18n.Messages;
-import io.guillermoamadodiaz.javacalcfx.ui.Botones;
-import io.guillermoamadodiaz.javacalcfx.ui.CalculosAsync;
+import io.guillermoamadodiaz.javacalcfx.ui.AsyncCalculations;
+import io.guillermoamadodiaz.javacalcfx.ui.Buttons;
 import io.guillermoamadodiaz.javacalcfx.ui.ConstructorDeFormularios;
-import io.guillermoamadodiaz.javacalcfx.ui.Entrada;
-import io.guillermoamadodiaz.javacalcfx.ui.EstadoVentana;
-import io.guillermoamadodiaz.javacalcfx.ui.FiltroNumerico;
-import io.guillermoamadodiaz.javacalcfx.ui.Formato;
+import io.guillermoamadodiaz.javacalcfx.ui.Format;
 import io.guillermoamadodiaz.javacalcfx.ui.Historial;
-import io.guillermoamadodiaz.javacalcfx.ui.Navegador;
+import io.guillermoamadodiaz.javacalcfx.ui.Input;
+import io.guillermoamadodiaz.javacalcfx.ui.Navigator;
+import io.guillermoamadodiaz.javacalcfx.ui.NumericFilter;
 import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoCilindro;
 import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoCuadratica;
 import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoPitagoras;
@@ -23,6 +22,7 @@ import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoPorcentaje;
 import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoReglaDeTres;
 import io.guillermoamadodiaz.javacalcfx.ui.Tema;
 import io.guillermoamadodiaz.javacalcfx.ui.UltimaCalculadora;
+import io.guillermoamadodiaz.javacalcfx.ui.WindowState;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -50,7 +50,7 @@ import javafx.stage.Stage;
 
 /**
  * Ventana principal. Solo hace tres cosas: montar la infraestructura de interfaz
- * ({@link Navegador}, {@link CalculosAsync}, {@link ConstructorDeFormularios}),
+ * ({@link Navigator}, {@link AsyncCalculations}, {@link ConstructorDeFormularios}),
  * declarar el catálogo de calculadoras y cerrar el ejecutor al salir. Cada
  * {@code pantallaX()} describe únicamente <em>qué</em> se pide y <em>qué</em> se
  * muestra; la aritmética vive en {@link Calculator} y los textos en {@link Messages}.
@@ -62,8 +62,8 @@ public class SelectorDeOpciones extends Application {
     private static final int NOTAS_APROBADO = 5;
 
     private final StackPane raiz = new StackPane();
-    private final CalculosAsync calculos = new CalculosAsync();
-    private final Navegador navegador = new Navegador(raiz, calculos::cancelar);
+    private final AsyncCalculations calculos = new AsyncCalculations();
+    private final Navigator navegador = new Navigator(raiz, calculos::cancel);
     private final ConstructorDeFormularios formularios =
             new ConstructorDeFormularios(navegador, calculos, this::mostrarMenu);
 
@@ -95,15 +95,15 @@ public class SelectorDeOpciones extends Application {
         escenario.setScene(escena);
         escenario.setMinWidth(710);
         escenario.setMinHeight(600);
-        EstadoVentana.restaurar(escenario);
+        WindowState.restore(escenario);
         escenario.show();
-        EstadoVentana.vigilar(escenario);
+        WindowState.watch(escenario);
         ultimaCalculadora.ifPresent(this::abrirCalculadora); // reabre la última pantalla
     }
 
     @Override
     public void stop() {
-        calculos.cerrar();
+        calculos.close();
     }
 
     // ------------------------------------------------------------------
@@ -199,12 +199,12 @@ public class SelectorDeOpciones extends Application {
 
         BorderPane menu = new BorderPane(scroll);
         menu.setTop(barraDeIdioma());
-        navegador.mostrar(menu);
+        navegador.show(menu);
     }
 
     /** Botón del menú a partir de su clave: usa {@code menu.boton.<clave>[.tooltip]}. */
     private Button botonMenu(String clave, Runnable accion) {
-        return Botones.crear(
+        return Buttons.create(
                 Messages.get("menu.boton." + clave), Messages.get("menu.boton." + clave + ".tooltip"), accion);
     }
 
@@ -224,13 +224,13 @@ public class SelectorDeOpciones extends Application {
         });
 
         String clave = Tema.esOscuro() ? "menu.tema.claro" : "menu.tema.oscuro";
-        Button tema = Botones.crear(Messages.get(clave), Messages.get("menu.tema.tooltip"), () -> {
+        Button tema = Buttons.create(Messages.get(clave), Messages.get("menu.tema.tooltip"), () -> {
             Tema.alternar();
             Tema.aplicarA(escenario.getScene());
             mostrarMenu(); // reconstruye la barra con la etiqueta correcta
         });
 
-        Button historial = Botones.crear(
+        Button historial = Buttons.create(
                 Messages.get("menu.historial"), Messages.get("menu.historial.tooltip"), this::pantallaHistorial);
 
         HBox barra = new HBox(8, historial, tema, selector);
@@ -245,13 +245,13 @@ public class SelectorDeOpciones extends Application {
 
         List<Historial.Entrada> entradas = Historial.reciente();
 
-        Button vaciar = Botones.crear(Messages.get("historial.vaciar"), () -> {
+        Button vaciar = Buttons.create(Messages.get("historial.vaciar"), () -> {
             Historial.limpiar();
             pantallaHistorial();
         });
         vaciar.setDisable(entradas.isEmpty());
         Button volver =
-                Botones.crear(Messages.get("form.volver"), Messages.get("form.volver.tooltip"), this::mostrarMenu);
+                Buttons.create(Messages.get("form.volver"), Messages.get("form.volver.tooltip"), this::mostrarMenu);
         volver.setCancelButton(true); // Esc
 
         VBox contenido = new VBox(16, encabezado, new HBox(8, vaciar, volver));
@@ -288,7 +288,7 @@ public class SelectorDeOpciones extends Application {
         scroll.setFitToWidth(true);
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroll.getStyleClass().add("formulario");
-        navegador.mostrar(scroll);
+        navegador.show(scroll);
     }
 
     /** Fecha y hora de un cálculo del historial, con los meses en el idioma actual. */
@@ -308,19 +308,20 @@ public class SelectorDeOpciones extends Application {
                 Messages.get("pitagoras.titulo"),
                 Messages.get("pitagoras.instrucciones"),
                 List.of(Messages.get("pitagoras.campo.catetoA"), Messages.get("pitagoras.campo.catetoB")),
-                FiltroNumerico.Tipo.DECIMAL,
+                NumericFilter.Type.DECIMAL,
                 valores -> {
-                    Triangle t =
-                            Calculator.solveRightTriangle(Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1)));
+                    Triangle t = Calculator.solveRightTriangle(
+                            Input.asDouble(valores.get(0)), Input.asDouble(valores.get(1)));
                     return Messages.get(
                             "pitagoras.resultado",
-                            Formato.numero(t.hypotenuse()),
-                            Formato.numero(t.area()),
-                            Formato.numero(t.perimeter()),
-                            Formato.numero(t.angleAlpha()),
-                            Formato.numero(t.angleBeta()));
+                            Format.number(t.hypotenuse()),
+                            Format.number(t.area()),
+                            Format.number(t.perimeter()),
+                            Format.number(t.angleAlpha()),
+                            Format.number(t.angleBeta()));
                 },
-                valores -> PasoAPasoPitagoras.desarrollo(Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1))));
+                valores ->
+                        PasoAPasoPitagoras.desarrollo(Input.asDouble(valores.get(0)), Input.asDouble(valores.get(1))));
     }
 
     private void pantallaCilindro() {
@@ -328,12 +329,13 @@ public class SelectorDeOpciones extends Application {
                 Messages.get("cilindro.titulo"),
                 Messages.get("cilindro.instrucciones"),
                 List.of(Messages.get("cilindro.campo.radio"), Messages.get("cilindro.campo.altura")),
-                FiltroNumerico.Tipo.DECIMAL,
+                NumericFilter.Type.DECIMAL,
                 valores -> Messages.get(
                         "cilindro.resultado",
-                        Formato.numero(
-                                Calculator.cylinderArea(Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1))))),
-                valores -> PasoAPasoCilindro.desarrollo(Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1))));
+                        Format.number(Calculator.cylinderArea(
+                                Input.asDouble(valores.get(0)), Input.asDouble(valores.get(1))))),
+                valores ->
+                        PasoAPasoCilindro.desarrollo(Input.asDouble(valores.get(0)), Input.asDouble(valores.get(1))));
     }
 
     private void pantallaBisiesto() {
@@ -341,9 +343,9 @@ public class SelectorDeOpciones extends Application {
                 Messages.get("bisiesto.titulo"),
                 Messages.get("bisiesto.instrucciones"),
                 List.of(Messages.get("bisiesto.campo.anio")),
-                FiltroNumerico.Tipo.ENTERO,
+                NumericFilter.Type.INTEGER,
                 valores -> {
-                    int anio = Entrada.entero(valores.get(0));
+                    int anio = Input.asInt(valores.get(0));
                     String clave = Calculator.isLeapYear(anio) ? "bisiesto.resultado.si" : "bisiesto.resultado.no";
                     return Messages.get(clave, String.valueOf(anio));
                 });
@@ -354,11 +356,11 @@ public class SelectorDeOpciones extends Application {
                 Messages.get("factorial.titulo"),
                 Messages.get("factorial.instrucciones"),
                 List.of(Messages.get("factorial.campo.numero")),
-                FiltroNumerico.Tipo.ENTERO,
+                NumericFilter.Type.INTEGER,
                 valores -> {
-                    int n = Entrada.entero(valores.get(0));
+                    int n = Input.asInt(valores.get(0));
                     BigInteger factorial = Calculator.factorial(n);
-                    return Messages.get("factorial.resultado", String.valueOf(n), Formato.enteroGrande(factorial));
+                    return Messages.get("factorial.resultado", String.valueOf(n), Format.bigInteger(factorial));
                 });
     }
 
@@ -367,10 +369,10 @@ public class SelectorDeOpciones extends Application {
                 Messages.get("multiplo.titulo"),
                 Messages.get("multiplo.instrucciones"),
                 List.of(Messages.get("multiplo.campo.primero"), Messages.get("multiplo.campo.segundo")),
-                FiltroNumerico.Tipo.ENTERO,
+                NumericFilter.Type.INTEGER,
                 valores -> {
-                    long a = Entrada.largo(valores.get(0));
-                    long b = Entrada.largo(valores.get(1));
+                    long a = Input.asLong(valores.get(0));
+                    long b = Input.asLong(valores.get(1));
                     String clave = Calculator.isMultiple(a, b) ? "multiplo.resultado.si" : "multiplo.resultado.no";
                     return Messages.get(clave, String.valueOf(a), String.valueOf(b));
                 });
@@ -386,15 +388,15 @@ public class SelectorDeOpciones extends Application {
                 Messages.get("aprobado.instrucciones", String.valueOf((int) Calculator.MIN_GRADE), String.valueOf((int)
                         Calculator.MAX_GRADE)),
                 prompts,
-                FiltroNumerico.Tipo.DECIMAL,
+                NumericFilter.Type.DECIMAL,
                 valores -> {
                     double[] notas =
-                            valores.stream().mapToDouble(Entrada::doble).toArray();
+                            valores.stream().mapToDouble(Input::asDouble).toArray();
                     double media = Calculator.mean(notas);
                     String clave = Calculator.isPassing(media)
                             ? "aprobado.resultado.aprobado"
                             : "aprobado.resultado.suspendido";
-                    return Messages.get(clave, Formato.dosDecimales(media));
+                    return Messages.get(clave, Format.twoDecimals(media));
                 });
     }
 
@@ -406,34 +408,36 @@ public class SelectorDeOpciones extends Application {
                         Messages.get("cuadratica.campo.a"),
                         Messages.get("cuadratica.campo.b"),
                         Messages.get("cuadratica.campo.c")),
-                FiltroNumerico.Tipo.DECIMAL,
+                NumericFilter.Type.DECIMAL,
                 valores -> {
                     QuadraticEquation e = Calculator.solveQuadratic(
-                            Entrada.doble(valores.get(0)),
-                            Entrada.doble(valores.get(1)),
-                            Entrada.doble(valores.get(2)));
-                    String delta = Formato.numero(e.discriminant());
+                            Input.asDouble(valores.get(0)),
+                            Input.asDouble(valores.get(1)),
+                            Input.asDouble(valores.get(2)));
+                    String delta = Format.number(e.discriminant());
                     if (e.hasDoubleRoot()) {
-                        return Messages.get("cuadratica.resultado.doble", Formato.numero(e.x1().real()));
+                        return Messages.get("cuadratica.resultado.doble", Format.number(e.x1().real()));
                     }
                     if (e.hasRealRoots()) {
                         return Messages.get(
                                 "cuadratica.resultado.reales",
                                 delta,
-                                Formato.numero(e.x1().real()),
-                                Formato.numero(e.x2().real()));
+                                Format.number(e.x1().real()),
+                                Format.number(e.x2().real()));
                     }
                     return Messages.get(
                             "cuadratica.resultado.complejas", delta, formatoRaiz(e.x1()), formatoRaiz(e.x2()));
                 },
                 valores -> PasoAPasoCuadratica.desarrollo(
-                        Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1)), Entrada.doble(valores.get(2))));
+                        Input.asDouble(valores.get(0)),
+                        Input.asDouble(valores.get(1)),
+                        Input.asDouble(valores.get(2))));
     }
 
     /** Formatea una raíz compleja como {@code a + b i} (o {@code a - b i}). */
     private static String formatoRaiz(Root raiz) {
         String signo = raiz.imaginary() < 0 ? " - " : " + ";
-        return Formato.numero(raiz.real()) + signo + Formato.numero(Math.abs(raiz.imaginary())) + " i";
+        return Format.number(raiz.real()) + signo + Format.number(Math.abs(raiz.imaginary())) + " i";
     }
 
     private void pantallaPotencia() {
@@ -441,15 +445,15 @@ public class SelectorDeOpciones extends Application {
                 Messages.get("potencia.titulo"),
                 Messages.get("potencia.instrucciones"),
                 List.of(Messages.get("potencia.campo.base"), Messages.get("potencia.campo.exponente")),
-                FiltroNumerico.Tipo.DECIMAL,
+                NumericFilter.Type.DECIMAL,
                 valores -> {
-                    double base = Entrada.doble(valores.get(0));
-                    double exponente = Entrada.doble(valores.get(1));
+                    double base = Input.asDouble(valores.get(0));
+                    double exponente = Input.asDouble(valores.get(1));
                     return Messages.get(
                             "potencia.resultado",
-                            Formato.numero(base),
-                            Formato.numero(exponente),
-                            Formato.numero(Calculator.power(base, exponente)));
+                            Format.number(base),
+                            Format.number(exponente),
+                            Format.number(Calculator.power(base, exponente)));
                 });
     }
 
@@ -458,15 +462,15 @@ public class SelectorDeOpciones extends Application {
                 Messages.get("raiz.titulo"),
                 Messages.get("raiz.instrucciones"),
                 List.of(Messages.get("raiz.campo.radicando"), Messages.get("raiz.campo.indice")),
-                FiltroNumerico.Tipo.DECIMAL,
+                NumericFilter.Type.DECIMAL,
                 valores -> {
-                    double radicando = Entrada.doble(valores.get(0));
-                    double indice = Entrada.doble(valores.get(1));
+                    double radicando = Input.asDouble(valores.get(0));
+                    double indice = Input.asDouble(valores.get(1));
                     return Messages.get(
                             "raiz.resultado",
-                            Formato.numero(indice),
-                            Formato.numero(radicando),
-                            Formato.numero(Calculator.nthRoot(radicando, indice)));
+                            Format.number(indice),
+                            Format.number(radicando),
+                            Format.number(Calculator.nthRoot(radicando, indice)));
                 });
     }
 
@@ -475,16 +479,16 @@ public class SelectorDeOpciones extends Application {
                 Messages.get("mcd.titulo"),
                 Messages.get("mcd.instrucciones"),
                 List.of(Messages.get("mcd.campo.a"), Messages.get("mcd.campo.b")),
-                FiltroNumerico.Tipo.ENTERO,
+                NumericFilter.Type.INTEGER,
                 valores -> {
-                    long a = Entrada.largo(valores.get(0));
-                    long b = Entrada.largo(valores.get(1));
+                    long a = Input.asLong(valores.get(0));
+                    long b = Input.asLong(valores.get(1));
                     return Messages.get(
                             "mcd.resultado",
-                            Formato.entero(a),
-                            Formato.entero(b),
-                            Formato.entero(Calculator.gcd(a, b)),
-                            Formato.entero(Calculator.lcm(a, b)));
+                            Format.integer(a),
+                            Format.integer(b),
+                            Format.integer(Calculator.gcd(a, b)),
+                            Format.integer(Calculator.lcm(a, b)));
                 });
     }
 
@@ -493,22 +497,22 @@ public class SelectorDeOpciones extends Application {
                 Messages.get("primo.titulo"),
                 Messages.get("primo.instrucciones"),
                 List.of(Messages.get("primo.campo.numero")),
-                FiltroNumerico.Tipo.ENTERO,
+                NumericFilter.Type.INTEGER,
                 valores -> {
-                    long n = Entrada.largo(valores.get(0));
+                    long n = Input.asLong(valores.get(0));
                     Calculator.Primality p = Calculator.analyzePrimality(n);
                     if (p.prime()) {
-                        return Messages.get("primo.resultado.si", Formato.entero(n));
+                        return Messages.get("primo.resultado.si", Format.integer(n));
                     }
                     if (p.isComposite()) {
                         long divisor = p.smallestProperDivisor();
                         return Messages.get(
                                 "primo.resultado.compuesto",
-                                Formato.entero(n),
-                                Formato.entero(divisor),
-                                Formato.entero(n / divisor));
+                                Format.integer(n),
+                                Format.integer(divisor),
+                                Format.integer(n / divisor));
                     }
-                    return Messages.get("primo.resultado.no", Formato.entero(n));
+                    return Messages.get("primo.resultado.no", Format.integer(n));
                 });
     }
 
@@ -529,18 +533,18 @@ public class SelectorDeOpciones extends Application {
                 Messages.get("porcentaje.titulo"),
                 Messages.get("porcentaje.instrucciones"),
                 List.of(Messages.get("porcentaje.campo.porcentaje"), Messages.get("porcentaje.campo.cantidad")),
-                FiltroNumerico.Tipo.DECIMAL,
+                NumericFilter.Type.DECIMAL,
                 valores -> {
-                    double porcentaje = Entrada.doble(valores.get(0));
-                    double cantidad = Entrada.doble(valores.get(1));
+                    double porcentaje = Input.asDouble(valores.get(0));
+                    double cantidad = Input.asDouble(valores.get(1));
                     return Messages.get(
                             "porcentaje.resultado",
-                            Formato.numero(porcentaje),
-                            Formato.numero(cantidad),
-                            Formato.numero(Calculator.percentageOf(porcentaje, cantidad)));
+                            Format.number(porcentaje),
+                            Format.number(cantidad),
+                            Format.number(Calculator.percentageOf(porcentaje, cantidad)));
                 },
                 valores ->
-                        PasoAPasoPorcentaje.desarrollo(Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1))));
+                        PasoAPasoPorcentaje.desarrollo(Input.asDouble(valores.get(0)), Input.asDouble(valores.get(1))));
     }
 
     private void pantallaReglaDeTres() {
@@ -551,20 +555,22 @@ public class SelectorDeOpciones extends Application {
                         Messages.get("regladetres.campo.a"),
                         Messages.get("regladetres.campo.b"),
                         Messages.get("regladetres.campo.c")),
-                FiltroNumerico.Tipo.DECIMAL,
+                NumericFilter.Type.DECIMAL,
                 valores -> {
-                    double a = Entrada.doble(valores.get(0));
-                    double b = Entrada.doble(valores.get(1));
-                    double c = Entrada.doble(valores.get(2));
+                    double a = Input.asDouble(valores.get(0));
+                    double b = Input.asDouble(valores.get(1));
+                    double c = Input.asDouble(valores.get(2));
                     return Messages.get(
                             "regladetres.resultado",
-                            Formato.numero(a),
-                            Formato.numero(b),
-                            Formato.numero(c),
-                            Formato.numero(Calculator.ruleOfThree(a, b, c)));
+                            Format.number(a),
+                            Format.number(b),
+                            Format.number(c),
+                            Format.number(Calculator.ruleOfThree(a, b, c)));
                 },
                 valores -> PasoAPasoReglaDeTres.desarrollo(
-                        Entrada.doble(valores.get(0)), Entrada.doble(valores.get(1)), Entrada.doble(valores.get(2))));
+                        Input.asDouble(valores.get(0)),
+                        Input.asDouble(valores.get(1)),
+                        Input.asDouble(valores.get(2))));
     }
 
     private void pantallaImc() {
@@ -573,7 +579,7 @@ public class SelectorDeOpciones extends Application {
                 Messages.get("imc.sistema.metrico"),
                 List.of(Messages.get("imc.campo.peso.kg"), Messages.get("imc.campo.altura.cm")),
                 valores -> resultadoImc(
-                        Entrada.doble(valores.get(0)), Conversions.cmToMeters(Entrada.doble(valores.get(1)))),
+                        Input.asDouble(valores.get(0)), Conversions.cmToMeters(Input.asDouble(valores.get(1)))),
                 valores -> comun(valores, v -> new double[] {v[0], Conversions.cmToMeters(v[1])}),
                 comun -> List.of(redondeado(comun[0], 1), redondeado(Conversions.metersToCm(comun[1]), 0)));
 
@@ -584,15 +590,15 @@ public class SelectorDeOpciones extends Application {
                         Messages.get("imc.campo.altura.pies"),
                         Messages.get("imc.campo.altura.pulgadas")),
                 valores -> resultadoImc(
-                        Conversions.poundsToKilos(Entrada.doble(valores.get(0))),
-                        Conversions.feetInchesToMeters(Entrada.doble(valores.get(1)), Entrada.doble(valores.get(2)))),
+                        Conversions.poundsToKilos(Input.asDouble(valores.get(0))),
+                        Conversions.feetInchesToMeters(Input.asDouble(valores.get(1)), Input.asDouble(valores.get(2)))),
                 valores -> comun(valores, v ->
                         new double[] {Conversions.poundsToKilos(v[0]), Conversions.feetInchesToMeters(v[1], v[2])}),
                 comun -> {
                     double[] piesYPulgadas = Conversions.metersToFeetInches(comun[1]);
                     return List.of(
                             redondeado(Conversions.kilosToPounds(comun[0]), 1),
-                            Formato.numero(piesYPulgadas[0]),
+                            Format.number(piesYPulgadas[0]),
                             redondeado(piesYPulgadas[1], 1));
                 });
 
@@ -601,14 +607,14 @@ public class SelectorDeOpciones extends Application {
                 Messages.get("imc.instrucciones"),
                 Messages.get("imc.sistema"),
                 List.of(metrico, imperial),
-                FiltroNumerico.Tipo.DECIMAL);
+                NumericFilter.Type.DECIMAL);
     }
 
     private String resultadoImc(double pesoKg, double alturaM) {
         Calculator.BodyMassIndex r = Calculator.bmi(pesoKg, alturaM);
         return Messages.get(
                 "imc.resultado",
-                Formato.dosDecimales(r.value()),
+                Format.twoDecimals(r.value()),
                 Messages.get("imc.categoria." + r.category().name().toLowerCase()));
     }
 
@@ -617,7 +623,7 @@ public class SelectorDeOpciones extends Application {
         try {
             double[] crudos = new double[valores.size()];
             for (int i = 0; i < valores.size(); i++) {
-                crudos[i] = Entrada.doble(valores.get(i));
+                crudos[i] = Input.asDouble(valores.get(i));
             }
             return Optional.of(aComun.apply(crudos));
         } catch (RuntimeException noValido) {
@@ -633,7 +639,7 @@ public class SelectorDeOpciones extends Application {
      */
     private static String redondeado(double valor, int decimales) {
         double factor = Math.pow(10, decimales);
-        return Formato.numero(Math.round(valor * factor) / factor);
+        return Format.number(Math.round(valor * factor) / factor);
     }
 
     public static void main(String[] args) {

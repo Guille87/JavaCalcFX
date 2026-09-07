@@ -32,7 +32,7 @@ import javafx.util.StringConverter;
  * {@link ScrollPane} para que, si la ventana se hace muy pequeña, se pueda
  * desplazar en vez de recortar contenido.
  *
- * <p>El cálculo se delega en {@link CalculosAsync}; el parseo y la validación de
+ * <p>El cálculo se delega en {@link AsyncCalculations}; el parseo y la validación de
  * dominio están en la función que recibe cada pantalla, y sus errores se muestran
  * en la misma etiqueta. Si la pantalla aporta una función {@code pasos}, tras un
  * cálculo correcto aparece un botón «Mostrar pasos» que despliega su desarrollo.
@@ -46,11 +46,11 @@ public final class ConstructorDeFormularios {
     private static final double ESPACIADO = 10;
     private static final double ANCHO_MAXIMO = 440;
 
-    private final Navegador navegador;
-    private final CalculosAsync calculos;
+    private final Navigator navegador;
+    private final AsyncCalculations calculos;
     private final Runnable volverAlMenu;
 
-    public ConstructorDeFormularios(Navegador navegador, CalculosAsync calculos, Runnable volverAlMenu) {
+    public ConstructorDeFormularios(Navigator navegador, AsyncCalculations calculos, Runnable volverAlMenu) {
         this.navegador = navegador;
         this.calculos = calculos;
         this.volverAlMenu = volverAlMenu;
@@ -60,7 +60,7 @@ public final class ConstructorDeFormularios {
             String titulo,
             String instrucciones,
             List<String> prompts,
-            FiltroNumerico.Tipo tipoCampo,
+            NumericFilter.Type tipoCampo,
             Function<List<String>, String> calculo) {
         mostrar(titulo, instrucciones, prompts, tipoCampo, calculo, null);
     }
@@ -69,7 +69,7 @@ public final class ConstructorDeFormularios {
             String titulo,
             String instrucciones,
             List<String> prompts,
-            FiltroNumerico.Tipo tipoCampo, // {@code null} = sin filtro (p. ej. permitir dígitos hex)
+            NumericFilter.Type tipoCampo, // {@code null} = sin filtro (p. ej. permitir dígitos hex)
             Function<List<String>, String> calculo,
             Function<List<String>, String> pasos) {
         VBox pantalla = new VBox(ESPACIADO);
@@ -90,7 +90,7 @@ public final class ConstructorDeFormularios {
             TextField campo = new TextField();
             campo.setPromptText(prompt);
             if (tipoCampo != null) {
-                FiltroNumerico.aplicarA(campo, tipoCampo);
+                NumericFilter.applyTo(campo, tipoCampo);
             }
             campos.add(campo);
         }
@@ -114,7 +114,7 @@ public final class ConstructorDeFormularios {
                 seccion.ocultar();
             }
             copiar.ocultar();
-            calculos.ejecutar(
+            calculos.run(
                     () -> calculo.apply(valores),
                     () -> {
                         calcular.setDisable(true);
@@ -137,7 +137,7 @@ public final class ConstructorDeFormularios {
                     });
         });
 
-        Button volver = Botones.crear(Messages.get("form.volver"), Messages.get("form.volver.tooltip"), volverAlMenu);
+        Button volver = Buttons.create(Messages.get("form.volver"), Messages.get("form.volver.tooltip"), volverAlMenu);
         volver.setCancelButton(true); // permite pulsar Esc
 
         pantalla.getChildren().addAll(encabezado, instruccion);
@@ -183,11 +183,7 @@ public final class ConstructorDeFormularios {
      * No admite «paso a paso». El primer modo de la lista es el inicial.
      */
     public void mostrarConModos(
-            String titulo,
-            String instrucciones,
-            String etiquetaModos,
-            List<Modo> modos,
-            FiltroNumerico.Tipo tipoCampo) {
+            String titulo, String instrucciones, String etiquetaModos, List<Modo> modos, NumericFilter.Type tipoCampo) {
         VBox pantalla = new VBox(ESPACIADO);
         pantalla.setPadding(RELLENO);
         pantalla.setAlignment(Pos.TOP_CENTER);
@@ -240,7 +236,7 @@ public final class ConstructorDeFormularios {
                 TextField campo = new TextField();
                 campo.setPromptText(modo.prompts().get(i));
                 if (tipoCampo != null) {
-                    FiltroNumerico.aplicarA(campo, tipoCampo);
+                    NumericFilter.applyTo(campo, tipoCampo);
                 }
                 if (i < heredados.size()) {
                     campo.setText(heredados.get(i));
@@ -267,7 +263,7 @@ public final class ConstructorDeFormularios {
                     .toList();
             Function<List<String>, String> calculo = calculoActual.get();
             copiar.ocultar();
-            calculos.ejecutar(
+            calculos.run(
                     () -> calculo.apply(valores),
                     () -> {
                         calcular.setDisable(true);
@@ -287,7 +283,7 @@ public final class ConstructorDeFormularios {
                     });
         });
 
-        Button volver = Botones.crear(Messages.get("form.volver"), Messages.get("form.volver.tooltip"), volverAlMenu);
+        Button volver = Buttons.create(Messages.get("form.volver"), Messages.get("form.volver.tooltip"), volverAlMenu);
         volver.setCancelButton(true);
 
         pantalla.getChildren()
@@ -336,7 +332,7 @@ public final class ConstructorDeFormularios {
         scroll.setFitToWidth(true);
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroll.getStyleClass().add("formulario");
-        navegador.mostrar(scroll);
+        navegador.show(scroll);
     }
 
     /** Botón «Mostrar / Ocultar pasos» y la etiqueta con el desarrollo. */
@@ -384,7 +380,7 @@ public final class ConstructorDeFormularios {
         private final Button boton;
 
         BotonCopiar(Label resultado) {
-            boton = Botones.crear(
+            boton = Buttons.create(
                     Messages.get("form.copiar"), Messages.get("form.copiar.tooltip"), () -> copiar(resultado));
             ocultar();
         }

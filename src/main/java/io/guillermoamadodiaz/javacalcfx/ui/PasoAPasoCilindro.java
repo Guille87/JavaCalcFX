@@ -36,6 +36,6 @@ public final class PasoAPasoCilindro {
     }
 
     private static String n(double valor) {
-        return Formato.numero(valor);
+        return Format.number(valor);
     }
 }

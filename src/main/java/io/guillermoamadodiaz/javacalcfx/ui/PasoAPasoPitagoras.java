@@ -41,6 +41,6 @@ public final class PasoAPasoPitagoras {
     }
 
     private static String n(double valor) {
-        return Formato.numero(valor);
+        return Format.number(valor);
     }
 }

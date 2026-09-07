@@ -28,6 +28,6 @@ public final class PasoAPasoPorcentaje {
     }
 
     private static String n(double valor) {
-        return Formato.numero(valor);
+        return Format.number(valor);
     }
 }
