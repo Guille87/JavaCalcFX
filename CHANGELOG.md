@@ -9,6 +9,8 @@ and the project follows [semantic versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-09-07
+
 ### Added
 
 - **Settings screen**: a ⚙ button in the menu's top bar opens a screen that
@@ -91,6 +93,7 @@ First packaged version.
 - Continuous integration with Spotless, tests (JUnit 5 + headless TestFX) on JDK
   17 and 21, and a coverage report with JaCoCo.
 
-[Unreleased]: https://github.com/Guille87/JavaCalcFX/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/Guille87/JavaCalcFX/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/Guille87/JavaCalcFX/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Guille87/JavaCalcFX/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/Guille87/JavaCalcFX/releases/tag/v0.1.0

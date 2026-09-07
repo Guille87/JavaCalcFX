@@ -17,31 +17,7 @@ live in the [CHANGELOG](CHANGELOG.md).
 
 ## Next up
 
-Short, committed shortlist.
-
-### Settings screen (v1)
-
-A **⚙** button in the menu's top bar opens a settings screen that gathers the
-options currently scattered around the UI, plus a few new ones. A new
-`ui/Settings` centralizes the `java.util.prefs` reads/writes, the way `ui/Theme`
-and `ui/LastCalculator` already do. New keys in both `messages*.properties`, unit
-tests for `ui/Settings` and a `UiTest` case for the navigation.
-
-- [x] **⚙ button + `settingsScreen()`**, with «Back» / Esc like any other screen.
-- [x] **Language** — moved here from the top bar (the `ComboBox` leaves the menu).
-- [x] **Theme** — light / dark, moved here (a quick toggle may still stay in the
-      bar).
-- [x] **Remember the last calculator on exit** — on/off. When off,
-      `LastCalculator` records nothing and the app always starts on the menu.
-- [x] **Remember the window size and position** — on/off, plus a **«Reset
-      window»** button.
-- [x] **History**
-  - [x] enable / disable — when off, nothing is recorded.
-  - [x] max entries — 10 / 25 / 50 / 100.
-  - [x] clear the history on exit — on/off.
-- [x] **«Restore defaults»** — clears every settings subnode (light theme,
-      default language, history on, …).
-- [x] **About** — version (from `pom.xml`), MIT license, link to the repository.
+Short, committed shortlist. _(Nothing queued — pick from the backlog.)_
 
 ---
 
@@ -70,14 +46,19 @@ No commitment; anything worth remembering.
 ## Done
 
 Since `0.1.0`, outside the original plan. See the [CHANGELOG](CHANGELOG.md) for
-the details of each.
+the details and the version of each.
 
+- **Settings screen** (`ui/Settings` + ⚙ button): language, theme,
+  remember-last-calculator (off by default now), window options + «Reset
+  window», history options (on/off, size, clear on exit), «Restore defaults» and
+  an «About» screen.
 - **English conventions** — class, method and test names, comments and i18n keys
   migrated to English; English as the default language.
 - **BMI in cm + metric/imperial selector**, with the data carried across
   converted on switching systems (`calc/Conversions` +
   `FormBuilder.showWithModes`).
-- **History**: a date on each entry and no consecutive duplicates.
+- **History**: a date on each entry, no consecutive duplicates, and each entry
+  shown as a card.
 
 ---
 

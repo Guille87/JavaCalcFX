@@ -17,35 +17,7 @@ cambio publicado está en el [CHANGELOG](CHANGELOG_es.md).
 
 ## Siguiente
 
-Lista corta y comprometida.
-
-### Pantalla de ajustes (v1)
-
-Un botón **⚙** en la barra superior del menú abre una pantalla de ajustes que
-reúne las opciones que ahora están repartidas por la interfaz, más algunas
-nuevas. Un `ui/Settings` centraliza las lecturas/escrituras de `java.util.prefs`,
-igual que ya hacen `ui/Theme` y `ui/LastCalculator`. Claves nuevas en los dos
-`messages*.properties`, tests unitarios de `ui/Settings` y un caso de `UiTest`
-para la navegación.
-
-- [x] **Botón ⚙ + `settingsScreen()`**, con «Volver» / Esc como cualquier otra
-      pantalla.
-- [x] **Idioma** — se mueve aquí desde la barra superior (el `ComboBox` sale del
-      menú).
-- [x] **Tema** — claro / oscuro, se mueve aquí (puede quedar un toggle rápido en
-      la barra).
-- [x] **Recordar la última calculadora al cerrar** — on/off. Si está en off,
-      `LastCalculator` no registra nada y la app siempre arranca en el menú.
-- [x] **Recordar tamaño y posición de la ventana** — on/off, más un botón
-      **«Restablecer ventana»**.
-- [x] **Historial**
-  - [x] activar / desactivar — si está en off, no se registra nada.
-  - [x] número máximo de entradas — 10 / 25 / 50 / 100.
-  - [x] vaciar el historial al cerrar — on/off.
-- [x] **«Restablecer ajustes»** — borra todos los subnodos de ajustes (tema
-      claro, idioma por defecto, historial activado, …).
-- [x] **Acerca de** — versión (desde `pom.xml`), licencia MIT, enlace al
-      repositorio.
+Lista corta y comprometida. _(Nada en cola — elegir del backlog.)_
 
 ---
 
@@ -80,14 +52,19 @@ Sin compromiso; cualquier cosa que valga la pena apuntar.
 ## Hecho
 
 Desde la `0.1.0`, fuera del plan original. Ver el [CHANGELOG](CHANGELOG_es.md)
-para el detalle de cada uno.
+para el detalle y la versión de cada uno.
 
+- **Pantalla de ajustes** (`ui/Settings` + botón ⚙): idioma, tema, recordar la
+  última calculadora (ahora desactivado por defecto), opciones de ventana +
+  «Restablecer ventana», opciones de historial (on/off, tamaño, vaciar al
+  cerrar), «Restablecer ajustes» y una pantalla «Acerca de».
 - **Convenciones en inglés** — nombres de clase, método y test, comentarios y
   claves de i18n migrados al inglés; inglés como idioma por defecto.
 - **IMC en cm + selector métrico/imperial**, con traspaso de los datos
   convertidos al cambiar de sistema (`calc/Conversions` +
   `FormBuilder.showWithModes`).
-- **Historial**: fecha en cada entrada y sin duplicados consecutivos.
+- **Historial**: fecha en cada entrada, sin duplicados consecutivos, y cada
+  entrada en una tarjeta.
 
 ---
 
