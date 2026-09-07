@@ -13,7 +13,7 @@ shows the result (or a readable error message) on the same screen.
 
 | Menu | A calculator |
 |---|---|
-| ![Menu](docs/captura-menu.png) | ![Pythagorean Theorem](docs/captura-pitagoras.png) |
+| ![Menu](docs/screenshots/menu.png) | ![Pythagorean Theorem](docs/screenshots/pythagorean-theorem.png) |
 
 ---
 

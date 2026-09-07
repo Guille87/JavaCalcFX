@@ -14,7 +14,7 @@ mensaje de error legible) en la misma pantalla.
 
 | Menú | Una calculadora |
 |---|---|
-| ![Menú](captura-menu.png) | ![Teorema de Pitágoras](captura-pitagoras.png) |
+| ![Menú](screenshots/menu.png) | ![Teorema de Pitágoras](screenshots/pythagorean-theorem.png) |
 
 ---
 
