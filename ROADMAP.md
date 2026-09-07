@@ -1,109 +1,111 @@
-# Hoja de ruta
+# Roadmap
 
-Mejoras planificadas para JavaCalcFX, ordenadas de menor a mayor riesgo. Se van
-marcando conforme se completan.
+<p align="center"><a href="ROADMAP.md">English</a> · <a href="docs/ROADMAP_es.md">Español</a></p>
 
-## Decisiones tomadas
+Planned improvements for JavaCalcFX, ordered from lowest to highest risk. They
+are ticked off as they are completed.
 
-- **Formateador:** `palantir-java-format` (vía Spotless).
-- **`jpackage`:** solo Windows por ahora (`.msi`/`.exe`); es donde se puede probar.
-  El workflow de release se podrá ampliar a Linux/macOS más adelante.
-- **Versionado:** SemVer, empezando en `0.1.0`.
+## Decisions made
+
+- **Formatter:** `palantir-java-format` (via Spotless).
+- **`jpackage`:** Windows only for now (`.msi`/`.exe`); it is where it can be
+  tested. The release workflow can be extended to Linux/macOS later.
+- **Versioning:** SemVer, starting at `0.1.0`.
 
 ---
 
-## Fase 0 · Tooling base
+## Phase 0 · Base tooling
 
-Se hace primero para que el código nuevo nazca ya con el estilo correcto.
+- [x] **Spotless** with `palantir-java-format`: `mvn spotless:apply` over the
+      current code and `spotless:check` in CI.
+- [x] **`.github/dependabot.yml`** — update PRs for Maven and GitHub Actions
+      dependencies.
+- [x] **README**: CI and license badges; real screenshots instead of the ASCII
+      diagram.
+- [x] **App icon** (`stage.getIcons(...)`, PNGs in `resources/.../icons/`).
 
-- [x] **Spotless** con `palantir-java-format`: `mvn spotless:apply` sobre el
-      código actual y `spotless:check` en la CI.
-- [x] **`.github/dependabot.yml`** — PRs de actualización para dependencias de
-      Maven y GitHub Actions.
-- [x] **README**: badges de CI y licencia; capturas reales en vez del diagrama ASCII.
-- [x] **Icono de la app** (`stage.getIcons(...)`, PNGs en `resources/.../icons/`).
+## Phase 1 · UX polish
 
-## Fase 1 · Pulido de UX
+- [x] **Persist window size and position** between sessions (`ui/WindowState`,
+      with `java.util.prefs`).
+- [x] **Remember the last calculator opened** (`ui/LastCalculator`): on start it
+      reopens that screen; going back to the menu forgets it.
+- [x] The **first field gets the focus** when a form opens.
 
-- [x] **Persistir tamaño y posición de la ventana** entre sesiones
-      (`ui/EstadoVentana`, con `java.util.prefs`).
-- [x] **Recordar la última calculadora abierta** (`ui/UltimaCalculadora`): al
-      arrancar se reabre esa pantalla; volver al menú lo olvida.
-- [x] El **primer campo recibe el foco** al abrir un formulario.
+## Phase 2 · More calculators
 
-## Fase 2 · Más calculadoras
+Pattern for each: pure method in `Calculator` + test + text in `en`/`es`
+(including `menu.button.<key>` and `.tooltip`) + `xScreen()` + `menuButton`. One
+mini-commit per calculator.
 
-Patrón por cada una: método puro en `Calculadora` + test + textos `es`/`en`
-(incluido `menu.boton.<clave>` y `.tooltip`) + `pantallaX()` + `botonMenu`.
-Un mini-commit por calculadora.
+- [x] Quadratic equation
+- [x] Power (`xⁿ`) and nth root (separate screens; the root allows odd indices of
+      negatives)
+- [x] GCD and LCM
+- [x] Is it prime? (gives a divisor and the factorization if composite)
+- [x] Base converter (bin/oct/hex/dec; the input base is inferred from the
+      0b/0o/0x prefix)
+- [x] Percentage (X% of an amount) and direct rule of three (separate screens,
+      «Proportions and percentages» category)
+- [x] BMI (weight/height², with a WHO category)
+- [x] **Category-grouped menu** (Geometry · Arithmetic · Powers and equations ·
+      Other). The catalog is a list of `Category` in `CalculatorApp`.
 
-- [x] Ecuación de 2.º grado
-- [x] Potencia (`xⁿ`) y raíz n-ésima (pantallas separadas; la raíz admite
-      índices impares de negativos)
-- [x] MCD y MCM
-- [x] ¿Es primo? (da un divisor y la factorización si es compuesto)
-- [x] Conversor de bases (bin/oct/hex/dec; la base de entrada se infiere del
-      prefijo 0b/0o/0x)
-- [x] Porcentaje (X % de una cantidad) y regla de tres directa (pantallas
-      separadas, categoría «Proporciones y porcentajes»)
-- [x] IMC (peso/altura², con categoría según la OMS)
-- [x] **Menú agrupado por categorías** (Geometría · Aritmética · Potencias y
-      ecuaciones · Otros). El catálogo es una lista de `Categoria` en
-      `SelectorDeOpciones`.
+## Phase 3 · Quality and modernization
 
-## Fase 3 · Calidad y modernización
+- [x] **JaCoCo**: coverage report (HTML as an artifact, a PR comment and a badge
+      regenerated on push to `main`). Optional pending: a threshold that breaks
+      the build.
+- [x] **Migrate to JavaFX 21 LTS**: `javafx.version` to `21.0.10` (the JDK stays
+      at 17; JavaFX 21 supports it). `openjfx-monocle` stays at `17.0.10`: it is
+      compatible with JavaFX 21 and its bytecode runs on JDK 17, whereas 21.x
+      would require a 21+ runtime and break the JDK 17 CI job.
+- [x] **CI matrix**: JDK 17 and 21.
+- [x] **SpotBugs** as a CI check (effort Max, threshold Medium, production code
+      only; false positives in `spotbugs-exclude.xml`).
 
-- [x] **JaCoCo**: informe de cobertura (HTML como artefacto, comentario en las
-      PR y badge que se regenera al hacer push a `main`). Pendiente opcional: un
-      umbral que rompa el build.
-- [x] **Migrar a JavaFX 21 LTS**: `javafx.version` a `21.0.10` (el JDK sigue en
-      17; JavaFX 21 lo admite). `openjfx-monocle` se queda en `17.0.10`: es
-      compatible con JavaFX 21 y su bytecode corre en JDK 17, mientras que la
-      21.x exigiría un runtime 21+ y rompería el job de JDK 17 de la CI.
-- [x] **Matriz de CI**: JDK 17 y 21.
-- [x] **SpotBugs** como check en la CI (esfuerzo Max, umbral Medium, solo código
-      de producción; falsos positivos en `spotbugs-exclude.xml`).
+## Phase 4 · Distribution (Windows)
 
-## Fase 4 · Distribución (Windows)
+- [x] **`javafx:jlink`** — self-contained runtime in `target/JavaCalcFX`.
+- [x] **`jpackage`** (`dist` profile): portable app-image by default, `.msi`
+      installer with `-Pdist,installer`. Via `panteleyev/jpackage-maven-plugin`.
+- [x] **Release workflow** (`release.yml`): on pushing a `vX.Y.Z` tag on
+      `windows-latest`, it builds the `.msi` and the portable zip and attaches
+      them to the GitHub Release.
+- [x] **Versioning**: `pom.xml` at `0.1.0`. Optional pending: a
+      `0.2.0-SNAPSHOT` convention between releases.
 
-- [x] **`javafx:jlink`** — runtime autocontenido en `target/JavaCalcFX`.
-- [x] **`jpackage`** (perfil `dist`): *app-image* portable por defecto,
-      instalador `.msi` con `-Pdist,installer`. Vía `panteleyev/jpackage-maven-plugin`.
-- [x] **Workflow de release** (`release.yml`): al empujar una etiqueta `vX.Y.Z`
-      en `windows-latest`, construye el `.msi` y el zip portable y los adjunta al
-      GitHub Release.
-- [x] **Versionado**: `pom.xml` a `0.1.0`. Pendiente opcional: convención
-      `0.2.0-SNAPSHOT` entre releases (ahora la versión del build es siempre la
-      del último tag).
+## Phase 5 · Step by step
 
-## Fase 5 · Paso a paso
+A worked explanation of the calculation, in linear notation, behind a «Show
+steps» button. Deterministic, tested templates, not symbolic algebra.
 
-Explicación desarrollada del cálculo, en notación lineal, tras un botón
-«Mostrar pasos». Plantillas deterministas y testeadas, no álgebra simbólica.
+- [x] **Prototype: quadratic equation** (`ui/QuadraticSteps` + toggle in
+      `FormBuilder`).
+- [x] Extended to Pythagoras, cylinder, percentage and rule of three (one
+      `ui/XSteps` per calculator). For «prime», «leap year», etc. it adds
+      nothing.
 
-- [x] **Prototipo: ecuación de 2.º grado** (`ui/PasoAPasoCuadratica` + toggle en
-      `ConstructorDeFormularios`).
-- [x] Extendido a Pitágoras, cilindro, porcentaje y regla de tres (un
-      `ui/PasoAPasoX` por calculadora). En «primo», «bisiesto», etc. no aporta.
+## Phase 6 · Optional
 
-## Fase 6 · Opcionales
-
-- [x] **Modo oscuro** con toggle persistido (`ui/Tema` + clase `tema-oscuro` en
-      `styles.css` + botón en la barra superior del menú).
-- [x] Desacoplar `calc` de `Textos`: `ErrorDeCalculo` lleva la clave del mensaje
-      y sus argumentos; `ui/MensajesDeError` traduce. El paquete `calc` ya no
-      importa nada del resto del proyecto.
+- [x] **Dark mode** with a persisted toggle (`ui/Theme` + `dark-theme` class in
+      `styles.css` + button in the menu's top bar).
+- [x] Decouple `calc` from `Messages`: `CalculationError` carries the message key
+      and its arguments; `ui/ErrorMessages` translates. The `calc` package no
+      longer imports anything from the rest of the project.
 - [x] `CHANGELOG.md` / `CONTRIBUTING.md`.
-- [x] Copiar el resultado al portapapeles (botón «Copiar» tras un cálculo).
-- [x] Historial de cálculos (`ui/Historial`, persistido; pantalla accesible
-      desde la barra del menú, con botón «Vaciar»).
+- [x] Copy the result to the clipboard («Copy» button after a calculation).
+- [x] Calculation history (`ui/History`, persisted; screen reachable from the
+      menu bar, with a «Clear» button).
 
 ---
 
-## Mejoras posteriores
+## Later improvements
 
-Fuera del plan original, según van surgiendo.
+Outside the original plan, as they come up.
 
-- [x] **IMC**: altura en centímetros y selector de sistema de medida (métrico /
-      imperial), con traspaso de los datos convertidos al cambiar de sistema.
-      `calc/Conversiones` + `ConstructorDeFormularios.mostrarConModos`.
+- [x] **BMI**: height in centimeters and a measurement-system selector (metric /
+      imperial), with the data carried across converted on switching systems.
+      `calc/Conversions` + `FormBuilder.showWithModes`.
+- [x] **English conventions**: class, method and test names, comments and i18n
+      keys migrated to English; English as the default language.

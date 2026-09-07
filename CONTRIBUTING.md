@@ -1,53 +1,55 @@
-# Guía de contribución
+# Contributing guide
 
-Gracias por tu interés. El proyecto es pequeño; estas son las convenciones.
+<p align="center"><a href="CONTRIBUTING.md">English</a> · <a href="docs/CONTRIBUTING_es.md">Español</a></p>
 
-## Antes de empezar
+Thanks for your interest. The project is small; these are the conventions.
 
-- **JDK 17 o superior.** Las dependencias (JavaFX 21, JUnit 5, TestFX…) las
-  descarga Maven; no hace falta instalar nada más.
-- Comandos habituales en el [README](README.md#cómo-ejecutar); la arquitectura,
-  en [CLAUDE.md](CLAUDE.md).
+## Before you start
 
-## Flujo de trabajo
+- **JDK 17 or newer.** The dependencies (JavaFX 21, JUnit 5, TestFX…) are
+  downloaded by Maven; nothing else to install.
+- Common commands are in the [README](README.md#how-to-run); the architecture, in
+  [CLAUDE.md](CLAUDE.md).
 
-1. Crea una rama a partir de `main`.
-2. Un commit por unidad lógica de cambio.
-3. Ejecuta `mvn spotless:apply` (formatea con `palantir-java-format`, 120
-   columnas) y luego `mvn clean test`: deben pasar todos los tests en JDK 17.
-4. Abre una *pull request*. La CI ejecuta `spotless:check` y los tests en **JDK
-   17 y 21**, y comenta la cobertura; tiene que quedar en verde.
+## Workflow
 
-## Convenciones
+1. Branch off `main`.
+2. One commit per logical unit of change.
+3. Run `mvn spotless:apply` (formats with `palantir-java-format`, 120 columns) and
+   then `mvn clean test`: every test must pass on JDK 17.
+4. Open a pull request. CI runs `spotless:check` and the tests on **JDK 17 and
+   21**, and comments the coverage; it has to be green.
 
-- **Identificadores y comentarios en español.** Los textos visibles para la
-  persona usuaria NO van en el código: viven en
+## Conventions
+
+- **Identifiers and comments in English.** User-visible text does NOT go in the
+  code: it lives in
   `src/main/resources/io/guillermoamadodiaz/javacalcfx/i18n/messages*.properties`
-  y se resuelven con `Textos.get(...)`. Toda clave nueva va en **los dos**
-  ficheros (`TextosTest` comprueba que tengan las mismas claves y que los
-  patrones con `{0}` sean válidos).
-- **Lógica sin interfaz.** La aritmética vive en `calc/Calculadora` como método
-  puro —sin JavaFX ni textos—, lanza `ErrorDeCalculo` con una *clave* ante una
-  entrada inválida, y siempre acompañada de su test.
-- **Mensajes de commit**: prefijo `feat:`, `fix:`, `docs:`, `refactor:`,
-  `build:`, `ci:` o `test:`, y el resto en imperativo.
+  and is resolved with `Messages.get(...)`. Every new key goes in **both** files
+  (`MessagesTest` checks that they declare the same keys and that the `{0}`
+  patterns are valid).
+- **Logic without interface.** The arithmetic lives in `calc/Calculator` as a
+  pure method —no JavaFX, no text—, throws `CalculationError` with a *key* on
+  invalid input, and always comes with its test.
+- **Commit messages**: prefix `feat:`, `fix:`, `docs:`, `refactor:`, `build:`,
+  `ci:` or `test:`, and the rest in the imperative.
 
-## Añadir una calculadora
+## Adding a calculator
 
-El patrón completo está en [CLAUDE.md](CLAUDE.md) («To add a calculator»):
-método puro en `Calculadora` + test + textos `es`/`en` (incluidos
-`menu.boton.<clave>` y `.tooltip`) + `pantallaX()` + `EntradaMenu` en la
-`Categoria` correspondiente de `catalogo()`. Si aporta, añade un `ui/PasoAPasoX`
-puro y pásalo como argumento `pasos`.
+The full pattern is in [CLAUDE.md](CLAUDE.md) («To add a calculator»): a pure
+method in `Calculator` + test + text in `en`/`es` (including `menu.button.<key>`
+and `.tooltip`) + `xScreen()` + `MenuEntry` in the right `Category` of
+`catalog()`. If it helps, add a pure `ui/XSteps` and pass it as the `steps`
+argument.
 
-## Publicar una versión
+## Releasing a version
 
-Sube `<version>` en `pom.xml`, mueve lo que corresponda de «Sin publicar» a la
-nueva versión en [CHANGELOG.md](CHANGELOG.md), y:
+Bump `<version>` in `pom.xml`, move what applies from «Unreleased» to the new
+version in [`CHANGELOG.md`](CHANGELOG.md), and:
 
 ```bash
 git tag vX.Y.Z && git push origin vX.Y.Z
 ```
 
-El workflow de release construye el `.msi` y la versión portable para Windows y
-los adjunta al GitHub Release.
+The release workflow builds the `.msi` and the portable version for Windows and
+attaches them to the GitHub Release.

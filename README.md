@@ -1,126 +1,125 @@
-# JavaCalcFX — Calculadora Matemática
+# JavaCalcFX — Math Calculator
+
+<p align="center"><a href="README.md">English</a> · <a href="docs/README_es.md">Español</a></p>
 
 [![CI](https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml/badge.svg)](https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml)
-[![Cobertura](.github/badges/jacoco.svg)](https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml)
+[![Coverage](.github/badges/jacoco.svg)](https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Aplicación de escritorio escrita en **Java 17** con **JavaFX 21** que reúne
-varias calculadoras matemáticas de uso frecuente tras un menú común. Cada herramienta
-valida los datos de entrada, ejecuta el cálculo fuera del hilo de la interfaz
-para que la ventana nunca se congele y muestra el resultado (o un mensaje de
-error legible) en la misma pantalla.
+A desktop application written in **Java 17** with **JavaFX 21** that gathers
+several everyday math calculators behind a common menu. Each tool validates its
+input, runs the calculation off the UI thread so the window never freezes, and
+shows the result (or a readable error message) on the same screen.
 
-| Menú | Una calculadora |
+| Menu | A calculator |
 |---|---|
-| ![Menú](docs/captura-menu.png) | ![Teorema de Pitágoras](docs/captura-pitagoras.png) |
+| ![Menu](docs/captura-menu.png) | ![Pythagorean Theorem](docs/captura-pitagoras.png) |
 
 ---
 
-## Índice
+## Contents
 
-- [Características](#características)
-- [Flujo](#flujo)
-- [Descarga (Windows)](#descarga-windows)
-- [Requisitos](#requisitos)
-- [Cómo ejecutar](#cómo-ejecutar)
-- [Cómo empaquetar para Windows](#cómo-empaquetar-para-windows)
-- [Cómo ejecutar los tests](#cómo-ejecutar-los-tests)
-- [Arquitectura](#arquitectura)
-- [Estructura del proyecto](#estructura-del-proyecto)
-- [Detalles de cada cálculo](#detalles-de-cada-cálculo)
-- [Cómo añadir una calculadora nueva](#cómo-añadir-una-calculadora-nueva)
-- [Contribución](#contribución)
-- [Licencia y contacto](#licencia-y-contacto)
+- [Features](#features)
+- [Flow](#flow)
+- [Download (Windows)](#download-windows)
+- [Requirements](#requirements)
+- [How to run](#how-to-run)
+- [How to package for Windows](#how-to-package-for-windows)
+- [How to run the tests](#how-to-run-the-tests)
+- [Architecture](#architecture)
+- [Project layout](#project-layout)
+- [Notes on each calculation](#notes-on-each-calculation)
+- [How to add a new calculator](#how-to-add-a-new-calculator)
+- [Contributing](#contributing)
+- [License and contact](#license-and-contact)
 
 ---
 
-## Características
+## Features
 
-| Calculadora | Entrada | Resultado |
+| Calculator | Input | Result |
 |---|---|---|
-| **Teorema de Pitágoras** | Los dos catetos de un triángulo rectángulo (> 0) | Hipotenusa, área, perímetro y los dos ángulos agudos (α, β) en grados, con **paso a paso** opcional |
-| **Área de un cilindro** | Radio y altura (≥ 0) | Área total de la superficie: `2·π·r·(r + h)`, con **paso a paso** opcional |
-| **Año bisiesto** | Un año del calendario gregoriano (> 0) | Si el año es bisiesto o no |
-| **Factorial** | Un entero entre `0` y `100 000` | `n!` con separadores de miles |
-| **Múltiplo** | Dos enteros `a` y `b` | Si `a` es múltiplo de `b` |
-| **Aprobado** | Cinco notas del alumno entre `0` y `10` | «Aprobado» / «Suspendido» y la nota media (aprueba con media ≥ 5) |
-| **Ecuación de 2.º grado** | Los coeficientes `a` (≠ 0), `b` y `c` de `ax² + bx + c = 0` | Las dos raíces (reales, doble o complejas conjugadas), con el discriminante explicado y un **paso a paso** opcional |
-| **Potencia** | Base y exponente (cualquier real) | `base^exponente` |
-| **Raíz n-ésima** | Radicando y un índice entero ≥ 2 | La raíz; admite índices impares de radicando negativo (`∛-8 = -2`) |
-| **MCD y MCM** | Dos enteros | El máximo común divisor y el mínimo común múltiplo |
-| **¿Es primo?** | Un entero | Si es primo; si es compuesto, un divisor y la factorización |
-| **Conversor de bases** | Un entero (prefijos `0b`/`0o`/`0x`, o decimal) | El número en binario, octal, decimal y hexadecimal |
-| **Porcentaje** | Un porcentaje y una cantidad | El X % de la cantidad, con **paso a paso** opcional |
-| **Regla de tres** | Tres valores `a`, `b`, `c` | `x = c·b/a` (regla de tres directa), con **paso a paso** opcional |
-| **IMC** | Peso y altura, en sistema métrico (kg, cm) o imperial (lb, pies y pulgadas) | El índice de masa corporal y su categoría (peso insuficiente / normal / sobrepeso / obesidad) según la OMS |
+| **Pythagorean Theorem** | The two legs of a right triangle (> 0) | Hypotenuse, area, perimeter and the two acute angles (α, β) in degrees, with optional **step by step** |
+| **Cylinder surface area** | Radius and height (≥ 0) | Total surface area: `2·π·r·(r + h)`, with optional **step by step** |
+| **Leap year** | A Gregorian calendar year (> 0) | Whether the year is a leap year |
+| **Factorial** | An integer between `0` and `100,000` | `n!` with thousands separators |
+| **Multiple** | Two integers `a` and `b` | Whether `a` is a multiple of `b` |
+| **Pass / fail** | Five student grades between `0` and `10` | «Pass» / «Fail» and the average grade (pass with average ≥ 5) |
+| **Quadratic equation** | The coefficients `a` (≠ 0), `b` and `c` of `ax² + bx + c = 0` | The two roots (real, double or complex conjugates), with the discriminant explained and an optional **step by step** |
+| **Power** | Base and exponent (any real) | `base^exponent` |
+| **nth root** | Radicand and an integer index ≥ 2 | The root; allows odd indices of a negative radicand (`∛-8 = -2`) |
+| **GCD and LCM** | Two integers | The greatest common divisor and the least common multiple |
+| **Is it prime?** | An integer | Whether it is prime; if composite, a divisor and the factorization |
+| **Base converter** | An integer (prefixes `0b`/`0o`/`0x`, or decimal) | The number in binary, octal, decimal and hexadecimal |
+| **Percentage** | A percentage and an amount | X% of the amount, with optional **step by step** |
+| **Rule of three** | Three values `a`, `b`, `c` | `x = c·b/a` (direct rule of three), with optional **step by step** |
+| **BMI** | Weight and height, in metric (kg, cm) or imperial (lb, feet and inches) | The body mass index and its WHO category (underweight / normal / overweight / obesity) |
 
-Aspectos transversales a todas las pantallas:
+Cross-cutting concerns across every screen:
 
-- **Validación de dominio**: catetos y radios negativos, años ≤ 0, factoriales
-  fuera de rango o divisores no válidos se rechazan con un mensaje claro en vez
-  de un `stacktrace` o un resultado silenciosamente incorrecto.
-- **Cálculo asíncrono**: cada operación corre en un `Task` sobre un hilo demonio.
-  El botón «Calcular» se deshabilita mientras dura, la etiqueta muestra
-  «Calculando…» y al navegar a otra pantalla el cálculo en curso se cancela.
-- **Teclado**: pulsar <kbd>Enter</kbd> en cualquier campo equivale a pulsar
-  «Calcular»; <kbd>Esc</kbd> vuelve al menú.
-- **Copiar**: tras un cálculo, un botón «Copiar» pone el resultado en el
-  portapapeles.
-- **Historial**: los últimos cálculos quedan en una pantalla accesible desde la
-  barra del menú; se recuerdan entre sesiones.
-- **Formato numérico legible**: los decimales se muestran con
-  `#,##0.####` en lugar de la representación cruda de `double`.
-- **Idioma**: español o inglés, seleccionable desde el menú; la elección se
-  recuerda para el siguiente arranque.
-- **Tema claro u oscuro**: botón en la barra superior del menú; la elección se
-  recuerda entre sesiones.
-- **Ventana**: recuerda su tamaño y posición entre sesiones; al abrir un
-  formulario el cursor ya está en el primer campo.
-- **Última pantalla**: al arrancar vuelve a la calculadora que estuviera abierta
-  al cerrar la app.
-
----
-
-## Flujo
-
-Menú de calculadoras ⇄ pantalla de formulario (instrucciones · campos · «Calcular» +
-resultado · «Volver»). La raíz de la escena es un único contenedor que siempre
-muestra **una** pantalla; `mostrar(...)` la intercambia.
+- **Domain validation**: negative legs and radii, years ≤ 0, out-of-range
+  factorials or invalid divisors are rejected with a clear message instead of a
+  stack trace or a silently wrong result.
+- **Asynchronous calculation**: every operation runs in a `Task` on a daemon
+  thread. The «Calculate» button is disabled while it runs, the label shows
+  «Calculating…», and navigating away cancels the in-flight calculation.
+- **Keyboard**: pressing <kbd>Enter</kbd> in any field is the same as pressing
+  «Calculate»; <kbd>Esc</kbd> goes back to the menu.
+- **Copy**: after a calculation, a «Copy» button puts the result on the clipboard.
+- **History**: the latest calculations stay on a screen reachable from the menu
+  bar; they are remembered between sessions.
+- **Readable number formatting**: decimals are shown with `#,##0.####` instead of
+  the raw `double` representation.
+- **Language**: English or Spanish, selectable from the menu; the choice is
+  remembered for the next start.
+- **Light or dark theme**: a button in the menu's top bar; the choice is
+  remembered between sessions.
+- **Window**: remembers its size and position between sessions; when a form
+  opens, the cursor is already in the first field.
+- **Last screen**: on start it returns to the calculator that was open when the
+  app was closed.
 
 ---
 
-## Descarga (Windows)
+## Flow
 
-En la página de [**Releases**](https://github.com/Guille87/JavaCalcFX/releases)
-hay, para cada versión:
-
-- **`JavaCalcFX-X.Y.Z.msi`** — instalador. Crea acceso directo y entrada en el
-  menú Inicio; se instala por usuario (no pide permisos de administrador).
-- **`JavaCalcFX-X.Y.Z-windows-portable.zip`** — carpeta autocontenida; se
-  descomprime y se ejecuta `JavaCalcFX.exe`, sin instalar nada.
-
-Ambos incluyen su propio runtime de Java: **no hace falta tener Java instalado**.
+Calculator menu ⇄ form screen (instructions · fields · «Calculate» + result ·
+«Back»). The scene root is a single container that always shows **one** screen;
+`Navigator.show(...)` swaps it.
 
 ---
 
-## Requisitos
+## Download (Windows)
 
-Solo para compilar desde el código (para *usar* la app, ver la sección anterior):
+The [**Releases**](https://github.com/Guille87/JavaCalcFX/releases) page has, for
+each version:
 
-- **JDK 17 o superior** (`maven.compiler.release = 17`).
-- **Maven 3.8+**. Las dependencias de JavaFX 21 LTS (`org.openjfx`) se descargan
-  desde Maven Central; **no hace falta instalar un SDK de JavaFX aparte**.
+- **`JavaCalcFX-X.Y.Z.msi`** — installer. Creates a shortcut and a Start-menu
+  entry; installs per user (no administrator rights required).
+- **`JavaCalcFX-X.Y.Z-windows-portable.zip`** — a self-contained folder; unzip it
+  and run `JavaCalcFX.exe`, nothing to install.
+
+Both bundle their own Java runtime: **no Java installation needed**.
 
 ---
 
-## Cómo ejecutar
+## Requirements
+
+Only to build from source (to *use* the app, see the section above):
+
+- **JDK 17 or newer** (`maven.compiler.release = 17`).
+- **Maven 3.8+**. The JavaFX 21 LTS dependencies (`org.openjfx`) are downloaded
+  from Maven Central; **no separate JavaFX SDK needed**.
+
+---
+
+## How to run
 
 ```bash
 mvn clean javafx:run
 ```
 
-Depuración (el JVM queda suspendido hasta que un depurador se conecte a
-`localhost:8000`):
+Debugging (the JVM stays suspended until a debugger attaches to `localhost:8000`):
 
 ```bash
 mvn clean javafx:run@debug
@@ -128,225 +127,225 @@ mvn clean javafx:run@debug
 
 ---
 
-## Cómo empaquetar para Windows
+## How to package for Windows
 
-Versión portable (carpeta con `JavaCalcFX.exe` en `target/dist/JavaCalcFX/`):
+Portable version (folder with `JavaCalcFX.exe` in `target/dist/JavaCalcFX/`):
 
 ```bash
 mvn -Pdist -DskipTests clean javafx:jlink package
 ```
 
-Instalador `.msi` (requiere [WiX 3.x](https://github.com/wixtoolset/wix3/releases)
-en el `PATH`):
+`.msi` installer (needs [WiX 3.x](https://github.com/wixtoolset/wix3/releases) on
+the `PATH`):
 
 ```bash
 mvn -Pdist,installer -DskipTests clean javafx:jlink package
 ```
 
-`javafx:jlink` arma un runtime de Java mínimo en `target/JavaCalcFX` y `jpackage`
-lo envuelve. Al empujar una etiqueta `vX.Y.Z`, el workflow
-[`release.yml`](.github/workflows/release.yml) hace ambos en un runner
-`windows-latest` y los sube al Release.
+`javafx:jlink` builds a minimal Java runtime in `target/JavaCalcFX` and `jpackage`
+wraps it. On pushing a `vX.Y.Z` tag, the
+[`release.yml`](.github/workflows/release.yml) workflow does both on a
+`windows-latest` runner and attaches them to the Release.
 
 ---
 
-## Cómo ejecutar los tests
+## How to run the tests
 
 ```bash
 mvn clean test
 ```
 
-Una sola clase o un solo método:
+A single class or a single method:
 
 ```bash
-mvn test -Dtest=FormatoTest
-mvn test -Dtest=FormatoTest#numero_entero_sin_decimales
+mvn test -Dtest=FormatTest
+mvn test -Dtest=FormatTest#whole_number_without_decimals
 ```
 
-Todos los métodos de `CalculadoraTest` viven en una clase `@Nested`
-(`TrianguloRectangulo`, `AreaCilindro`, `AnioBisiesto`, `Factorial`, `Multiplos`,
-`Notas`), así que para apuntar a uno hay que nombrar la clase que lo contiene:
+`CalculatorTest`'s methods live in `@Nested` classes (`RightTriangle`,
+`CylinderArea`, `LeapYear`, `Factorial`, `Multiples`, `Grades`, …), so to target
+one you name the enclosing class:
 
 ```bash
-mvn test -Dtest='CalculadoraTest$Factorial#rechaza_negativos'
+mvn test -Dtest='CalculatorTest$Factorial#rejects_negatives'
 ```
 
-El formato del código lo aplica Spotless (`palantir-java-format`). Antes de
-commitear:
+Code formatting is applied by Spotless (`palantir-java-format`). Before
+committing:
 
 ```bash
 mvn spotless:apply
 ```
 
-La CI ejecuta `mvn spotless:check` (formato) y `mvn compile spotbugs:check`
-(análisis estático) y falla ante cualquier problema. Los falsos positivos de
-SpotBugs se listan en [`spotbugs-exclude.xml`](spotbugs-exclude.xml).
+CI runs `mvn spotless:check` (formatting) and `mvn compile spotbugs:check` (static
+analysis) and fails on any problem. SpotBugs false positives are listed in
+[`spotbugs-exclude.xml`](spotbugs-exclude.xml).
 
-Los tests de interfaz (`InterfazTest`, con TestFX) corren **sin pantalla**
-mediante Monocle; no hace falta configurar nada. Para verlos con ventana:
+The interface tests (`UiTest`, with TestFX) run **headless** via Monocle; nothing
+to set up. To watch them in a window:
 
 ```bash
-mvn test -Pheaded -Dtest=InterfazTest
+mvn test -Pheaded -Dtest=UiTest
 ```
 
-`mvn test` genera además el informe de cobertura de JaCoCo en
-`target/site/jacoco/index.html`. La CI publica el HTML como artefacto, comenta
-la cobertura en cada *pull request* y actualiza el badge de arriba. Los tests
-se ejecutan en la CI con **JDK 17 y 21**.
+`mvn test` also generates the JaCoCo coverage report at
+`target/site/jacoco/index.html`. CI publishes the HTML as an artifact, comments
+the coverage on every pull request and updates the badge above. Tests run in CI
+on **JDK 17 and 21**.
 
 ---
 
-## Arquitectura
+## Architecture
 
-El proyecto se organiza en cuatro paquetes: `calc` (dominio puro), `i18n`
-(textos traducibles), `ui` (infraestructura de interfaz reutilizable) y el
-paquete raíz (la `Application` y su catálogo de pantallas).
+The project is organized in four packages: `calc` (pure domain), `i18n`
+(translatable text), `ui` (reusable interface infrastructure) and the root
+package (the `Application` and its screen catalog).
 
-- **`calc/`** — toda la aritmética como métodos `static`, **sin ninguna
-  dependencia del resto del proyecto** (ni de JavaFX ni de los textos). Cada
-  método comprueba sus precondiciones y, ante una entrada inválida, lanza
-  `ErrorDeCalculo` con la *clave* del mensaje y sus argumentos; la interfaz
-  (`ui/MensajesDeError`) es quien lo traduce. Devuelve `record`s inmutables
-  (`Triangulo`, `EcuacionCuadratica`…). `Conversiones` pasa libras/pies/pulgadas/
-  centímetros a las unidades del SI para reutilizar la misma lógica (lo usa el
-  IMC). Es la capa cubierta por tests unitarios.
-- **`i18n/`** — `Textos` lee los ficheros `messages*.properties` (español de
-  base, inglés encima) y resuelve claves con sustitución de parámetros vía
-  `MessageFormat`; `Idioma` es el enum del selector. El idioma se elige desde el
-  menú y se recuerda entre sesiones (`java.util.prefs`).
-- **`ui/`** — piezas pequeñas con una sola responsabilidad:
-  - `Navegador` — contenedor raíz (`StackPane` con un único hijo); `mostrar(Node)`
-    intercambia la pantalla y antes ejecuta un *hook* (cancelar el cálculo en curso).
-  - `CalculosAsync` — dueño del `ExecutorService` de un hilo demonio y de la
-    `Task` actual. `ejecutar(...)` lanza el trabajo fuera del hilo de JavaFX,
-    `cancelar()` lo interrumpe y `cerrar()` (desde `Application.stop()`) apaga el
-    ejecutor. Solo hay un cálculo a la vez.
-  - `ConstructorDeFormularios` — arma la pantalla de formulario genérica (dentro de
-    un `ScrollPane`, con el foco en el primer campo). Tras un cálculo correcto
-    ofrece un botón «Copiar» (resultado al portapapeles), registra el cálculo en
-    el `Historial` y, si la pantalla lo aporta, «Mostrar pasos». `mostrarConModos`
-    es una variante con un selector que cambia los campos y el cálculo (lo usa el
-    IMC para métrico/imperial).
-  - `MensajesDeError` — función pura `Throwable → String` (probada con tests).
-  - `Formato` — formateo numérico puro y seguro entre hilos, con `Locale.ROOT`
-    (punto decimal) para no depender del idioma del sistema (probado con tests).
-  - `Entrada` — único punto de parseo de texto a número (probado con tests).
-  - `FiltroNumerico` — `TextFormatter` entero/decimal por campo (probado con tests).
-  - `EstadoVentana` — persiste tamaño y posición de la ventana (probado con tests).
-  - `Tema` — modo claro/oscuro (clase `tema-oscuro` en `styles.css`), con la
-    preferencia persistida en `java.util.prefs` (probado con tests).
-  - `Historial` — los últimos 25 cálculos (título + resultado + fecha),
-    persistidos en un subnodo de `java.util.prefs`; el resultado se recorta a 300
-    caracteres para no desbordar el límite de tamaño de las preferencias, y
-    repetir el mismo cálculo solo refresca su hora (probado con tests).
-  - `UltimaCalculadora` — guarda en `java.util.prefs` la clave de la última
-    calculadora abierta; `SelectorDeOpciones` la reabre al arrancar y la olvida al
-    volver al menú (probado con tests).
-  - `PasoAPasoX` — desarrollo paso a paso, en notación lineal, de la cuadrática,
-    Pitágoras, el cilindro, el porcentaje y la regla de tres (plantillas
-    deterministas, probadas con tests).
-  - `Botones` — fábrica de botones.
-- **`SelectorDeOpciones.java`** — `Application` mínima: conecta las piezas de `ui`,
-  carga `styles.css` y los iconos, y define un `pantallaX()` + entrada de menú por
-  calculadora (cada uno declara título, campos, tipo y función de presentación).
+- **`calc/`** — all the arithmetic as `static` methods, **with no dependency on
+  the rest of the project** (nor JavaFX nor the text layer). Each method checks
+  its preconditions and, on invalid input, throws `CalculationError` carrying the
+  message *key* and its arguments; the interface (`ui/ErrorMessages`) translates
+  it. It returns immutable `record`s (`Triangle`, `QuadraticEquation`…).
+  `Conversions` turns pounds/feet/inches/centimeters into SI units so the same
+  logic is reused (the BMI screen uses it). This is the layer covered by unit
+  tests.
+- **`i18n/`** — `Messages` reads the `messages*.properties` files (English base,
+  Spanish on top) and resolves keys with parameter substitution via
+  `MessageFormat`; `Language` is the selector's enum. The language is chosen from
+  the menu and remembered between sessions (`java.util.prefs`).
+- **`ui/`** — small single-responsibility pieces:
+  - `Navigator` — root container (`StackPane` with a single child); `show(Node)`
+    swaps the screen and first runs a hook (cancel the in-flight calculation).
+  - `AsyncCalculations` — owns the single daemon-thread `ExecutorService` and the
+    current `Task`. `run(...)` starts the work off the JavaFX thread, `cancel()`
+    interrupts it and `close()` (from `Application.stop()`) shuts the executor
+    down. One calculation at a time.
+  - `FormBuilder` — builds the generic form screen (inside a `ScrollPane`, focus
+    on the first field). After a successful calculation it offers a «Copy» button
+    (result to the clipboard), records the calculation in `History` and, if the
+    screen supplies it, «Show steps». `showWithModes` is a variant with a
+    selector that swaps the fields and the calculation (the BMI screen uses it
+    for metric/imperial).
+  - `ErrorMessages` — a pure `Throwable → String` function (unit-tested).
+  - `Format` — pure, thread-safe number formatting with `Locale.ROOT` (dot
+    decimal) so it does not depend on the system language (unit-tested).
+  - `Input` — the single text-to-number parsing seam (unit-tested).
+  - `NumericFilter` — an integer/decimal `TextFormatter` per field (unit-tested).
+  - `WindowState` — persists the window size and position (unit-tested).
+  - `Theme` — light/dark mode (`dark-theme` class in `styles.css`), with the
+    preference persisted in `java.util.prefs` (unit-tested).
+  - `History` — the last 25 calculations (title + result + timestamp), persisted
+    in a `java.util.prefs` subnode; the result is trimmed to 300 characters so it
+    cannot overflow the preferences size limit, and repeating the same
+    calculation only refreshes its timestamp (unit-tested).
+  - `LastCalculator` — stores in `java.util.prefs` the key of the last calculator
+    opened; `CalculatorApp` reopens it on start and forgets it on going back to
+    the menu (unit-tested).
+  - `XSteps` — step-by-step explanation, in linear notation, of the quadratic,
+    Pythagoras, the cylinder, the percentage and the rule of three (deterministic
+    templates, unit-tested).
+  - `Buttons` — a button factory.
+- **`CalculatorApp.java`** — a minimal `Application`: wires the `ui` pieces
+  together, loads `styles.css` and the icons, and defines one `xScreen()` + one
+  menu entry per calculator (each declares title, fields, type and presentation
+  function).
 
-`Calculadora.factorial` consulta `Thread.isInterrupted()` para abortar pronto un
-cómputo largo ya cancelado.
+`Calculator.factorial` checks `Thread.isInterrupted()` to abort a long, already
+cancelled computation early.
 
-Los identificadores y comentarios del código están en **español** (convención
-del proyecto); los textos visibles salen de `i18n` (español de base, inglés
-incluido).
+Identifiers and comments in the code are in **English**; user-visible text comes
+from `i18n` (English base, Spanish included).
 
 ---
 
-## Estructura del proyecto
+## Project layout
 
 ```
 JavaCalcFX/
 ├── pom.xml                     Java 17, JavaFX 21 LTS, JUnit 5, TestFX + Monocle, JaCoCo, Spotless, SpotBugs
-├── spotbugs-exclude.xml        falsos positivos de SpotBugs
-├── nbactions.xml               acciones «run» / «debug» para NetBeans
+├── spotbugs-exclude.xml        SpotBugs false positives
+├── nbactions.xml               «run» / «debug» actions for NetBeans
 ├── LICENSE                     MIT
-├── CLAUDE.md · ROADMAP.md      guía para agentes · plan de mejoras
-├── CHANGELOG.md · CONTRIBUTING.md
-├── docs/                       capturas para el README
-├── .github/                    workflows de CI y release, badges y config de Dependabot
+├── CLAUDE.md                   guide for agents
+├── README.md · CONTRIBUTING.md · CHANGELOG.md · ROADMAP.md   English (primary)
+├── docs/                       *_es.md (Spanish docs) and README screenshots
+├── .github/                    CI and release workflows, badges and Dependabot config
 └── src/
     ├── main/
     │   ├── java/
-    │   │   ├── module-info.java              requires javafx.controls y java.prefs; exporta los 4 paquetes
+    │   │   ├── module-info.java              requires javafx.controls and java.prefs; exports the 4 packages
     │   │   └── io/guillermoamadodiaz/javacalcfx/
-    │   │       ├── SelectorDeOpciones.java       Application + catálogo de pantallas
-    │   │       ├── calc/Calculadora.java         lógica matemática pura y validada
-    │   │       ├── i18n/                         Textos (lector de .properties) e Idioma
-    │   │       └── ui/                           Navegador, CalculosAsync,
-    │   │                                         ConstructorDeFormularios, MensajesDeError,
-    │   │                                         Formato, Entrada, FiltroNumerico, Botones,
-    │   │                                         EstadoVentana
+    │   │       ├── CalculatorApp.java           Application + screen catalog
+    │   │       ├── calc/Calculator.java         pure, validated math logic
+    │   │       ├── i18n/                        Messages (.properties reader) and Language
+    │   │       └── ui/                          Navigator, AsyncCalculations, FormBuilder,
+    │   │                                        ErrorMessages, Format, Input, NumericFilter,
+    │   │                                        Buttons, WindowState, Theme, History, LastCalculator
     │   └── resources/io/guillermoamadodiaz/javacalcfx/
     │       ├── styles.css
-    │       ├── icons/icon-*.png · icon.ico   (el .ico lo usa jpackage)
-    │       └── i18n/messages[_en].properties
+    │       ├── icons/icon-*.png · icon.ico   (the .ico is used by jpackage)
+    │       └── i18n/messages[_es].properties
     └── test/java/io/guillermoamadodiaz/javacalcfx/
-        ├── InterfazTest.java                    TestFX: navegación y mensajes en pantalla
-        ├── calc/CalculadoraTest.java            JUnit 5, casos parametrizados y @Nested
-        ├── i18n/{Textos,Idioma}Test.java
-        └── ui/{Formato,MensajesDeError,Entrada,FiltroNumerico,EstadoVentana,Tema,
-             PasoAPaso{Cuadratica,Pitagoras,Cilindro,Proporciones}}Test.java
+        ├── UiTest.java                         TestFX: navigation and on-screen messages
+        ├── calc/CalculatorTest.java            JUnit 5, parametrized cases and @Nested
+        ├── i18n/{Messages,Language}Test.java
+        └── ui/{Format,ErrorMessages,Input,NumericFilter,WindowState,Theme,History,
+             LastCalculator,{Cylinder,Quadratic,Pythagoras,Proportions}Steps}Test.java
 ```
 
 ---
 
-## Detalles de cada cálculo
+## Notes on each calculation
 
-**Teorema de Pitágoras.** Usa `Math.hypot` (estable frente a desbordamiento con
-catetos grandes) y `Math.atan2` para los ángulos (evita `NaN` cuando un cateto
-es 0). Además de la hipotenusa devuelve área, perímetro y los dos ángulos agudos.
+**Pythagorean Theorem.** Uses `Math.hypot` (overflow-stable with large legs) and
+`Math.atan2` for the angles (avoids `NaN` when a leg is 0). Besides the
+hypotenuse it returns area, perimeter and the two acute angles.
 
-**Área de un cilindro.** Devuelve el área **total** (superficie lateral más las
-dos bases), `2·π·r·(r + h)`. Admite radio o altura iguales a 0.
+**Cylinder surface area.** Returns the **total** area (lateral surface plus the
+two bases), `2·π·r·(r + h)`. Allows a radius or height equal to 0.
 
-**Año bisiesto.** Regla gregoriana proléptica: divisible por 4, salvo los
-múltiplos de 100 que no lo sean de 400. Rechaza años ≤ 0.
+**Leap year.** Proleptic Gregorian rule: divisible by 4, except multiples of 100
+that are not multiples of 400. Rejects years ≤ 0.
 
-**Factorial.** La entrada se parsea como `int` y se limita a
-`MAX_FACTORIAL = 100 000` para no bloquear la aplicación con un cómputo
-desbordado; el resultado es un `BigInteger`. El bucle es interrumpible.
+**Factorial.** The input is parsed as an `int` and capped at
+`MAX_FACTORIAL = 100,000` so an overflowing computation cannot block the app; the
+result is a `BigInteger`. The loop is interruptible.
 
-**Múltiplo.** Por convención, `0` es múltiplo de cualquier entero y ningún entero
-distinto de `0` es múltiplo de `0`; por eso `esMultiplo(a, 0)` es `true` solo si
-`a == 0` y nunca lanza `ArithmeticException`.
+**Multiple.** By convention, `0` is a multiple of every integer and no non-zero
+integer is a multiple of `0`; so `isMultiple(a, 0)` is `true` only if `a == 0`
+and never throws `ArithmeticException`.
 
-**Aprobado.** Media aritmética de las cinco notas; aprueba con media ≥ 5.
-
----
-
-## Cómo añadir una calculadora nueva
-
-1. Añade un método puro a `Calculadora` con sus precondiciones (lanza
-   `ErrorDeCalculo` con una clave ante una entrada inválida) **y un test**.
-2. Añade sus textos (título, instrucciones, campos, resultado, `menu.boton.<clave>`
-   + `.tooltip` y las claves de error) a `messages.properties` y
-   `messages_en.properties`.
-3. Crea un método `pantallaX()` que llame a `formularios.mostrar(...)` con el
-   título, las instrucciones, los `prompts`, el `Tipo` de campo y la función de
-   presentación (todo vía `Textos.get(...)`); opcionalmente, una función `pasos`.
-4. Añade una `EntradaMenu("<clave>", this::pantallaX)` en la `Categoria` que
-   corresponda de `catalogo()`.
+**Pass / fail.** Arithmetic mean of the five grades; pass with average ≥ 5.
 
 ---
 
-## Contribución
+## How to add a new calculator
 
-¡Se aceptan contribuciones! Abre un *issue* o envía un *pull request*. Las
-convenciones (formato, textos, mensajes de commit, cómo añadir una calculadora,
-cómo publicar una versión) están en [`CONTRIBUTING.md`](CONTRIBUTING.md); los
-cambios de cada versión, en [`CHANGELOG.md`](CHANGELOG.md).
+1. Add a pure method to `Calculator` with its preconditions (throws
+   `CalculationError` with a key on invalid input) **and a test**.
+2. Add its text (title, instructions, fields, result, `menu.button.<key>` +
+   `.tooltip` and the error keys) to `messages.properties` and
+   `messages_es.properties`.
+3. Create an `xScreen()` method that calls `forms.show(...)` with the title, the
+   instructions, the `prompts`, the field `Type` and the presentation function
+   (all via `Messages.get(...)`); optionally, a `steps` function.
+4. Add a `MenuEntry("<key>", this::xScreen)` in the right `Category` of
+   `catalog()`. If it helps, add a pure `ui/XSteps` and pass it as the `steps`
+   argument.
 
 ---
 
-## Licencia y contacto
+## Contributing
 
-Publicado bajo la licencia **MIT** (ver [`LICENSE`](LICENSE)).
+Contributions are welcome! Open an issue or send a pull request. The conventions
+(formatting, text, commit messages, how to add a calculator, how to release) are
+in [`CONTRIBUTING.md`](CONTRIBUTING.md); the changes in each version, in
+[`CHANGELOG.md`](CHANGELOG.md).
 
-Para cualquier pregunta o comentario: **guillermo_amado@hotmail.es**.
+---
+
+## License and contact
+
+Released under the **MIT** license (see [`LICENSE`](LICENSE)).
+
+For any question or comment: **guillermo_amado@hotmail.es**.
