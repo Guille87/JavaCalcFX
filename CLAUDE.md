@@ -38,9 +38,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## CI / release
 
 - `.github/workflows/ci.yml`: an `analisis-estatico` job (`spotless:check` +
-  `spotbugs:check`) then a `test` job on a **JDK 17 + 21 matrix** (`mvn -B clean test`). On JDK 17 it uploads the JaCoCo HTML,
-  comments coverage on PRs, and — on push to `main` — regenerates `.github/badges/jacoco.svg`
-  and commits it back with `[skip ci]`.
+  `spotbugs:check`), then a `test` job on a **JDK 17 + 21 matrix** (`mvn -B clean test`).
+  On JDK 17 it uploads the JaCoCo HTML, comments coverage on PRs, and — on push to `main` —
+  regenerates `.github/badges/jacoco.svg` and commits it back with `[skip ci]` (so pulling
+  before a push avoids a fast-forward conflict).
 - `.github/workflows/release.yml`: pushing a tag `vX.Y.Z` builds the `.msi` + portable zip
   on `windows-latest` and attaches them to a GitHub Release. Bump `pom.xml` `<version>`
   then `git tag vX.Y.Z && git push origin vX.Y.Z`.
@@ -154,5 +155,6 @@ an input-mode selector, use `formularios.mostrarConModos(...)` instead.
 
 Identifiers and comments are in Spanish (keep that convention); user-visible strings live
 in `messages*.properties`. `TextosTest` guards that the two bundles have identical keys and
-that every parametrized value is a valid `MessageFormat` pattern. `ROADMAP.md` tracks
-planned work (Fases 0–5 done; remaining items are optional).
+that every parametrized value is a valid `MessageFormat` pattern. `ROADMAP.md` records the
+original plan (Fases 0–6 all done) plus a `Mejoras posteriores` section for post-plan work;
+`CHANGELOG.md` has an `## [Sin publicar]` section to keep current. Version is `0.1.0`.
