@@ -1,7 +1,9 @@
 package io.guillermoamadodiaz.javacalcfx;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.LabeledMatchers.hasText;
 
@@ -16,6 +18,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.prefs.Preferences;
+import java.util.stream.Stream;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -26,6 +29,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 
@@ -91,6 +97,42 @@ class UiTest extends ApplicationTest {
         assertTrue(lookup(".category").queryAll().size() >= 3);
         assertTrue(lookup("Geometry").tryQuery().isPresent());
         assertTrue(lookup("Arithmetic").tryQuery().isPresent());
+    }
+
+    static Stream<Arguments> everyCalculator() {
+        return Stream.of(
+                arguments("Pythagorean Theorem", new String[] {"3", "4"}),
+                arguments("Cylinder Surface Area", new String[] {"5", "3"}),
+                arguments("Leap Year Check", new String[] {"2000"}),
+                arguments("Factorial", new String[] {"5"}),
+                arguments("Multiple Check", new String[] {"10", "5"}),
+                arguments("Pass / Fail", new String[] {"5", "6", "7", "8", "9"}),
+                arguments("Solve Quadratic Equation", new String[] {"1", "-3", "2"}),
+                arguments("Power", new String[] {"2", "10"}),
+                arguments("nth Root", new String[] {"27", "3"}),
+                arguments("GCD and LCM", new String[] {"12", "18"}),
+                arguments("Prime Check", new String[] {"7"}),
+                arguments("Base Converter", new String[] {"255"}),
+                arguments("Percentage", new String[] {"15", "200"}),
+                arguments("Rule of Three", new String[] {"2", "4", "6"}),
+                arguments("Body Mass Index", new String[] {"70", "175"}));
+    }
+
+    /** Every calculator opens, takes valid input and shows a result (not an error). */
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("everyCalculator")
+    void every_calculator_computes_a_result(String button, String[] inputs) throws TimeoutException {
+        clickOn(button);
+        WaitForAsyncUtils.waitForFxEvents();
+        for (int i = 0; i < inputs.length; i++) {
+            clickOn(lookup(".text-field").nth(i).queryAs(TextField.class)).write(inputs[i]);
+        }
+        clickOn("Calculate");
+
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> !resultText().isBlank());
+        String result = resultText();
+        assertFalse(result.startsWith("Error"), button + " -> " + result);
+        assertFalse(result.startsWith("Unexpected error"), button + " -> " + result);
     }
 
     @Test
