@@ -25,7 +25,9 @@ y el proyecto sigue [versionado semántico](https://semver.org/lang/es/).
   selector de sistema de medida: **métrico** (kg, cm) o **imperial** (lb, pies y
   pulgadas). El IMC y su categoría son los mismos; solo cambian los datos de
   entrada. Al cambiar de sistema, si los campos estaban rellenos, se **traspasan
-  convertidos** (p. ej. 70 kg / 175 cm → 154.3 lb / 5 ft 8.9 in).
+  convertidos** (p. ej. 70 kg / 175 cm → 154.3 lb / 5 ft 8.9 in): los cm sin
+  decimales y kg, libras y pulgadas a uno, para que la conversión de ida y vuelta
+  vuelva al mismo valor.
 - `Formato` usa siempre `Locale.ROOT`: los números se muestran con punto decimal
   y coma para los miles, con independencia del idioma del sistema. Antes, en un
   equipo con configuración regional española, el resultado salía con coma

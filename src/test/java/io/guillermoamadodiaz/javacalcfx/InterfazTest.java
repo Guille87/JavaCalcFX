@@ -197,6 +197,13 @@ class InterfazTest extends ApplicationTest {
         assertTrue(
                 lookup(".text-field").nth(2).queryAs(TextField.class).getText().startsWith("8.9"),
                 "175 cm ≈ 5 ft 8.9 in");
+
+        // volver a métrico: la conversión de ida y vuelta cae en los mismos valores
+        interact(() -> selector.getSelectionModel().select(0));
+        WaitForAsyncUtils.waitForFxEvents();
+        assertEquals("70", lookup(".text-field").nth(0).queryAs(TextField.class).getText());
+        assertEquals(
+                "175", lookup(".text-field").nth(1).queryAs(TextField.class).getText());
     }
 
     @Test

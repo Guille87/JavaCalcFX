@@ -554,7 +554,7 @@ public class SelectorDeOpciones extends Application {
                 valores -> resultadoImc(
                         Entrada.doble(valores.get(0)), Conversiones.centimetrosAMetros(Entrada.doble(valores.get(1)))),
                 valores -> comun(valores, v -> new double[] {v[0], Conversiones.centimetrosAMetros(v[1])}),
-                comun -> List.of(aprox(comun[0]), aprox(Conversiones.metrosACentimetros(comun[1]))));
+                comun -> List.of(redondeado(comun[0], 1), redondeado(Conversiones.metrosACentimetros(comun[1]), 0)));
 
         ConstructorDeFormularios.Modo imperial = new ConstructorDeFormularios.Modo(
                 Textos.get("imc.sistema.imperial"),
@@ -571,9 +571,9 @@ public class SelectorDeOpciones extends Application {
                 comun -> {
                     double[] piesYPulgadas = Conversiones.metrosAPiesYPulgadas(comun[1]);
                     return List.of(
-                            aprox(Conversiones.kilosALibras(comun[0])),
+                            redondeado(Conversiones.kilosALibras(comun[0]), 1),
                             Formato.numero(piesYPulgadas[0]),
-                            aprox(piesYPulgadas[1]));
+                            redondeado(piesYPulgadas[1], 1));
                 });
 
         formularios.mostrarConModos(
@@ -605,9 +605,15 @@ public class SelectorDeOpciones extends Application {
         }
     }
 
-    /** Número redondeado a un decimal, para rellenar campos al cambiar de sistema. */
-    private static String aprox(double valor) {
-        return Formato.numero(Math.round(valor * 10.0) / 10.0);
+    /**
+     * Número redondeado a {@code decimales} decimales, para rellenar campos al
+     * cambiar de sistema de medida. Los cm van sin decimales y las libras,
+     * pulgadas y kg a uno: así la conversión de ida y vuelta (p. ej.
+     * cm → pulgadas → cm) vuelve al mismo valor.
+     */
+    private static String redondeado(double valor, int decimales) {
+        double factor = Math.pow(10, decimales);
+        return Formato.numero(Math.round(valor * factor) / factor);
     }
 
     public static void main(String[] args) {
