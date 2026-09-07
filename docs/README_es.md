@@ -2,9 +2,15 @@
 
 <p align="center"><a href="../README.md">English</a> · <a href="README_es.md">Español</a></p>
 
-[![CI](https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml/badge.svg)](https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml)
-[![Cobertura](../.github/badges/jacoco.svg)](https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
+<p align="center">
+  <a href="https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml"><img alt="Cobertura" src="../.github/badges/jacoco.svg"></a>
+  <a href="../LICENSE"><img alt="Licencia: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
+  <br/>
+  <a href="https://github.com/Guille87/JavaCalcFX/graphs/contributors"><img alt="Colaboradores" src="https://img.shields.io/github/contributors/Guille87/JavaCalcFX"></a>
+  <a href="https://github.com/Guille87/JavaCalcFX/issues"><img alt="Incidencias" src="https://img.shields.io/github/issues/Guille87/JavaCalcFX"></a>
+  <a href="https://github.com/Guille87/JavaCalcFX/pulls"><img alt="Pull requests" src="https://img.shields.io/github/issues-pr/Guille87/JavaCalcFX"></a>
+</p>
 
 Aplicación de escritorio escrita en **Java 17** con **JavaFX 21** que reúne
 varias calculadoras matemáticas de uso frecuente tras un menú común. Cada

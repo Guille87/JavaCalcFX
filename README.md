@@ -2,9 +2,15 @@
 
 <p align="center"><a href="README.md">English</a> · <a href="docs/README_es.md">Español</a></p>
 
-[![CI](https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml/badge.svg)](https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml)
-[![Coverage](.github/badges/jacoco.svg)](https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+<p align="center">
+  <a href="https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/Guille87/JavaCalcFX/actions/workflows/ci.yml"><img alt="Coverage" src=".github/badges/jacoco.svg"></a>
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
+  <br/>
+  <a href="https://github.com/Guille87/JavaCalcFX/graphs/contributors"><img alt="Contributors" src="https://img.shields.io/github/contributors/Guille87/JavaCalcFX"></a>
+  <a href="https://github.com/Guille87/JavaCalcFX/issues"><img alt="Issues" src="https://img.shields.io/github/issues/Guille87/JavaCalcFX"></a>
+  <a href="https://github.com/Guille87/JavaCalcFX/pulls"><img alt="Pull requests" src="https://img.shields.io/github/issues-pr/Guille87/JavaCalcFX"></a>
+</p>
 
 A desktop application written in **Java 17** with **JavaFX 21** that gathers
 several everyday math calculators behind a common menu. Each tool validates its
