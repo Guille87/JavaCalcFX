@@ -39,9 +39,9 @@ tests for `ui/Settings` and a `UiTest` case for the navigation.
   - [x] enable / disable — when off, nothing is recorded.
   - [x] max entries — 10 / 25 / 50 / 100.
   - [x] clear the history on exit — on/off.
-- [ ] **«Restore defaults»** — clears every settings subnode (light theme,
+- [x] **«Restore defaults»** — clears every settings subnode (light theme,
       default language, history on, …).
-- [ ] **About** — version (from `pom.xml`), MIT license, link to the repository.
+- [x] **About** — version (from `pom.xml`), MIT license, link to the repository.
 
 ---
 

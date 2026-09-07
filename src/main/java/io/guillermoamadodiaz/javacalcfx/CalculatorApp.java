@@ -24,13 +24,16 @@ import io.guillermoamadodiaz.javacalcfx.ui.RuleOfThreeSteps;
 import io.guillermoamadodiaz.javacalcfx.ui.Settings;
 import io.guillermoamadodiaz.javacalcfx.ui.Theme;
 import io.guillermoamadodiaz.javacalcfx.ui.WindowState;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.function.UnaryOperator;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -39,6 +42,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -63,6 +67,7 @@ public class CalculatorApp extends Application {
     private static final double MENU_BUTTON_WIDTH = 210;
     private static final double MENU_WIDTH = 690;
     private static final int PASSING_GRADES = 5;
+    private static final String REPO_URL = "https://github.com/Guille87/JavaCalcFX";
 
     private final StackPane root = new StackPane();
     private final AsyncCalculations calculations = new AsyncCalculations();
@@ -302,10 +307,13 @@ public class CalculatorApp extends Application {
         rows.addRow(6, new Label(Messages.get("settings.history.max")), historyMax);
         rows.add(clearHistoryOnExit, 0, 7, 2, 1);
 
+        Button restoreDefaults = Buttons.create(Messages.get("settings.restore.defaults"), this::restoreDefaults);
+        Button about = Buttons.create(Messages.get("settings.about"), this::aboutScreen);
+
         Button back = Buttons.create(Messages.get("form.back"), Messages.get("form.back.tooltip"), this::showMenu);
         back.setCancelButton(true); // Esc
 
-        VBox content = new VBox(16, header, rows, back);
+        VBox content = new VBox(16, header, rows, new HBox(8, restoreDefaults, about), back);
         content.setAlignment(Pos.TOP_CENTER);
         content.setMaxWidth(MENU_WIDTH);
         content.setPadding(new Insets(20));
@@ -315,6 +323,55 @@ public class CalculatorApp extends Application {
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroll.getStyleClass().add("form");
         navigator.show(scroll);
+    }
+
+    /** Resets every option (settings, theme, language, window) to its default and re-renders. */
+    private void restoreDefaults() {
+        Settings.restoreDefaults();
+        Theme.setDark(false);
+        Theme.applyTo(stage.getScene());
+        Messages.select(Language.from(Locale.getDefault()));
+        stage.setTitle(Messages.get("app.title"));
+        WindowState.reset(stage);
+        settingsScreen();
+    }
+
+    /** About screen: app name and version, license and a link to the repository. */
+    private void aboutScreen() {
+        Label header = new Label(Messages.get("about.title"));
+        header.getStyleClass().add("header");
+
+        Label app = new Label(Messages.get("about.app", version()));
+        app.getStyleClass().add("history-title"); // bold
+
+        Hyperlink repo = new Hyperlink(Messages.get("about.repository"));
+        repo.setOnAction(e -> getHostServices().showDocument(REPO_URL));
+
+        Button back =
+                Buttons.create(Messages.get("form.back"), Messages.get("form.back.tooltip"), this::settingsScreen);
+        back.setCancelButton(true); // Esc
+
+        VBox content = new VBox(12, header, app, new Label(Messages.get("about.license")), repo, back);
+        content.setAlignment(Pos.TOP_CENTER);
+        content.setMaxWidth(MENU_WIDTH);
+        content.setPadding(new Insets(20));
+
+        ScrollPane scroll = new ScrollPane(new StackPane(content));
+        scroll.setFitToWidth(true);
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.getStyleClass().add("form");
+        navigator.show(scroll);
+    }
+
+    /** The project version, injected into {@code app.properties} by Maven ({@code "dev"} when unfiltered). */
+    private static String version() {
+        try (InputStream in = CalculatorApp.class.getResourceAsStream("app.properties")) {
+            Properties p = new Properties();
+            p.load(in);
+            return p.getProperty("version", "dev");
+        } catch (Exception e) {
+            return "dev";
+        }
     }
 
     /** Screen with the latest calculations ({@link History}). */

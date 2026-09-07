@@ -64,4 +64,21 @@ class SettingsTest {
         assertEquals(50, Settings.historyMax());
         assertTrue(Settings.clearHistoryOnExit());
     }
+
+    @Test
+    void restore_defaults_puts_every_option_back() {
+        Settings.setRememberLastCalculator(true);
+        Settings.setRememberWindow(false);
+        Settings.setHistoryEnabled(false);
+        Settings.setHistoryMax(100);
+        Settings.setClearHistoryOnExit(true);
+
+        Settings.restoreDefaults();
+
+        assertFalse(Settings.rememberLastCalculator());
+        assertTrue(Settings.rememberWindow());
+        assertTrue(Settings.historyEnabled());
+        assertEquals(25, Settings.historyMax());
+        assertFalse(Settings.clearHistoryOnExit());
+    }
 }

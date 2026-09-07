@@ -264,6 +264,35 @@ class UiTest extends ApplicationTest {
     }
 
     @Test
+    void restore_defaults_resets_the_options() {
+        Settings.setRememberLastCalculator(true);
+        Locale previous = Locale.getDefault();
+        try {
+            Locale.setDefault(Locale.ENGLISH);
+            clickOn("Settings");
+            clickOn("Restore defaults");
+            verifyThat(".header", hasText("Settings")); // re-rendered, still here
+            assertTrue(!Settings.rememberLastCalculator(), "restore defaults puts the options back");
+        } finally {
+            Locale.setDefault(previous);
+        }
+    }
+
+    @Test
+    void the_about_screen_shows_the_app_and_a_repository_link() {
+        clickOn("Settings");
+        clickOn("About");
+        verifyThat(".header", hasText("About"));
+        assertTrue(
+                lookup(".history-title").queryAs(Label.class).getText().startsWith("JavaCalcFX "),
+                "the About screen names the app and its version");
+        assertTrue(lookup("Source code on GitHub").tryQuery().isPresent());
+
+        clickOn("Back");
+        verifyThat(".header", hasText("Settings")); // Back returns to settings
+    }
+
+    @Test
     void the_theme_button_toggles_dark_mode() {
         boolean darkBefore = darkMode();
         clickOn(darkBefore ? "Light mode" : "Dark mode");

@@ -12,10 +12,12 @@ and the project follows [semantic versioning](https://semver.org/).
 ### Added
 
 - **Settings screen**: a ⚙ button in the menu's top bar opens a screen that
-  gathers the options. So far: language (moved off the top bar), theme, a
-  «Reopen the last calculator on start» toggle, a «Remember the window size and
-  position» toggle with a «Reset window» button, and history options (keep a
-  history on/off, size 10 / 25 / 50 / 100, clear when closing on/off).
+  gathers the options: language (moved off the top bar), theme, a «Reopen the
+  last calculator on start» toggle, a «Remember the window size and position»
+  toggle with a «Reset window» button, history options (keep a history on/off,
+  size 10 / 25 / 50 / 100, clear when closing on/off), a «Restore defaults»
+  button and an «About» screen (app version, MIT license, link to the
+  repository).
 
 ### Changed
 

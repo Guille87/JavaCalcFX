@@ -12,11 +12,13 @@ y el proyecto sigue [versionado semántico](https://semver.org/lang/es/).
 ### Añadido
 
 - **Pantalla de ajustes**: un botón ⚙ en la barra superior del menú abre una
-  pantalla que reúne las opciones. De momento: idioma (sale de la barra
-  superior), tema, un interruptor «Reabrir la última calculadora al arrancar»,
-  un interruptor «Recordar el tamaño y la posición de la ventana» con un botón
-  «Restablecer ventana», y opciones de historial (guardar historial sí/no,
-  tamaño 10 / 25 / 50 / 100, vaciar al cerrar sí/no).
+  pantalla que reúne las opciones: idioma (sale de la barra superior), tema, un
+  interruptor «Reabrir la última calculadora al arrancar», un interruptor
+  «Recordar el tamaño y la posición de la ventana» con un botón «Restablecer
+  ventana», opciones de historial (guardar historial sí/no, tamaño
+  10 / 25 / 50 / 100, vaciar al cerrar sí/no), un botón «Restablecer ajustes» y
+  una pantalla «Acerca de» (versión de la app, licencia MIT, enlace al
+  repositorio).
 
 ### Cambiado
 

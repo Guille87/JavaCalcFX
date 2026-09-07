@@ -1,5 +1,6 @@
 package io.guillermoamadodiaz.javacalcfx.ui;
 
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 /**
@@ -66,5 +67,14 @@ public final class Settings {
 
     public static void setClearHistoryOnExit(boolean value) {
         PREFS.putBoolean(CLEAR_HISTORY_ON_EXIT, value);
+    }
+
+    /** Clears every stored option, so each getter falls back to its default. */
+    public static void restoreDefaults() {
+        try {
+            PREFS.clear();
+        } catch (BackingStoreException | RuntimeException ignored) {
+            // no persistence available: nothing to clear
+        }
     }
 }

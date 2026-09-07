@@ -42,9 +42,9 @@ para la navegación.
   - [x] activar / desactivar — si está en off, no se registra nada.
   - [x] número máximo de entradas — 10 / 25 / 50 / 100.
   - [x] vaciar el historial al cerrar — on/off.
-- [ ] **«Restablecer ajustes»** — borra todos los subnodos de ajustes (tema
+- [x] **«Restablecer ajustes»** — borra todos los subnodos de ajustes (tema
       claro, idioma por defecto, historial activado, …).
-- [ ] **Acerca de** — versión (desde `pom.xml`), licencia MIT, enlace al
+- [x] **Acerca de** — versión (desde `pom.xml`), licencia MIT, enlace al
       repositorio.
 
 ---
