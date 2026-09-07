@@ -28,7 +28,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   `useModulePath=false` so TestFX isn't on the module path). `mvn test -Pheaded` shows a
   window. No display or xvfb needed. It opens the stage large (the categorized menu is
   tall — small windows would scroll buttons out of TestFX's reach); it pins
-  `Messages.useLocale("es")` so it can click the Spanish labels, a `@BeforeEach` clears
+  `Messages.useLocale(ENGLISH)` and clicks the English labels, a `@BeforeEach` clears
   `History` and `@AfterAll` clears the `WindowState`/`Theme`/`History` prefs it touched.
 - Package for Windows (profile `dist`): `mvn -Pdist -DskipTests clean javafx:jlink package`
   → portable app-image in `target/dist/JavaCalcFX/`. Add `,installer` for the `.msi`
