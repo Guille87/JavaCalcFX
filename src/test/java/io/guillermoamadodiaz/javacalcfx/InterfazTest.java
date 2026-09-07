@@ -189,6 +189,14 @@ class InterfazTest extends ApplicationTest {
         interact(() -> selector.getSelectionModel().select(1)); // imperial
         WaitForAsyncUtils.waitForFxEvents();
         assertEquals(3, lookup(".text-field").queryAll().size(), "imperial: peso, pies y pulgadas");
+
+        // al cambiar de sistema, los datos se traspasan convertidos
+        assertTrue(
+                lookup(".text-field").nth(0).queryAs(TextField.class).getText().startsWith("154"), "70 kg ≈ 154 lb");
+        assertEquals("5", lookup(".text-field").nth(1).queryAs(TextField.class).getText(), "175 cm ≈ 5 ft");
+        assertTrue(
+                lookup(".text-field").nth(2).queryAs(TextField.class).getText().startsWith("8.9"),
+                "175 cm ≈ 5 ft 8.9 in");
     }
 
     @Test

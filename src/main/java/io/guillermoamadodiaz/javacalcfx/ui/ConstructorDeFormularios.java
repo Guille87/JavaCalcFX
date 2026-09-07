@@ -3,6 +3,7 @@ package io.guillermoamadodiaz.javacalcfx.ui;
 import io.guillermoamadodiaz.javacalcfx.i18n.Textos;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import javafx.animation.PauseTransition;
@@ -154,8 +155,27 @@ public final class ConstructorDeFormularios {
     /**
      * Registro de un «modo» de un formulario con selector: su nombre visible, los
      * campos que pide y el cálculo que hace con esos campos.
+     *
+     * <p>{@code aComun} y {@code desdeComun} son opcionales: si un modo los aporta,
+     * al cambiar de modo se traspasan los datos (los campos del modo anterior se
+     * convierten a una representación común y de ahí a los del nuevo modo). Si
+     * algún campo está vacío o no es válido, el traspaso no se hace.
+     *
+     * @param aComun campos → valores comunes; {@link Optional#empty()} si no procede
+     * @param desdeComun valores comunes → textos para los campos del modo
      */
-    public record Modo(String nombre, List<String> prompts, Function<List<String>, String> calculo) {}
+    public record Modo(
+            String nombre,
+            List<String> prompts,
+            Function<List<String>, String> calculo,
+            Function<List<String>, Optional<double[]>> aComun,
+            Function<double[], List<String>> desdeComun) {
+
+        /** Modo sin traspaso: al cambiar de modo se limpian los campos. */
+        public Modo(String nombre, List<String> prompts, Function<List<String>, String> calculo) {
+            this(nombre, prompts, calculo, valores -> Optional.empty(), comun -> List.of());
+        }
+    }
 
     /**
      * Variante del formulario con un {@link ComboBox} de modos (p. ej. sistema de
@@ -205,16 +225,25 @@ public final class ConstructorDeFormularios {
         List<TextField> campos = new ArrayList<>();
         VBox camposBox = new VBox(ESPACIADO);
         AtomicReference<Function<List<String>, String>> calculoActual = new AtomicReference<>();
+        AtomicReference<Modo> modoAnterior = new AtomicReference<>();
 
         Runnable aplicarModo = () -> {
             Modo modo = selector.getValue();
+            if (modo == modoAnterior.get()) {
+                return; // el ComboBox notificó sin cambio real
+            }
+            List<String> heredados = traspasar(modoAnterior.get(), modo, campos);
+
             campos.clear();
             camposBox.getChildren().clear();
-            for (String prompt : modo.prompts()) {
+            for (int i = 0; i < modo.prompts().size(); i++) {
                 TextField campo = new TextField();
-                campo.setPromptText(prompt);
+                campo.setPromptText(modo.prompts().get(i));
                 if (tipoCampo != null) {
                     FiltroNumerico.aplicarA(campo, tipoCampo);
+                }
+                if (i < heredados.size()) {
+                    campo.setText(heredados.get(i));
                 }
                 campos.add(campo);
                 camposBox.getChildren().add(campo);
@@ -223,6 +252,7 @@ public final class ConstructorDeFormularios {
             resultado.setText("");
             copiar.ocultar();
             campos.get(0).requestFocus();
+            modoAnterior.set(modo);
         };
         selector.getSelectionModel().selectFirst();
         aplicarModo.run();
@@ -273,6 +303,20 @@ public final class ConstructorDeFormularios {
 
         mostrarEnScroll(pantalla);
         campos.get(0).requestFocus();
+    }
+
+    /** Convierte los campos del modo {@code anterior} a los textos que tocan en el {@code nuevo}. */
+    private static List<String> traspasar(Modo anterior, Modo nuevo, List<TextField> campos) {
+        if (anterior == null || anterior == nuevo) {
+            return List.of();
+        }
+        List<String> actuales = campos.stream()
+                .map(c -> c.getText() == null ? "" : c.getText().trim())
+                .toList();
+        return anterior.aComun()
+                .apply(actuales)
+                .map(comun -> nuevo.desdeComun().apply(comun))
+                .orElse(List.of());
     }
 
     /** Esc vuelve al menú aunque el foco esté en un {@link TextField} (que consumiría la tecla). */

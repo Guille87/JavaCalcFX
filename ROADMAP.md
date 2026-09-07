@@ -105,4 +105,5 @@ Explicación desarrollada del cálculo, en notación lineal, tras un botón
 Fuera del plan original, según van surgiendo.
 
 - [x] **IMC**: altura en centímetros y selector de sistema de medida (métrico /
-      imperial). `calc/Conversiones` + `ConstructorDeFormularios.mostrarConModos`.
+      imperial), con traspaso de los datos convertidos al cambiar de sistema.
+      `calc/Conversiones` + `ConstructorDeFormularios.mostrarConModos`.

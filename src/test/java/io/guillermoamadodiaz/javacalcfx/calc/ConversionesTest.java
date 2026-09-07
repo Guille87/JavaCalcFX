@@ -26,4 +26,18 @@ class ConversionesTest {
         assertEquals(1.7526, Conversiones.piesYPulgadasAMetros(5, 9), EPS); // 69 in
         assertEquals(0.0254, Conversiones.piesYPulgadasAMetros(0, 1), EPS);
     }
+
+    @Test
+    void las_conversiones_inversas_cuadran() {
+        assertEquals(154.32358, Conversiones.kilosALibras(70), 1e-5);
+        assertEquals(180.0, Conversiones.metrosACentimetros(1.8), EPS);
+
+        double[] ftIn = Conversiones.metrosAPiesYPulgadas(1.8288); // exactamente 6'0"
+        assertEquals(6.0, ftIn[0], EPS);
+        assertEquals(0.0, ftIn[1], 1e-9);
+
+        double[] otro = Conversiones.metrosAPiesYPulgadas(1.7526); // 5'9"
+        assertEquals(5.0, otro[0], EPS);
+        assertEquals(9.0, otro[1], 1e-6);
+    }
 }

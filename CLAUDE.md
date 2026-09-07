@@ -101,6 +101,8 @@ Single-module JavaFX desktop app in four packages: `calc` (pure domain), `i18n`
     `Historial`; the `mostrar(...)` overload that also takes a `pasos` function shows a
     **«Mostrar pasos»** toggle. `mostrarConModos(...)` is the variant with a `ComboBox<Modo>`
     that swaps the fields + calc function (IMC uses it for metric/imperial); no pasos there.
+    A `Modo` may carry `aComun`/`desdeComun` so switching modes carries the entered data
+    across, converted (métrico↔imperial in IMC via `calc/Conversiones`).
   - `MensajesDeError` — pure `Throwable → String`. This is where `ErrorDeCalculo.clave()`
     (and any `Nombre` args) get translated via `Textos`; `NumberFormatException` →
     generic message; cancellation → `""`. Unit-tested.

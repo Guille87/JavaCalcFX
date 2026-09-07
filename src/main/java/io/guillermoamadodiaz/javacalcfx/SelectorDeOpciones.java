@@ -27,6 +27,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -546,11 +547,14 @@ public class SelectorDeOpciones extends Application {
     }
 
     private void pantallaImc() {
+        // Representación común entre los dos modos: {peso en kg, altura en m}.
         ConstructorDeFormularios.Modo metrico = new ConstructorDeFormularios.Modo(
                 Textos.get("imc.sistema.metrico"),
                 List.of(Textos.get("imc.campo.peso.kg"), Textos.get("imc.campo.altura.cm")),
                 valores -> resultadoImc(
-                        Entrada.doble(valores.get(0)), Conversiones.centimetrosAMetros(Entrada.doble(valores.get(1)))));
+                        Entrada.doble(valores.get(0)), Conversiones.centimetrosAMetros(Entrada.doble(valores.get(1)))),
+                valores -> comun(valores, v -> new double[] {v[0], Conversiones.centimetrosAMetros(v[1])}),
+                comun -> List.of(aprox(comun[0]), aprox(Conversiones.metrosACentimetros(comun[1]))));
 
         ConstructorDeFormularios.Modo imperial = new ConstructorDeFormularios.Modo(
                 Textos.get("imc.sistema.imperial"),
@@ -561,7 +565,16 @@ public class SelectorDeOpciones extends Application {
                 valores -> resultadoImc(
                         Conversiones.librasAKilos(Entrada.doble(valores.get(0))),
                         Conversiones.piesYPulgadasAMetros(
-                                Entrada.doble(valores.get(1)), Entrada.doble(valores.get(2)))));
+                                Entrada.doble(valores.get(1)), Entrada.doble(valores.get(2)))),
+                valores -> comun(valores, v ->
+                        new double[] {Conversiones.librasAKilos(v[0]), Conversiones.piesYPulgadasAMetros(v[1], v[2])}),
+                comun -> {
+                    double[] piesYPulgadas = Conversiones.metrosAPiesYPulgadas(comun[1]);
+                    return List.of(
+                            aprox(Conversiones.kilosALibras(comun[0])),
+                            Formato.numero(piesYPulgadas[0]),
+                            aprox(piesYPulgadas[1]));
+                });
 
         formularios.mostrarConModos(
                 Textos.get("imc.titulo"),
@@ -577,6 +590,24 @@ public class SelectorDeOpciones extends Application {
                 "imc.resultado",
                 Formato.dosDecimales(r.valor()),
                 Textos.get("imc.categoria." + r.categoria().name().toLowerCase()));
+    }
+
+    /** Parsea los campos y aplica {@code aComun}; vacío si algún campo falta o no es válido. */
+    private static Optional<double[]> comun(List<String> valores, UnaryOperator<double[]> aComun) {
+        try {
+            double[] crudos = new double[valores.size()];
+            for (int i = 0; i < valores.size(); i++) {
+                crudos[i] = Entrada.doble(valores.get(i));
+            }
+            return Optional.of(aComun.apply(crudos));
+        } catch (RuntimeException noValido) {
+            return Optional.empty();
+        }
+    }
+
+    /** Número redondeado a un decimal, para rellenar campos al cambiar de sistema. */
+    private static String aprox(double valor) {
+        return Formato.numero(Math.round(valor * 10.0) / 10.0);
     }
 
     public static void main(String[] args) {
