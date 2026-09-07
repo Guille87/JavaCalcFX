@@ -39,10 +39,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -208,23 +208,10 @@ public class CalculatorApp extends Application {
                 Messages.get("menu.button." + key), Messages.get("menu.button." + key + ".tooltip"), action);
     }
 
-    /** The menu's top bar: history, theme and language, top right. */
+    /** The menu's top bar: history, theme toggle and settings, top right. */
     private HBox topBar() {
-        ComboBox<Language> selector = new ComboBox<>();
-        selector.getItems().setAll(Language.values());
-        selector.setValue(Messages.language());
-        selector.setTooltip(new Tooltip(Messages.get("menu.language.tooltip")));
-        selector.setOnAction(e -> {
-            Language chosen = selector.getValue();
-            if (chosen != null && chosen != Messages.language()) {
-                Messages.select(chosen);
-                stage.setTitle(Messages.get("app.title"));
-                showMenu(); // rebuilds the menu already translated
-            }
-        });
-
-        String key = Theme.isDark() ? "menu.theme.light" : "menu.theme.dark";
-        Button theme = Buttons.create(Messages.get(key), Messages.get("menu.theme.tooltip"), () -> {
+        String themeKey = Theme.isDark() ? "menu.theme.light" : "menu.theme.dark";
+        Button theme = Buttons.create(Messages.get(themeKey), Messages.get("menu.theme.tooltip"), () -> {
             Theme.toggle();
             Theme.applyTo(stage.getScene());
             showMenu(); // rebuilds the bar with the correct label
@@ -233,9 +220,63 @@ public class CalculatorApp extends Application {
         Button history =
                 Buttons.create(Messages.get("menu.history"), Messages.get("menu.history.tooltip"), this::historyScreen);
 
-        HBox bar = new HBox(8, history, theme, selector);
+        Button settings = Buttons.create(
+                Messages.get("menu.settings"), Messages.get("menu.settings.tooltip"), this::settingsScreen);
+
+        HBox bar = new HBox(8, history, theme, settings);
         bar.setAlignment(Pos.CENTER_RIGHT);
         return bar;
+    }
+
+    /** Settings screen: the options that were scattered around the UI, plus new ones. */
+    private void settingsScreen() {
+        Label header = new Label(Messages.get("settings.title"));
+        header.getStyleClass().add("header");
+
+        ComboBox<Language> language = new ComboBox<>();
+        language.getItems().setAll(Language.values());
+        language.setValue(Messages.language());
+        language.setOnAction(e -> {
+            Language chosen = language.getValue();
+            if (chosen != null && chosen != Messages.language()) {
+                Messages.select(chosen);
+                stage.setTitle(Messages.get("app.title"));
+                settingsScreen(); // re-render with the new language
+            }
+        });
+
+        String light = Messages.get("settings.theme.light");
+        String dark = Messages.get("settings.theme.dark");
+        ComboBox<String> theme = new ComboBox<>();
+        theme.getItems().setAll(light, dark);
+        theme.setValue(Theme.isDark() ? dark : light);
+        theme.setOnAction(e -> {
+            boolean wantDark = dark.equals(theme.getValue());
+            if (wantDark != Theme.isDark()) {
+                Theme.setDark(wantDark);
+                Theme.applyTo(stage.getScene());
+            }
+        });
+
+        GridPane rows = new GridPane();
+        rows.setHgap(12);
+        rows.setVgap(12);
+        rows.addRow(0, new Label(Messages.get("settings.language")), language);
+        rows.addRow(1, new Label(Messages.get("settings.theme")), theme);
+
+        Button back = Buttons.create(Messages.get("form.back"), Messages.get("form.back.tooltip"), this::showMenu);
+        back.setCancelButton(true); // Esc
+
+        VBox content = new VBox(16, header, rows, back);
+        content.setAlignment(Pos.TOP_CENTER);
+        content.setMaxWidth(MENU_WIDTH);
+        content.setPadding(new Insets(20));
+
+        ScrollPane scroll = new ScrollPane(new StackPane(content));
+        scroll.setFitToWidth(true);
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.getStyleClass().add("form");
+        navigator.show(scroll);
     }
 
     /** Screen with the latest calculations ({@link History}). */

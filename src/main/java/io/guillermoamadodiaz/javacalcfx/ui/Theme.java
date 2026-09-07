@@ -34,6 +34,11 @@ public final class Theme {
         return dark;
     }
 
+    /** Sets dark mode on or off and persists it. */
+    public static void setDark(boolean dark) {
+        PREFS.putBoolean(KEY, dark);
+    }
+
     /** Applies the current theme to the scene. Idempotent; ignores {@code null}. */
     public static void applyTo(Scene scene) {
         if (scene == null || scene.getRoot() == null) {

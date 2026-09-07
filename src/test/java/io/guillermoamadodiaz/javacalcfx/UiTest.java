@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.LabeledMatchers.hasText;
 
+import io.guillermoamadodiaz.javacalcfx.i18n.Language;
 import io.guillermoamadodiaz.javacalcfx.i18n.Messages;
 import io.guillermoamadodiaz.javacalcfx.ui.History;
 import io.guillermoamadodiaz.javacalcfx.ui.LastCalculator;
@@ -51,6 +52,7 @@ class UiTest extends ApplicationTest {
             Preferences.userNodeForPackage(WindowState.class).clear();
             Preferences.userNodeForPackage(Theme.class).node("theme").clear();
             Preferences.userNodeForPackage(History.class).node("history").clear();
+            Preferences.userNodeForPackage(Messages.class).remove("language");
         } catch (Exception ignored) {
             // no persistence available in the test environment: nothing to clean
         }
@@ -232,6 +234,28 @@ class UiTest extends ApplicationTest {
 
     private boolean darkMode() {
         return lookup(".title").query().getScene().getRoot().getStyleClass().contains(Theme.DARK_CLASS);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void the_settings_screen_switches_the_language() {
+        clickOn("Settings");
+        verifyThat(".header", hasText("Settings"));
+
+        ComboBox<Language> language =
+                (ComboBox<Language>) lookup(".combo-box").nth(0).queryAs(ComboBox.class);
+        interact(() -> language.getSelectionModel().select(Language.SPANISH));
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat(".header", hasText("Ajustes"));
+
+        ComboBox<Language> languageAgain =
+                (ComboBox<Language>) lookup(".combo-box").nth(0).queryAs(ComboBox.class);
+        interact(() -> languageAgain.getSelectionModel().select(Language.ENGLISH));
+        WaitForAsyncUtils.waitForFxEvents();
+        verifyThat(".header", hasText("Settings"));
+
+        clickOn("Back");
+        verifyThat(".title", hasText("Math Calculator"));
     }
 
     @Test
