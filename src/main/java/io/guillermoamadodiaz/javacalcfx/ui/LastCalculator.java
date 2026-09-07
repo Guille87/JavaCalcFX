@@ -14,8 +14,8 @@ import java.util.prefs.Preferences;
 public final class LastCalculator {
 
     private static final Preferences PREFS =
-            Preferences.userNodeForPackage(LastCalculator.class).node("ultima-calculadora");
-    private static final String KEY = "clave";
+            Preferences.userNodeForPackage(LastCalculator.class).node("last-calculator");
+    private static final String KEY = "key";
 
     private LastCalculator() {}
 

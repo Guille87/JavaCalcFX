@@ -45,9 +45,11 @@ and the project follows [semantic versioning](https://semver.org/).
 - **English as the default language**: the code, comments and i18n keys move to
   English, and `messages.properties` (the base) is now in English, with Spanish
   in `messages_es.properties`. The app starts in English if no language is saved
-  and the selector switches to Spanish. As a side effect, on a machine that had
-  already saved the language with an earlier version, it will open in English the
-  first time (just pick the language again in the selector).
+  and the selector switches to Spanish.
+- The `java.util.prefs` node and key names for the saved settings (language,
+  theme, history, last calculator) are now in English. As a side effect, on a
+  machine that had saved settings with `0.1.0` those settings reset once: the app
+  opens in English, light theme, empty history, on the menu.
 
 ## [0.1.0] - 2026-09-06
 

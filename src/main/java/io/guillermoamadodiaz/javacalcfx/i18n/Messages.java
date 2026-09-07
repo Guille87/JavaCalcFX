@@ -25,7 +25,7 @@ import java.util.prefs.Preferences;
 public final class Messages {
 
     private static final String PATH = "/io/guillermoamadodiaz/javacalcfx/i18n/";
-    private static final String LANGUAGE_KEY = "idioma";
+    private static final String LANGUAGE_KEY = "language";
 
     private static Language language = initialLanguage();
     private static Properties texts = load(language);

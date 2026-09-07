@@ -26,8 +26,8 @@ public final class History {
     public static final int MAX_RESULT = 300;
 
     private static final Preferences PREFS =
-            Preferences.userNodeForPackage(History.class).node("historial");
-    private static final String KEY = "entradas";
+            Preferences.userNodeForPackage(History.class).node("history");
+    private static final String KEY = "entries";
     private static final String ENTRY_SEPARATOR = "\u001e"; // RS: between entries
     private static final String FIELD_SEPARATOR = "\u001f"; // US: between fields
 

@@ -17,8 +17,8 @@ public final class Theme {
     public static final String DARK_CLASS = "dark-theme";
 
     private static final Preferences PREFS =
-            Preferences.userNodeForPackage(Theme.class).node("tema");
-    private static final String KEY = "oscuro";
+            Preferences.userNodeForPackage(Theme.class).node("theme");
+    private static final String KEY = "dark";
 
     private Theme() {}
 

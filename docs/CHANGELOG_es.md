@@ -44,10 +44,12 @@ y el proyecto sigue [versionado semántico](https://semver.org/lang/es/).
 - **Inglés como idioma por defecto**: el código, los comentarios y las claves de
   i18n pasan al inglés, y `messages.properties` (la base) ahora está en inglés,
   con el español en `messages_es.properties`. La app arranca en inglés si no hay
-  un idioma guardado y el selector permite cambiar a español. Como efecto
-  secundario, en un equipo que ya hubiera guardado el idioma con una versión
-  anterior, la primera vez se abrirá en inglés (basta con volver a elegir el
-  idioma en el selector).
+  un idioma guardado y el selector permite cambiar a español.
+- Los nombres de nodo y clave de `java.util.prefs` de los ajustes guardados
+  (idioma, tema, historial, última calculadora) pasan al inglés. Como efecto
+  secundario, en un equipo que tuviera ajustes guardados de la `0.1.0`, esos
+  ajustes se reinician una vez: la app abre en inglés, tema claro, historial
+  vacío y en el menú.
 
 ## [0.1.0] - 2026-09-06
 

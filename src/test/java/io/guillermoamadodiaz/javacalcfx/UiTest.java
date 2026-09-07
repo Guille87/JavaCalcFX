@@ -49,8 +49,8 @@ class UiTest extends ApplicationTest {
         LastCalculator.forget();
         try {
             Preferences.userNodeForPackage(WindowState.class).clear();
-            Preferences.userNodeForPackage(Theme.class).node("tema").clear();
-            Preferences.userNodeForPackage(History.class).node("historial").clear();
+            Preferences.userNodeForPackage(Theme.class).node("theme").clear();
+            Preferences.userNodeForPackage(History.class).node("history").clear();
         } catch (Exception ignored) {
             // no persistence available in the test environment: nothing to clean
         }
