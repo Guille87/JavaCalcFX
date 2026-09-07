@@ -5,20 +5,20 @@ import io.guillermoamadodiaz.javacalcfx.calc.Calculator.Triangle;
 import io.guillermoamadodiaz.javacalcfx.i18n.Messages;
 
 /**
- * Desarrollo paso a paso del triángulo rectángulo, en notación lineal: aplica el
- * teorema de Pitágoras a la hipotenusa y sustituye los datos en las fórmulas del
- * área, el perímetro y los ángulos agudos.
+ * Step-by-step explanation of the right triangle, in linear notation: applies the
+ * Pythagorean theorem to the hypotenuse and substitutes the data into the
+ * formulas for the area, the perimeter and the acute angles.
  *
- * <p>Solo rellena plantillas fijas con los números; es determinista y está
- * cubierto por tests.
+ * <p>It only fills fixed templates with the numbers; it is deterministic and
+ * covered by tests.
  */
-public final class PasoAPasoPitagoras {
+public final class PythagorasSteps {
 
-    private PasoAPasoPitagoras() {}
+    private PythagorasSteps() {}
 
-    /** @throws IllegalArgumentException si algún cateto no es un número finito y positivo */
-    public static String desarrollo(double a, double b) {
-        Triangle t = Calculator.solveRightTriangle(a, b); // valida a y b
+    /** @throws IllegalArgumentException if a leg is not a finite, positive number */
+    public static String explain(double a, double b) {
+        Triangle t = Calculator.solveRightTriangle(a, b); // validates a and b
 
         StringBuilder sb = new StringBuilder();
         sb.append(Messages.get("pitagoras.pasos.hipotenusa")).append('\n');
@@ -40,7 +40,7 @@ public final class PasoAPasoPitagoras {
         return sb.toString();
     }
 
-    private static String n(double valor) {
-        return Format.number(valor);
+    private static String n(double value) {
+        return Format.number(value);
     }
 }

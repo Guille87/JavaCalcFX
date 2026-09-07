@@ -4,19 +4,20 @@ import io.guillermoamadodiaz.javacalcfx.calc.Calculator;
 import io.guillermoamadodiaz.javacalcfx.i18n.Messages;
 
 /**
- * Desarrollo paso a paso de la regla de tres directa: plantea la proporción
- * {@code a → b, c → x} y despeja {@code x = (c · b) / a} sustituyendo los datos.
+ * Step-by-step explanation of the direct rule of three: sets up the proportion
+ * {@code a → b, c → x} and solves {@code x = (c · b) / a} by substituting the
+ * data.
  *
- * <p>Solo rellena plantillas fijas con los números; es determinista y está
- * cubierto por tests.
+ * <p>It only fills fixed templates with the numbers; it is deterministic and
+ * covered by tests.
  */
-public final class PasoAPasoReglaDeTres {
+public final class RuleOfThreeSteps {
 
-    private PasoAPasoReglaDeTres() {}
+    private RuleOfThreeSteps() {}
 
-    /** @throws IllegalArgumentException si {@code a} es 0 o algún dato no es finito */
-    public static String desarrollo(double a, double b, double c) {
-        double x = Calculator.ruleOfThree(a, b, c); // valida a, b, c
+    /** @throws IllegalArgumentException if {@code a} is 0 or a value is not finite */
+    public static String explain(double a, double b, double c) {
+        double x = Calculator.ruleOfThree(a, b, c); // validates a, b, c
 
         StringBuilder sb = new StringBuilder();
         sb.append(Messages.get("regladetres.pasos.intro")).append('\n');
@@ -29,7 +30,7 @@ public final class PasoAPasoReglaDeTres {
         return sb.toString();
     }
 
-    private static String n(double valor) {
-        return Format.number(valor);
+    private static String n(double value) {
+        return Format.number(value);
     }
 }

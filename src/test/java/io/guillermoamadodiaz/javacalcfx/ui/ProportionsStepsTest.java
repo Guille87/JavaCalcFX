@@ -9,19 +9,19 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class PasoAPasoProporcionesTest {
+class ProportionsStepsTest {
 
     @BeforeAll
-    static void enEspanol() {
+    static void inSpanish() {
         Messages.useLocale(Locale.forLanguageTag("es"));
     }
 
     @Nested
-    class ReglaDeTres {
+    class RuleOfThree {
 
         @Test
-        void plantea_la_proporcion_y_despeja() {
-            String d = PasoAPasoReglaDeTres.desarrollo(3, 6, 5); // 3 → 6, 5 → 10
+        void sets_up_the_proportion_and_solves() {
+            String d = RuleOfThreeSteps.explain(3, 6, 5); // 3 → 6, 5 → 10
             assertTrue(d.startsWith("Regla de tres directa:"), d);
             assertTrue(d.contains("3 → 6"), d);
             assertTrue(d.contains("5 → x"), d);
@@ -31,17 +31,17 @@ class PasoAPasoProporcionesTest {
         }
 
         @Test
-        void rechaza_a_cero() {
-            assertThrows(IllegalArgumentException.class, () -> PasoAPasoReglaDeTres.desarrollo(0, 6, 5));
+        void rejects_a_zero() {
+            assertThrows(IllegalArgumentException.class, () -> RuleOfThreeSteps.explain(0, 6, 5));
         }
     }
 
     @Nested
-    class Porcentaje {
+    class Percentage {
 
         @Test
-        void sustituye_en_la_formula() {
-            String d = PasoAPasoPorcentaje.desarrollo(15, 200); // 15 % de 200 = 30
+        void substitutes_into_the_formula() {
+            String d = PercentageSteps.explain(15, 200); // 15% of 200 = 30
             assertTrue(d.startsWith("El porcentaje de la cantidad:"), d);
             assertTrue(d.contains("x = (15 / 100) · 200"), d);
             assertTrue(d.contains("x = 0.15 · 200"), d);
@@ -49,8 +49,8 @@ class PasoAPasoProporcionesTest {
         }
 
         @Test
-        void rechaza_datos_no_finitos() {
-            assertThrows(IllegalArgumentException.class, () -> PasoAPasoPorcentaje.desarrollo(Double.NaN, 200));
+        void rejects_non_finite_data() {
+            assertThrows(IllegalArgumentException.class, () -> PercentageSteps.explain(Double.NaN, 200));
         }
     }
 }

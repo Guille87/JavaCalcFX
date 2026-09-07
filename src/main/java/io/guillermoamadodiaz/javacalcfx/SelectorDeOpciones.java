@@ -9,19 +9,19 @@ import io.guillermoamadodiaz.javacalcfx.i18n.Language;
 import io.guillermoamadodiaz.javacalcfx.i18n.Messages;
 import io.guillermoamadodiaz.javacalcfx.ui.AsyncCalculations;
 import io.guillermoamadodiaz.javacalcfx.ui.Buttons;
-import io.guillermoamadodiaz.javacalcfx.ui.ConstructorDeFormularios;
+import io.guillermoamadodiaz.javacalcfx.ui.CylinderSteps;
+import io.guillermoamadodiaz.javacalcfx.ui.FormBuilder;
 import io.guillermoamadodiaz.javacalcfx.ui.Format;
-import io.guillermoamadodiaz.javacalcfx.ui.Historial;
+import io.guillermoamadodiaz.javacalcfx.ui.History;
 import io.guillermoamadodiaz.javacalcfx.ui.Input;
+import io.guillermoamadodiaz.javacalcfx.ui.LastCalculator;
 import io.guillermoamadodiaz.javacalcfx.ui.Navigator;
 import io.guillermoamadodiaz.javacalcfx.ui.NumericFilter;
-import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoCilindro;
-import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoCuadratica;
-import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoPitagoras;
-import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoPorcentaje;
-import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoReglaDeTres;
-import io.guillermoamadodiaz.javacalcfx.ui.Tema;
-import io.guillermoamadodiaz.javacalcfx.ui.UltimaCalculadora;
+import io.guillermoamadodiaz.javacalcfx.ui.PercentageSteps;
+import io.guillermoamadodiaz.javacalcfx.ui.PythagorasSteps;
+import io.guillermoamadodiaz.javacalcfx.ui.QuadraticSteps;
+import io.guillermoamadodiaz.javacalcfx.ui.RuleOfThreeSteps;
+import io.guillermoamadodiaz.javacalcfx.ui.Theme;
 import io.guillermoamadodiaz.javacalcfx.ui.WindowState;
 import java.math.BigInteger;
 import java.time.Instant;
@@ -50,7 +50,7 @@ import javafx.stage.Stage;
 
 /**
  * Ventana principal. Solo hace tres cosas: montar la infraestructura de interfaz
- * ({@link Navigator}, {@link AsyncCalculations}, {@link ConstructorDeFormularios}),
+ * ({@link Navigator}, {@link AsyncCalculations}, {@link FormBuilder}),
  * declarar el catálogo de calculadoras y cerrar el ejecutor al salir. Cada
  * {@code pantallaX()} describe únicamente <em>qué</em> se pide y <em>qué</em> se
  * muestra; la aritmética vive en {@link Calculator} y los textos en {@link Messages}.
@@ -64,8 +64,7 @@ public class SelectorDeOpciones extends Application {
     private final StackPane raiz = new StackPane();
     private final AsyncCalculations calculos = new AsyncCalculations();
     private final Navigator navegador = new Navigator(raiz, calculos::cancel);
-    private final ConstructorDeFormularios formularios =
-            new ConstructorDeFormularios(navegador, calculos, this::mostrarMenu);
+    private final FormBuilder formularios = new FormBuilder(navegador, calculos, this::mostrarMenu);
 
     private Stage escenario;
 
@@ -88,9 +87,9 @@ public class SelectorDeOpciones extends Application {
         if (hojaEstilos != null) {
             escena.getStylesheets().add(hojaEstilos.toExternalForm());
         }
-        Tema.aplicarA(escena); // restaura el modo claro/oscuro guardado
+        Theme.applyTo(escena); // restaura el modo claro/oscuro guardado
 
-        Optional<String> ultimaCalculadora = UltimaCalculadora.recordada();
+        Optional<String> ultimaCalculadora = LastCalculator.remembered();
         mostrarMenu(); // esto la olvida; por eso se lee antes
         escenario.setScene(escena);
         escenario.setMinWidth(710);
@@ -153,7 +152,7 @@ public class SelectorDeOpciones extends Application {
     /** Entrada de menú que, al abrirse, recuerda la calculadora para el próximo arranque. */
     private EntradaMenu entrada(String clave, Runnable pantalla) {
         return new EntradaMenu(clave, () -> {
-            UltimaCalculadora.recordar(clave);
+            LastCalculator.remember(clave);
             pantalla.run();
         });
     }
@@ -167,7 +166,7 @@ public class SelectorDeOpciones extends Application {
     }
 
     private void mostrarMenu() {
-        UltimaCalculadora.olvidar(); // se está en el menú: no hay «última calculadora» que reabrir
+        LastCalculator.forget(); // se está en el menú: no hay «última calculadora» que reabrir
 
         Label titulo = new Label(Messages.get("menu.titulo"));
         titulo.getStyleClass().add("titulo");
@@ -223,10 +222,10 @@ public class SelectorDeOpciones extends Application {
             }
         });
 
-        String clave = Tema.esOscuro() ? "menu.tema.claro" : "menu.tema.oscuro";
+        String clave = Theme.isDark() ? "menu.tema.claro" : "menu.tema.oscuro";
         Button tema = Buttons.create(Messages.get(clave), Messages.get("menu.tema.tooltip"), () -> {
-            Tema.alternar();
-            Tema.aplicarA(escenario.getScene());
+            Theme.toggle();
+            Theme.applyTo(escenario.getScene());
             mostrarMenu(); // reconstruye la barra con la etiqueta correcta
         });
 
@@ -238,15 +237,15 @@ public class SelectorDeOpciones extends Application {
         return barra;
     }
 
-    /** Pantalla con los últimos cálculos ({@link Historial}). */
+    /** Pantalla con los últimos cálculos ({@link History}). */
     private void pantallaHistorial() {
         Label encabezado = new Label(Messages.get("historial.titulo"));
         encabezado.getStyleClass().add("encabezado");
 
-        List<Historial.Entrada> entradas = Historial.reciente();
+        List<History.Entry> entradas = History.recent();
 
         Button vaciar = Buttons.create(Messages.get("historial.vaciar"), () -> {
-            Historial.limpiar();
+            History.clear();
             pantallaHistorial();
         });
         vaciar.setDisable(entradas.isEmpty());
@@ -265,16 +264,16 @@ public class SelectorDeOpciones extends Application {
             contenido.getChildren().add(vacio);
         } else {
             VBox lista = new VBox(14);
-            for (Historial.Entrada entrada : entradas) {
-                Label titulo = new Label(entrada.titulo());
+            for (History.Entry entrada : entradas) {
+                Label titulo = new Label(entrada.title());
                 titulo.getStyleClass().add("historial-titulo");
-                Label resultado = new Label(entrada.resultado());
+                Label resultado = new Label(entrada.result());
                 resultado.setWrapText(true);
                 resultado.getStyleClass().add("resultado");
 
                 VBox bloque = new VBox(2, titulo);
-                if (entrada.momento() != null) {
-                    Label fecha = new Label(fechaLegible(entrada.momento()));
+                if (entrada.timestamp() != null) {
+                    Label fecha = new Label(fechaLegible(entrada.timestamp()));
                     fecha.getStyleClass().add("historial-fecha");
                     bloque.getChildren().add(fecha);
                 }
@@ -304,7 +303,7 @@ public class SelectorDeOpciones extends Application {
     // ------------------------------------------------------------------
 
     private void pantallaPitagoras() {
-        formularios.mostrar(
+        formularios.show(
                 Messages.get("pitagoras.titulo"),
                 Messages.get("pitagoras.instrucciones"),
                 List.of(Messages.get("pitagoras.campo.catetoA"), Messages.get("pitagoras.campo.catetoB")),
@@ -320,12 +319,11 @@ public class SelectorDeOpciones extends Application {
                             Format.number(t.angleAlpha()),
                             Format.number(t.angleBeta()));
                 },
-                valores ->
-                        PasoAPasoPitagoras.desarrollo(Input.asDouble(valores.get(0)), Input.asDouble(valores.get(1))));
+                valores -> PythagorasSteps.explain(Input.asDouble(valores.get(0)), Input.asDouble(valores.get(1))));
     }
 
     private void pantallaCilindro() {
-        formularios.mostrar(
+        formularios.show(
                 Messages.get("cilindro.titulo"),
                 Messages.get("cilindro.instrucciones"),
                 List.of(Messages.get("cilindro.campo.radio"), Messages.get("cilindro.campo.altura")),
@@ -334,12 +332,11 @@ public class SelectorDeOpciones extends Application {
                         "cilindro.resultado",
                         Format.number(Calculator.cylinderArea(
                                 Input.asDouble(valores.get(0)), Input.asDouble(valores.get(1))))),
-                valores ->
-                        PasoAPasoCilindro.desarrollo(Input.asDouble(valores.get(0)), Input.asDouble(valores.get(1))));
+                valores -> CylinderSteps.explain(Input.asDouble(valores.get(0)), Input.asDouble(valores.get(1))));
     }
 
     private void pantallaBisiesto() {
-        formularios.mostrar(
+        formularios.show(
                 Messages.get("bisiesto.titulo"),
                 Messages.get("bisiesto.instrucciones"),
                 List.of(Messages.get("bisiesto.campo.anio")),
@@ -352,7 +349,7 @@ public class SelectorDeOpciones extends Application {
     }
 
     private void pantallaFactorial() {
-        formularios.mostrar(
+        formularios.show(
                 Messages.get("factorial.titulo"),
                 Messages.get("factorial.instrucciones"),
                 List.of(Messages.get("factorial.campo.numero")),
@@ -365,7 +362,7 @@ public class SelectorDeOpciones extends Application {
     }
 
     private void pantallaMultiplo() {
-        formularios.mostrar(
+        formularios.show(
                 Messages.get("multiplo.titulo"),
                 Messages.get("multiplo.instrucciones"),
                 List.of(Messages.get("multiplo.campo.primero"), Messages.get("multiplo.campo.segundo")),
@@ -383,7 +380,7 @@ public class SelectorDeOpciones extends Application {
         for (int i = 1; i <= NOTAS_APROBADO; i++) {
             prompts.add(Messages.get("aprobado.campo.nota", i));
         }
-        formularios.mostrar(
+        formularios.show(
                 Messages.get("aprobado.titulo"),
                 Messages.get("aprobado.instrucciones", String.valueOf((int) Calculator.MIN_GRADE), String.valueOf((int)
                         Calculator.MAX_GRADE)),
@@ -401,7 +398,7 @@ public class SelectorDeOpciones extends Application {
     }
 
     private void pantallaCuadratica() {
-        formularios.mostrar(
+        formularios.show(
                 Messages.get("cuadratica.titulo"),
                 Messages.get("cuadratica.instrucciones"),
                 List.of(
@@ -428,7 +425,7 @@ public class SelectorDeOpciones extends Application {
                     return Messages.get(
                             "cuadratica.resultado.complejas", delta, formatoRaiz(e.x1()), formatoRaiz(e.x2()));
                 },
-                valores -> PasoAPasoCuadratica.desarrollo(
+                valores -> QuadraticSteps.explain(
                         Input.asDouble(valores.get(0)),
                         Input.asDouble(valores.get(1)),
                         Input.asDouble(valores.get(2))));
@@ -441,7 +438,7 @@ public class SelectorDeOpciones extends Application {
     }
 
     private void pantallaPotencia() {
-        formularios.mostrar(
+        formularios.show(
                 Messages.get("potencia.titulo"),
                 Messages.get("potencia.instrucciones"),
                 List.of(Messages.get("potencia.campo.base"), Messages.get("potencia.campo.exponente")),
@@ -458,7 +455,7 @@ public class SelectorDeOpciones extends Application {
     }
 
     private void pantallaRaiz() {
-        formularios.mostrar(
+        formularios.show(
                 Messages.get("raiz.titulo"),
                 Messages.get("raiz.instrucciones"),
                 List.of(Messages.get("raiz.campo.radicando"), Messages.get("raiz.campo.indice")),
@@ -475,7 +472,7 @@ public class SelectorDeOpciones extends Application {
     }
 
     private void pantallaMcd() {
-        formularios.mostrar(
+        formularios.show(
                 Messages.get("mcd.titulo"),
                 Messages.get("mcd.instrucciones"),
                 List.of(Messages.get("mcd.campo.a"), Messages.get("mcd.campo.b")),
@@ -493,7 +490,7 @@ public class SelectorDeOpciones extends Application {
     }
 
     private void pantallaPrimo() {
-        formularios.mostrar(
+        formularios.show(
                 Messages.get("primo.titulo"),
                 Messages.get("primo.instrucciones"),
                 List.of(Messages.get("primo.campo.numero")),
@@ -517,7 +514,7 @@ public class SelectorDeOpciones extends Application {
     }
 
     private void pantallaBase() {
-        formularios.mostrar(
+        formularios.show(
                 Messages.get("base.titulo"),
                 Messages.get("base.instrucciones"),
                 List.of(Messages.get("base.campo.numero")),
@@ -529,7 +526,7 @@ public class SelectorDeOpciones extends Application {
     }
 
     private void pantallaPorcentaje() {
-        formularios.mostrar(
+        formularios.show(
                 Messages.get("porcentaje.titulo"),
                 Messages.get("porcentaje.instrucciones"),
                 List.of(Messages.get("porcentaje.campo.porcentaje"), Messages.get("porcentaje.campo.cantidad")),
@@ -543,12 +540,11 @@ public class SelectorDeOpciones extends Application {
                             Format.number(cantidad),
                             Format.number(Calculator.percentageOf(porcentaje, cantidad)));
                 },
-                valores ->
-                        PasoAPasoPorcentaje.desarrollo(Input.asDouble(valores.get(0)), Input.asDouble(valores.get(1))));
+                valores -> PercentageSteps.explain(Input.asDouble(valores.get(0)), Input.asDouble(valores.get(1))));
     }
 
     private void pantallaReglaDeTres() {
-        formularios.mostrar(
+        formularios.show(
                 Messages.get("regladetres.titulo"),
                 Messages.get("regladetres.instrucciones"),
                 List.of(
@@ -567,7 +563,7 @@ public class SelectorDeOpciones extends Application {
                             Format.number(c),
                             Format.number(Calculator.ruleOfThree(a, b, c)));
                 },
-                valores -> PasoAPasoReglaDeTres.desarrollo(
+                valores -> RuleOfThreeSteps.explain(
                         Input.asDouble(valores.get(0)),
                         Input.asDouble(valores.get(1)),
                         Input.asDouble(valores.get(2))));
@@ -575,7 +571,7 @@ public class SelectorDeOpciones extends Application {
 
     private void pantallaImc() {
         // Representación común entre los dos modos: {peso en kg, altura en m}.
-        ConstructorDeFormularios.Modo metrico = new ConstructorDeFormularios.Modo(
+        FormBuilder.Mode metrico = new FormBuilder.Mode(
                 Messages.get("imc.sistema.metrico"),
                 List.of(Messages.get("imc.campo.peso.kg"), Messages.get("imc.campo.altura.cm")),
                 valores -> resultadoImc(
@@ -583,7 +579,7 @@ public class SelectorDeOpciones extends Application {
                 valores -> comun(valores, v -> new double[] {v[0], Conversions.cmToMeters(v[1])}),
                 comun -> List.of(redondeado(comun[0], 1), redondeado(Conversions.metersToCm(comun[1]), 0)));
 
-        ConstructorDeFormularios.Modo imperial = new ConstructorDeFormularios.Modo(
+        FormBuilder.Mode imperial = new FormBuilder.Mode(
                 Messages.get("imc.sistema.imperial"),
                 List.of(
                         Messages.get("imc.campo.peso.lb"),
@@ -602,7 +598,7 @@ public class SelectorDeOpciones extends Application {
                             redondeado(piesYPulgadas[1], 1));
                 });
 
-        formularios.mostrarConModos(
+        formularios.showWithModes(
                 Messages.get("imc.titulo"),
                 Messages.get("imc.instrucciones"),
                 Messages.get("imc.sistema"),

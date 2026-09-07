@@ -8,16 +8,16 @@ import java.util.Locale;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class PasoAPasoCuadraticaTest {
+class QuadraticStepsTest {
 
     @BeforeAll
-    static void enEspanol() {
+    static void inSpanish() {
         Messages.useLocale(Locale.forLanguageTag("es"));
     }
 
     @Test
-    void empieza_por_la_formula_y_la_sustitucion() {
-        String d = PasoAPasoCuadratica.desarrollo(4, -4, 1); // el ejemplo de la imagen
+    void starts_with_the_formula_and_the_substitution() {
+        String d = QuadraticSteps.explain(4, -4, 1); // the example from the image
         assertTrue(d.startsWith("x = (-b ± √(b² - 4ac)) / 2a"), d);
         assertTrue(d.contains("x = (-(-4) ± √((-4)² - 4·(4)·(1))) / (2·(4))"), d);
         assertTrue(d.contains("√(16 - 16)"), d);
@@ -25,28 +25,28 @@ class PasoAPasoCuadraticaTest {
     }
 
     @Test
-    void raiz_doble_termina_en_una_sola_solucion() {
-        String d = PasoAPasoCuadratica.desarrollo(1, -4, 4); // (x - 2)² : x = 4 / 2 = 2
+    void a_double_root_ends_in_a_single_solution() {
+        String d = QuadraticSteps.explain(1, -4, 4); // (x - 2)² : x = 4 / 2 = 2
         assertTrue(d.contains("x = 4 / 2 = 2"), d);
-        assertTrue(!d.contains("x₁"), "la raíz doble no debe partir en dos ramas: " + d);
+        assertTrue(!d.contains("x₁"), "a double root must not split into two branches: " + d);
     }
 
     @Test
-    void dos_raices_reales_muestran_ambas_ramas() {
-        String d = PasoAPasoCuadratica.desarrollo(1, -5, 6); // 2 y 3
+    void two_real_roots_show_both_branches() {
+        String d = QuadraticSteps.explain(1, -5, 6); // 2 and 3
         assertTrue(d.contains("x₁ = ("), d);
         assertTrue(d.contains("x₂ = ("), d);
     }
 
     @Test
-    void discriminante_negativo_avisa_y_pasa_a_complejos() {
-        String d = PasoAPasoCuadratica.desarrollo(7, -3, 1);
+    void a_negative_discriminant_warns_and_moves_to_complex() {
+        String d = QuadraticSteps.explain(7, -3, 1);
         assertTrue(d.contains("en los reales no hay solución"), d);
         assertTrue(d.contains(" i"), d);
     }
 
     @Test
-    void a_cero_lanza() {
-        assertThrows(IllegalArgumentException.class, () -> PasoAPasoCuadratica.desarrollo(0, 2, 1));
+    void a_zero_throws() {
+        assertThrows(IllegalArgumentException.class, () -> QuadraticSteps.explain(0, 2, 1));
     }
 }

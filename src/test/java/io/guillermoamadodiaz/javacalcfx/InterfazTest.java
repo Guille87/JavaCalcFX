@@ -6,9 +6,9 @@ import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.LabeledMatchers.hasText;
 
 import io.guillermoamadodiaz.javacalcfx.i18n.Messages;
-import io.guillermoamadodiaz.javacalcfx.ui.Historial;
-import io.guillermoamadodiaz.javacalcfx.ui.Tema;
-import io.guillermoamadodiaz.javacalcfx.ui.UltimaCalculadora;
+import io.guillermoamadodiaz.javacalcfx.ui.History;
+import io.guillermoamadodiaz.javacalcfx.ui.LastCalculator;
+import io.guillermoamadodiaz.javacalcfx.ui.Theme;
 import io.guillermoamadodiaz.javacalcfx.ui.WindowState;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -40,17 +40,17 @@ class InterfazTest extends ApplicationTest {
 
     @BeforeEach
     void historialLimpio() {
-        Historial.limpiar();
+        History.clear();
     }
 
     @AfterAll
     static void limpiarPreferencias() {
-        Historial.limpiar();
-        UltimaCalculadora.olvidar();
+        History.clear();
+        LastCalculator.forget();
         try {
             Preferences.userNodeForPackage(WindowState.class).clear();
-            Preferences.userNodeForPackage(Tema.class).node("tema").clear();
-            Preferences.userNodeForPackage(Historial.class).node("historial").clear();
+            Preferences.userNodeForPackage(Theme.class).node("tema").clear();
+            Preferences.userNodeForPackage(History.class).node("historial").clear();
         } catch (Exception ignorado) {
             // sin persistencia disponible en el entorno de test: nada que limpiar
         }
@@ -58,7 +58,7 @@ class InterfazTest extends ApplicationTest {
 
     @Override
     public void start(Stage escenario) {
-        UltimaCalculadora.olvidar(); // cada test arranca en el menú
+        LastCalculator.forget(); // cada test arranca en el menú
         new SelectorDeOpciones().start(escenario);
         // El menú por categorías es alto; damos una ventana grande para que TestFX
         // pueda ver y pulsar cualquier botón sin depender del scroll.
@@ -172,7 +172,7 @@ class InterfazTest extends ApplicationTest {
 
         clickOn("Vaciar historial");
         WaitForAsyncUtils.waitForFxEvents();
-        assertTrue(Historial.reciente().isEmpty(), "«Vaciar historial» debe borrar los cálculos");
+        assertTrue(History.recent().isEmpty(), "«Vaciar historial» debe borrar los cálculos");
         assertTrue(lookup(".historial-titulo").tryQuery().isEmpty(), "la pantalla debe quedar sin entradas");
     }
 
@@ -213,11 +213,11 @@ class InterfazTest extends ApplicationTest {
     void recuerda_la_ultima_calculadora_y_la_olvida_al_volver() {
         clickOn("Calcular Factorial");
         WaitForAsyncUtils.waitForFxEvents();
-        assertEquals("factorial", UltimaCalculadora.recordada().orElse(null));
+        assertEquals("factorial", LastCalculator.remembered().orElse(null));
 
         clickOn("Volver");
         WaitForAsyncUtils.waitForFxEvents();
-        assertTrue(UltimaCalculadora.recordada().isEmpty(), "volver al menú debe olvidar la calculadora");
+        assertTrue(LastCalculator.remembered().isEmpty(), "volver al menú debe olvidar la calculadora");
     }
 
     @Test
@@ -231,7 +231,7 @@ class InterfazTest extends ApplicationTest {
     }
 
     private boolean modoOscuro() {
-        return lookup(".titulo").query().getScene().getRoot().getStyleClass().contains(Tema.CLASE_OSCURO);
+        return lookup(".titulo").query().getScene().getRoot().getStyleClass().contains(Theme.DARK_CLASS);
     }
 
     @Test
