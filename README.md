@@ -235,9 +235,10 @@ paquete raíz (la `Application` y su catálogo de pantallas).
   - `EstadoVentana` — persiste tamaño y posición de la ventana (probado con tests).
   - `Tema` — modo claro/oscuro (clase `tema-oscuro` en `styles.css`), con la
     preferencia persistida en `java.util.prefs` (probado con tests).
-  - `Historial` — los últimos 25 cálculos (título + resultado), persistidos en un
-    subnodo de `java.util.prefs`; el resultado se recorta a 300 caracteres para
-    no desbordar el límite de tamaño de las preferencias (probado con tests).
+  - `Historial` — los últimos 25 cálculos (título + resultado + fecha),
+    persistidos en un subnodo de `java.util.prefs`; el resultado se recorta a 300
+    caracteres para no desbordar el límite de tamaño de las preferencias, y
+    repetir el mismo cálculo solo refresca su hora (probado con tests).
   - `UltimaCalculadora` — guarda en `java.util.prefs` la clave de la última
     calculadora abierta; `SelectorDeOpciones` la reabre al arrancar y la olvida al
     volver al menú (probado con tests).

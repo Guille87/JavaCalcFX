@@ -120,11 +120,13 @@ Single-module JavaFX desktop app in four packages: `calc` (pure domain), `i18n`
     `aplicarA(Scene)` toggles the `tema-oscuro` style class on the scene root. `styles.css`
     redefines `-fx-base`/`-fx-background`/`-fx-control-inner-background` (+ prompt-text
     fill) for `.root.tema-oscuro`; Modena derives the rest.
-  - `Historial` — the last `MAXIMO` (25) calculations (screen title + shown result), most
-    recent first, persisted to a `java.util.prefs` subnode as one string (results trimmed
-    to `MAX_RESULTADO`=300 so a huge factorial can't overflow the prefs value limit).
+  - `Historial` — the last `MAXIMO` (25) calculations (`Entrada` = título + resultado +
+    `Instant`, most recent first), persisted to a `java.util.prefs` subnode as one string
+    (results trimmed to `MAX_RESULTADO`=300 so a huge factorial can't overflow the prefs
+    limit; legacy 2-field entries load with a null `momento`). `registrar` collapses a
+    repeat of the current head (same title+result) into a timestamp refresh.
     `ConstructorDeFormularios` calls `Historial.registrar(titulo, texto)` after every
-    successful calc; `SelectorDeOpciones.pantallaHistorial()` renders it.
+    successful calc; `SelectorDeOpciones.pantallaHistorial()` renders it with the date.
   - `UltimaCalculadora` — `recordar`/`recordada`/`olvidar` a calculator key in a
     `java.util.prefs` subnode. `catalogo()`'s `entrada(...)` factory records on open;
     `mostrarMenu()` calls `olvidar()`; `start()` reads it before `mostrarMenu()` and

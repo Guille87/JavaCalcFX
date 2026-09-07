@@ -56,6 +56,12 @@
     -fx-font-weight: bold;
 }
 
+/* Fecha y hora de cada cálculo en el historial: pequeña y atenuada. */
+.historial-fecha {
+    -fx-font-size: 11px;
+    -fx-opacity: 0.6;
+}
+
 /* Desarrollo paso a paso: monoespaciado para que la notación quede alineada. */
 .label.pasos {
     -fx-font-family: "Consolas", "DejaVu Sans Mono", "Courier New", monospace;

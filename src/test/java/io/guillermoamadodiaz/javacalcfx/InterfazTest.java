@@ -158,12 +158,15 @@ class InterfazTest extends ApplicationTest {
         clickOn(lookup(".text-field").nth(1).queryAs(TextField.class)).write("4");
         clickOn("Calcular");
         WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> textoResultado().contains("Hipotenusa"));
+        clickOn("Calcular"); // repetir el mismo cálculo no debe duplicar la entrada
+        WaitForAsyncUtils.waitForFxEvents();
 
         clickOn("Volver");
         clickOn("Historial");
 
         verifyThat(".encabezado", hasText("Historial de cálculos"));
-        assertTrue(lookup(".historial-titulo").tryQuery().isPresent(), "debe aparecer el cálculo en el historial");
+        assertEquals(1, lookup(".historial-titulo").queryAll().size(), "el cálculo repetido no debe duplicarse");
+        assertTrue(lookup(".historial-fecha").tryQuery().isPresent(), "cada entrada lleva su fecha");
         String resultado = lookup(".resultado").nth(0).queryAs(Label.class).getText();
         assertTrue(resultado.contains("Hipotenusa: 5"), "era: " + resultado);
 

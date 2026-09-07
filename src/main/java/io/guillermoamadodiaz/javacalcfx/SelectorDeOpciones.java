@@ -24,6 +24,9 @@ import io.guillermoamadodiaz.javacalcfx.ui.PasoAPasoReglaDeTres;
 import io.guillermoamadodiaz.javacalcfx.ui.Tema;
 import io.guillermoamadodiaz.javacalcfx.ui.UltimaCalculadora;
 import java.math.BigInteger;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -266,7 +269,15 @@ public class SelectorDeOpciones extends Application {
                 Label resultado = new Label(entrada.resultado());
                 resultado.setWrapText(true);
                 resultado.getStyleClass().add("resultado");
-                lista.getChildren().add(new VBox(2, titulo, resultado));
+
+                VBox bloque = new VBox(2, titulo);
+                if (entrada.momento() != null) {
+                    Label fecha = new Label(fechaLegible(entrada.momento()));
+                    fecha.getStyleClass().add("historial-fecha");
+                    bloque.getChildren().add(fecha);
+                }
+                bloque.getChildren().add(resultado);
+                lista.getChildren().add(bloque);
             }
             contenido.getChildren().add(lista);
         }
@@ -276,6 +287,13 @@ public class SelectorDeOpciones extends Application {
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroll.getStyleClass().add("formulario");
         navegador.mostrar(scroll);
+    }
+
+    /** Fecha y hora de un cálculo del historial, con los meses en el idioma actual. */
+    private static String fechaLegible(Instant momento) {
+        return DateTimeFormatter.ofPattern("d MMM yyyy, HH:mm", Textos.idioma().locale())
+                .withZone(ZoneId.systemDefault())
+                .format(momento);
     }
 
     // ------------------------------------------------------------------

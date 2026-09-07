@@ -10,7 +10,9 @@ y el proyecto sigue [versionado semántico](https://semver.org/lang/es/).
 ### Añadido
 
 - **Historial de cálculos**: pantalla accesible desde la barra del menú con los
-  últimos 25 resultados; se guarda entre sesiones y tiene botón «Vaciar».
+  últimos 25 resultados; se guarda entre sesiones y tiene botón «Vaciar». Cada
+  entrada muestra su **fecha y hora**, y repetir el mismo cálculo no añade una
+  entrada nueva (solo actualiza la hora de la que ya está arriba).
 - Al arrancar, la app **reabre la última calculadora** que estuviera abierta al
   cerrarla (si se cerró en el menú, abre el menú).
 - Botón **«Copiar»** que pone el resultado en el portapapeles tras un cálculo.
