@@ -28,72 +28,72 @@ import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 
 /**
- * Tests de interfaz con TestFX (sin pantalla, vía Monocle). Cubren la navegación
- * menú ↔ formulario y que los resultados y errores aparecen en la etiqueta.
+ * Interface tests with TestFX (headless, via Monocle). They cover menu ↔ form
+ * navigation and that results and errors appear in the label.
  */
-class InterfazTest extends ApplicationTest {
+class UiTest extends ApplicationTest {
 
     @BeforeAll
-    static void enEspanol() {
+    static void inSpanish() {
         Messages.useLocale(Locale.forLanguageTag("es"));
     }
 
     @BeforeEach
-    void historialLimpio() {
+    void cleanHistory() {
         History.clear();
     }
 
     @AfterAll
-    static void limpiarPreferencias() {
+    static void cleanPreferences() {
         History.clear();
         LastCalculator.forget();
         try {
             Preferences.userNodeForPackage(WindowState.class).clear();
             Preferences.userNodeForPackage(Theme.class).node("tema").clear();
             Preferences.userNodeForPackage(History.class).node("historial").clear();
-        } catch (Exception ignorado) {
-            // sin persistencia disponible en el entorno de test: nada que limpiar
+        } catch (Exception ignored) {
+            // no persistence available in the test environment: nothing to clean
         }
     }
 
     @Override
-    public void start(Stage escenario) {
-        LastCalculator.forget(); // cada test arranca en el menú
-        new SelectorDeOpciones().start(escenario);
-        // El menú por categorías es alto; damos una ventana grande para que TestFX
-        // pueda ver y pulsar cualquier botón sin depender del scroll.
-        escenario.setWidth(900);
-        escenario.setHeight(1000);
+    public void start(Stage stage) {
+        LastCalculator.forget(); // every test starts on the menu
+        new CalculatorApp().start(stage);
+        // The categorized menu is tall; give it a large window so TestFX can see
+        // and click any button without depending on the scroll.
+        stage.setWidth(900);
+        stage.setHeight(1000);
     }
 
-    private String textoResultado() {
+    private String resultText() {
         return lookup(".resultado").queryAs(Label.class).getText();
     }
 
     @Test
-    void el_menu_muestra_el_titulo_y_las_calculadoras() {
+    void the_menu_shows_the_title_and_the_calculators() {
         verifyThat(".titulo", hasText("Calculadora Matemática"));
         assertTrue(lookup("Calcular Teorema de Pitágoras").tryQuery().isPresent());
         assertTrue(lookup("Determinar Aprobado").tryQuery().isPresent());
     }
 
     @Test
-    void el_menu_agrupa_las_calculadoras_por_categorias() {
+    void the_menu_groups_the_calculators_by_category() {
         assertTrue(lookup(".categoria").queryAll().size() >= 3);
         assertTrue(lookup("Geometría").tryQuery().isPresent());
         assertTrue(lookup("Aritmética").tryQuery().isPresent());
     }
 
     @Test
-    void el_foco_empieza_en_el_primer_campo() {
+    void the_focus_starts_in_the_first_field() {
         clickOn("Calcular Área de Cilindro");
         WaitForAsyncUtils.waitForFxEvents();
-        TextField primero = lookup(".text-field").nth(0).queryAs(TextField.class);
-        assertTrue(primero.isFocused(), "el primer campo debe tener el foco al abrir el formulario");
+        TextField first = lookup(".text-field").nth(0).queryAs(TextField.class);
+        assertTrue(first.isFocused(), "the first field must have the focus when the form opens");
     }
 
     @Test
-    void abrir_una_calculadora_y_volver_con_el_boton() {
+    void open_a_calculator_and_go_back_with_the_button() {
         clickOn("Calcular Área de Cilindro");
         verifyThat(".encabezado", hasText("Área de Cilindro"));
 
@@ -102,7 +102,7 @@ class InterfazTest extends ApplicationTest {
     }
 
     @Test
-    void la_tecla_esc_vuelve_al_menu_desde_un_campo() {
+    void the_esc_key_goes_back_to_the_menu_from_a_field() {
         clickOn("Calcular Factorial");
         clickOn(".text-field").write("5");
         press(KeyCode.ESCAPE).release(KeyCode.ESCAPE);
@@ -111,89 +111,89 @@ class InterfazTest extends ApplicationTest {
     }
 
     @Test
-    void un_calculo_valido_muestra_el_resultado() throws TimeoutException {
+    void a_valid_calculation_shows_the_result() throws TimeoutException {
         clickOn("Calcular Teorema de Pitágoras");
         clickOn(lookup(".text-field").nth(0).queryAs(TextField.class)).write("3");
         clickOn(lookup(".text-field").nth(1).queryAs(TextField.class)).write("4");
         clickOn("Calcular");
 
-        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> textoResultado().contains("Hipotenusa"));
-        assertTrue(textoResultado().contains("5"), "hipotenusa 3-4-5, era: " + textoResultado());
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> resultText().contains("Hipotenusa"));
+        assertTrue(resultText().contains("5"), "hypotenuse 3-4-5, was: " + resultText());
     }
 
     @Test
-    void el_boton_mostrar_pasos_despliega_el_desarrollo() throws TimeoutException {
+    void the_show_steps_button_unfolds_the_explanation() throws TimeoutException {
         clickOn("Calcular Teorema de Pitágoras");
         clickOn(lookup(".text-field").nth(0).queryAs(TextField.class)).write("3");
         clickOn(lookup(".text-field").nth(1).queryAs(TextField.class)).write("4");
         clickOn("Calcular");
-        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> textoResultado().contains("Hipotenusa"));
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> resultText().contains("Hipotenusa"));
 
         clickOn("Mostrar pasos");
-        String pasos = lookup(".pasos").queryAs(Label.class).getText();
-        assertTrue(pasos.contains("h = √(9 + 16)"), "esperaba el desarrollo de Pitágoras, era: " + pasos);
+        String steps = lookup(".pasos").queryAs(Label.class).getText();
+        assertTrue(steps.contains("h = √(9 + 16)"), "expected the Pythagoras explanation, was: " + steps);
     }
 
     @Test
-    void el_boton_copiar_pone_el_resultado_en_el_portapapeles() throws TimeoutException {
+    void the_copy_button_puts_the_result_on_the_clipboard() throws TimeoutException {
         clickOn("Calcular Teorema de Pitágoras");
         clickOn(lookup(".text-field").nth(0).queryAs(TextField.class)).write("3");
         clickOn(lookup(".text-field").nth(1).queryAs(TextField.class)).write("4");
         clickOn("Calcular");
-        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> textoResultado().contains("Hipotenusa"));
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> resultText().contains("Hipotenusa"));
 
-        String esperado = textoResultado();
+        String expected = resultText();
         clickOn("Copiar");
         WaitForAsyncUtils.waitForFxEvents();
 
-        final String[] enPortapapeles = new String[1];
-        interact(() -> enPortapapeles[0] = Clipboard.getSystemClipboard().getString());
-        assertEquals(esperado, enPortapapeles[0]);
+        final String[] onClipboard = new String[1];
+        interact(() -> onClipboard[0] = Clipboard.getSystemClipboard().getString());
+        assertEquals(expected, onClipboard[0]);
     }
 
     @Test
-    void el_historial_recoge_los_calculos() throws TimeoutException {
+    void the_history_collects_the_calculations() throws TimeoutException {
         clickOn("Calcular Teorema de Pitágoras");
         clickOn(lookup(".text-field").nth(0).queryAs(TextField.class)).write("3");
         clickOn(lookup(".text-field").nth(1).queryAs(TextField.class)).write("4");
         clickOn("Calcular");
-        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> textoResultado().contains("Hipotenusa"));
-        clickOn("Calcular"); // repetir el mismo cálculo no debe duplicar la entrada
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> resultText().contains("Hipotenusa"));
+        clickOn("Calcular"); // repeating the same calculation must not duplicate the entry
         WaitForAsyncUtils.waitForFxEvents();
 
         clickOn("Volver");
         clickOn("Historial");
 
         verifyThat(".encabezado", hasText("Historial de cálculos"));
-        assertEquals(1, lookup(".historial-titulo").queryAll().size(), "el cálculo repetido no debe duplicarse");
-        assertTrue(lookup(".historial-fecha").tryQuery().isPresent(), "cada entrada lleva su fecha");
-        String resultado = lookup(".resultado").nth(0).queryAs(Label.class).getText();
-        assertTrue(resultado.contains("Hipotenusa: 5"), "era: " + resultado);
+        assertEquals(1, lookup(".historial-titulo").queryAll().size(), "the repeated calculation must not duplicate");
+        assertTrue(lookup(".historial-fecha").tryQuery().isPresent(), "each entry carries its date");
+        String result = lookup(".resultado").nth(0).queryAs(Label.class).getText();
+        assertTrue(result.contains("Hipotenusa: 5"), "was: " + result);
 
         clickOn("Vaciar historial");
         WaitForAsyncUtils.waitForFxEvents();
-        assertTrue(History.recent().isEmpty(), "«Vaciar historial» debe borrar los cálculos");
-        assertTrue(lookup(".historial-titulo").tryQuery().isEmpty(), "la pantalla debe quedar sin entradas");
+        assertTrue(History.recent().isEmpty(), "«Clear history» must delete the calculations");
+        assertTrue(lookup(".historial-titulo").tryQuery().isEmpty(), "the screen must be left with no entries");
     }
 
     @Test
-    void el_imc_cambia_los_campos_segun_el_sistema_de_medida() throws TimeoutException {
+    void the_bmi_swaps_the_fields_by_measurement_system() throws TimeoutException {
         clickOn("Calcular IMC");
         WaitForAsyncUtils.waitForFxEvents();
-        assertEquals(2, lookup(".text-field").queryAll().size(), "métrico: peso y altura");
+        assertEquals(2, lookup(".text-field").queryAll().size(), "metric: weight and height");
 
         clickOn(lookup(".text-field").nth(0).queryAs(TextField.class)).write("70");
         clickOn(lookup(".text-field").nth(1).queryAs(TextField.class)).write("175");
         clickOn("Calcular");
-        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> textoResultado().contains("IMC"));
-        assertTrue(textoResultado().contains("22.86"), "70 kg / 175 cm ≈ 22.86, era: " + textoResultado());
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> resultText().contains("IMC"));
+        assertTrue(resultText().contains("22.86"), "70 kg / 175 cm ≈ 22.86, was: " + resultText());
 
         ComboBox<?> selector = lookup(".combo-box").queryAs(ComboBox.class);
         interact(() -> selector.getSelectionModel().select(1)); // imperial
         WaitForAsyncUtils.waitForFxEvents();
-        assertEquals(3, lookup(".text-field").queryAll().size(), "imperial: peso, pies y pulgadas");
+        assertEquals(3, lookup(".text-field").queryAll().size(), "imperial: weight, feet and inches");
 
-        // al cambiar de sistema, los datos se traspasan convertidos
+        // when switching system, the data is carried across converted
         assertTrue(
                 lookup(".text-field").nth(0).queryAs(TextField.class).getText().startsWith("154"), "70 kg ≈ 154 lb");
         assertEquals("5", lookup(".text-field").nth(1).queryAs(TextField.class).getText(), "175 cm ≈ 5 ft");
@@ -201,7 +201,7 @@ class InterfazTest extends ApplicationTest {
                 lookup(".text-field").nth(2).queryAs(TextField.class).getText().startsWith("8.9"),
                 "175 cm ≈ 5 ft 8.9 in");
 
-        // volver a métrico: la conversión de ida y vuelta cae en los mismos valores
+        // back to metric: the round-trip conversion lands on the same values
         interact(() -> selector.getSelectionModel().select(0));
         WaitForAsyncUtils.waitForFxEvents();
         assertEquals("70", lookup(".text-field").nth(0).queryAs(TextField.class).getText());
@@ -210,54 +210,53 @@ class InterfazTest extends ApplicationTest {
     }
 
     @Test
-    void recuerda_la_ultima_calculadora_y_la_olvida_al_volver() {
+    void it_remembers_the_last_calculator_and_forgets_it_on_going_back() {
         clickOn("Calcular Factorial");
         WaitForAsyncUtils.waitForFxEvents();
         assertEquals("factorial", LastCalculator.remembered().orElse(null));
 
         clickOn("Volver");
         WaitForAsyncUtils.waitForFxEvents();
-        assertTrue(LastCalculator.remembered().isEmpty(), "volver al menú debe olvidar la calculadora");
+        assertTrue(LastCalculator.remembered().isEmpty(), "going back to the menu must forget the calculator");
     }
 
     @Test
-    void el_boton_de_tema_alterna_el_modo_oscuro() {
-        boolean oscuroAntes = modoOscuro();
-        clickOn(oscuroAntes ? "Modo claro" : "Modo oscuro");
-        assertTrue(modoOscuro() != oscuroAntes, "el botón debe alternar el modo oscuro");
+    void the_theme_button_toggles_dark_mode() {
+        boolean darkBefore = darkMode();
+        clickOn(darkBefore ? "Modo claro" : "Modo oscuro");
+        assertTrue(darkMode() != darkBefore, "the button must toggle dark mode");
 
-        clickOn(oscuroAntes ? "Modo oscuro" : "Modo claro"); // lo dejamos como estaba
-        assertTrue(modoOscuro() == oscuroAntes, "el segundo clic debe volver al tema anterior");
+        clickOn(darkBefore ? "Modo oscuro" : "Modo claro"); // leave it as it was
+        assertTrue(darkMode() == darkBefore, "the second click must return to the previous theme");
     }
 
-    private boolean modoOscuro() {
+    private boolean darkMode() {
         return lookup(".titulo").query().getScene().getRoot().getStyleClass().contains(Theme.DARK_CLASS);
     }
 
     @Test
-    void la_cuadratica_explica_el_discriminante_y_da_las_raices_complejas() throws TimeoutException {
+    void the_quadratic_explains_the_discriminant_and_gives_the_complex_roots() throws TimeoutException {
         clickOn("Resolver Ecuación de 2.º Grado");
         clickOn(lookup(".text-field").nth(0).queryAs(TextField.class)).write("7");
         clickOn(lookup(".text-field").nth(1).queryAs(TextField.class)).write("-3");
         clickOn(lookup(".text-field").nth(2).queryAs(TextField.class)).write("1");
         clickOn("Calcular");
 
-        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> textoResultado().contains("Δ"));
-        String r = textoResultado();
-        assertTrue(r.contains("-19"), "el discriminante es -19, era: " + r);
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> resultText().contains("Δ"));
+        String r = resultText();
+        assertTrue(r.contains("-19"), "the discriminant is -19, was: " + r);
         assertTrue(r.contains("no hay soluciones reales"), r);
-        assertTrue(r.contains("i"), "raíces complejas, era: " + r);
+        assertTrue(r.contains("i"), "complex roots, was: " + r);
     }
 
     @Test
-    void un_dato_no_numerico_muestra_un_mensaje_de_error() throws TimeoutException {
+    void a_non_numeric_value_shows_an_error_message() throws TimeoutException {
         clickOn("Calcular Área de Cilindro");
         clickOn(".text-field").write("abc");
         clickOn("Calcular");
 
-        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> !textoResultado().isBlank());
+        WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> !resultText().isBlank());
         assertTrue(
-                textoResultado().contains("números válidos"),
-                "esperaba el aviso de números inválidos, era: " + textoResultado());
+                resultText().contains("números válidos"), "expected the invalid-numbers warning, was: " + resultText());
     }
 }

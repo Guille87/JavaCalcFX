@@ -135,7 +135,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>io.guillermoamadodiaz.javacalcfx/io.guillermoamadodiaz.javacalcfx.SelectorDeOpciones</mainClass>
+                    <mainClass>io.guillermoamadodiaz.javacalcfx/io.guillermoamadodiaz.javacalcfx.CalculatorApp</mainClass>
                     <!-- `mvn javafx:jlink` genera target/JavaCalcFX: runtime autocontenido + bin/JavaCalcFX. -->
                     <launcher>JavaCalcFX</launcher>
                     <jlinkImageName>JavaCalcFX</jlinkImageName>
@@ -207,7 +207,7 @@
                                     <copyright>Guillermo Amado Diaz - MIT</copyright>
                                     <runtimeImage>${project.build.directory}/JavaCalcFX</runtimeImage>
                                     <module>
-                                        io.guillermoamadodiaz.javacalcfx/io.guillermoamadodiaz.javacalcfx.SelectorDeOpciones</module>
+                                        io.guillermoamadodiaz.javacalcfx/io.guillermoamadodiaz.javacalcfx.CalculatorApp</module>
                                     <icon>src/main/resources/io/guillermoamadodiaz/javacalcfx/icons/icon.ico</icon>
                                     <destination>${project.build.directory}/dist</destination>
                                     <javaOptions>
