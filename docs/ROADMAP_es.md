@@ -63,6 +63,10 @@ Sin compromiso; cualquier cosa que valga la pena apuntar.
       investigar.
 - [ ] **Formato al copiar** — copiar solo el número o el resultado completo con
       etiquetas.
+- [ ] **Notas de la versión desde el CHANGELOG** — `release.yml` debería rellenar
+      el cuerpo del GitHub Release con la sección del CHANGELOG de esa versión, en
+      lugar de dejarlo al mensaje de la etiqueta anotada (por eso el cuerpo de la
+      `v0.2.0` es escueto).
 - [ ] **Umbral de cobertura** que rompa el build (objetivo `check` de JaCoCo).
 - [ ] **Convención de versión `0.2.0-SNAPSHOT`** entre releases (hoy la versión
       del build es siempre la del último tag).

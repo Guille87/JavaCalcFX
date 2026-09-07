@@ -56,6 +56,9 @@ No commitment; anything worth remembering.
       already centralizes this).
 - [ ] **«Follow the OS theme»** — detection in JavaFX is limited; investigate.
 - [ ] **Copy format** — copy just the number vs. the full labeled result.
+- [ ] **Release notes from the CHANGELOG** — `release.yml` should fill the GitHub
+      Release body with that version's CHANGELOG section instead of leaving it to
+      the annotated-tag message (which is why `v0.2.0`'s body is thin).
 - [ ] **Coverage threshold** that breaks the build (JaCoCo `check` goal).
 - [ ] **`0.2.0-SNAPSHOT` version convention** between releases (today the build
       version is always the last tag).
