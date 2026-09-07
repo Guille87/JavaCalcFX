@@ -4,9 +4,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class LastCalculatorTest {
+
+    @BeforeEach
+    void enableRemembering() {
+        Settings.setRememberLastCalculator(true); // remember(...) is a no-op when this is off
+    }
 
     @AfterEach
     void cleanUp() {

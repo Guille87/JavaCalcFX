@@ -21,6 +21,7 @@ import io.guillermoamadodiaz.javacalcfx.ui.PercentageSteps;
 import io.guillermoamadodiaz.javacalcfx.ui.PythagorasSteps;
 import io.guillermoamadodiaz.javacalcfx.ui.QuadraticSteps;
 import io.guillermoamadodiaz.javacalcfx.ui.RuleOfThreeSteps;
+import io.guillermoamadodiaz.javacalcfx.ui.Settings;
 import io.guillermoamadodiaz.javacalcfx.ui.Theme;
 import io.guillermoamadodiaz.javacalcfx.ui.WindowState;
 import java.math.BigInteger;
@@ -36,6 +37,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -258,11 +260,16 @@ public class CalculatorApp extends Application {
             }
         });
 
+        CheckBox rememberLast = new CheckBox(Messages.get("settings.remember.last.calculator"));
+        rememberLast.setSelected(Settings.rememberLastCalculator());
+        rememberLast.setOnAction(e -> Settings.setRememberLastCalculator(rememberLast.isSelected()));
+
         GridPane rows = new GridPane();
         rows.setHgap(12);
         rows.setVgap(12);
         rows.addRow(0, new Label(Messages.get("settings.language")), language);
         rows.addRow(1, new Label(Messages.get("settings.theme")), theme);
+        rows.add(rememberLast, 0, 2, 2, 1);
 
         Button back = Buttons.create(Messages.get("form.back"), Messages.get("form.back.tooltip"), this::showMenu);
         back.setCancelButton(true); // Esc

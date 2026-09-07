@@ -28,13 +28,13 @@ igual que ya hacen `ui/Theme` y `ui/LastCalculator`. Claves nuevas en los dos
 `messages*.properties`, tests unitarios de `ui/Settings` y un caso de `UiTest`
 para la navegación.
 
-- [ ] **Botón ⚙ + `settingsScreen()`**, con «Volver» / Esc como cualquier otra
+- [x] **Botón ⚙ + `settingsScreen()`**, con «Volver» / Esc como cualquier otra
       pantalla.
-- [ ] **Idioma** — se mueve aquí desde la barra superior (el `ComboBox` sale del
+- [x] **Idioma** — se mueve aquí desde la barra superior (el `ComboBox` sale del
       menú).
-- [ ] **Tema** — claro / oscuro, se mueve aquí (puede quedar un toggle rápido en
+- [x] **Tema** — claro / oscuro, se mueve aquí (puede quedar un toggle rápido en
       la barra).
-- [ ] **Recordar la última calculadora al cerrar** — on/off. Si está en off,
+- [x] **Recordar la última calculadora al cerrar** — on/off. Si está en off,
       `LastCalculator` no registra nada y la app siempre arranca en el menú.
 - [ ] **Recordar tamaño y posición de la ventana** — on/off, más un botón
       **«Restablecer ventana»**.

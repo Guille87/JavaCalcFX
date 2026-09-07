@@ -19,8 +19,11 @@ public final class LastCalculator {
 
     private LastCalculator() {}
 
-    /** Remembers the calculator {@code key}. */
+    /** Remembers the calculator {@code key}, unless the user turned that setting off. */
     public static void remember(String key) {
+        if (!Settings.rememberLastCalculator()) {
+            return;
+        }
         try {
             PREFS.put(KEY, key);
         } catch (RuntimeException ignored) {

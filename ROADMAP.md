@@ -27,11 +27,11 @@ options currently scattered around the UI, plus a few new ones. A new
 and `ui/LastCalculator` already do. New keys in both `messages*.properties`, unit
 tests for `ui/Settings` and a `UiTest` case for the navigation.
 
-- [ ] **⚙ button + `settingsScreen()`**, with «Back» / Esc like any other screen.
-- [ ] **Language** — moved here from the top bar (the `ComboBox` leaves the menu).
-- [ ] **Theme** — light / dark, moved here (a quick toggle may still stay in the
+- [x] **⚙ button + `settingsScreen()`**, with «Back» / Esc like any other screen.
+- [x] **Language** — moved here from the top bar (the `ComboBox` leaves the menu).
+- [x] **Theme** — light / dark, moved here (a quick toggle may still stay in the
       bar).
-- [ ] **Remember the last calculator on exit** — on/off. When off,
+- [x] **Remember the last calculator on exit** — on/off. When off,
       `LastCalculator` records nothing and the app always starts on the menu.
 - [ ] **Remember the window size and position** — on/off, plus a **«Reset
       window»** button.

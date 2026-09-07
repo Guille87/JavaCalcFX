@@ -9,6 +9,7 @@ import io.guillermoamadodiaz.javacalcfx.i18n.Language;
 import io.guillermoamadodiaz.javacalcfx.i18n.Messages;
 import io.guillermoamadodiaz.javacalcfx.ui.History;
 import io.guillermoamadodiaz.javacalcfx.ui.LastCalculator;
+import io.guillermoamadodiaz.javacalcfx.ui.Settings;
 import io.guillermoamadodiaz.javacalcfx.ui.Theme;
 import io.guillermoamadodiaz.javacalcfx.ui.WindowState;
 import java.util.Locale;
@@ -40,8 +41,9 @@ class UiTest extends ApplicationTest {
     }
 
     @BeforeEach
-    void cleanHistory() {
+    void resetState() {
         History.clear();
+        Settings.setRememberLastCalculator(true);
     }
 
     @AfterAll
@@ -53,6 +55,7 @@ class UiTest extends ApplicationTest {
             Preferences.userNodeForPackage(Theme.class).node("theme").clear();
             Preferences.userNodeForPackage(History.class).node("history").clear();
             Preferences.userNodeForPackage(Messages.class).remove("language");
+            Preferences.userNodeForPackage(Settings.class).node("settings").clear();
         } catch (Exception ignored) {
             // no persistence available in the test environment: nothing to clean
         }
@@ -220,6 +223,17 @@ class UiTest extends ApplicationTest {
         clickOn("Back");
         WaitForAsyncUtils.waitForFxEvents();
         assertTrue(LastCalculator.remembered().isEmpty(), "going back to the menu must forget the calculator");
+    }
+
+    @Test
+    void turning_off_the_remember_setting_stops_recording_the_last_calculator() {
+        clickOn("Settings");
+        clickOn("Reopen the last calculator on start"); // checked by default -> unchecks it
+        clickOn("Back");
+
+        clickOn("Factorial");
+        WaitForAsyncUtils.waitForFxEvents();
+        assertTrue(LastCalculator.remembered().isEmpty(), "with the setting off, nothing is remembered");
     }
 
     @Test
