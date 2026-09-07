@@ -16,9 +16,9 @@ class LanguageTest {
     }
 
     @Test
-    void from_falls_back_to_spanish_for_an_unsupported_language() {
-        assertEquals(Language.SPANISH, Language.from(Locale.forLanguageTag("de")));
-        assertEquals(Language.SPANISH, Language.from(Locale.FRANCE));
+    void from_falls_back_to_english_for_an_unsupported_language() {
+        assertEquals(Language.ENGLISH, Language.from(Locale.forLanguageTag("de")));
+        assertEquals(Language.ENGLISH, Language.from(Locale.FRANCE));
     }
 
     @Test

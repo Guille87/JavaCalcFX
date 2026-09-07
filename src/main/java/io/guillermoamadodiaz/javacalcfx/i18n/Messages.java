@@ -19,8 +19,8 @@ import java.util.prefs.Preferences;
  * the system's ({@link Locale#getDefault()}). {@link #select} changes and
  * remembers it. The {@code messages*.properties} files are read directly (not via
  * {@link java.util.ResourceBundle}, whose lookup depends on the default locale):
- * {@code messages.properties} is Spanish and serves as the base; each language
- * layers its own file on top. No JavaFX dependencies.
+ * {@code messages.properties} is English and serves as the base; each other
+ * language layers its own file on top. No JavaFX dependencies.
  */
 public final class Messages {
 
@@ -64,11 +64,11 @@ public final class Messages {
     }
 
     private static Properties load(Language language) {
-        Properties base = read("messages.properties"); // Spanish, always present
-        if (language == Language.SPANISH) {
+        Properties base = read("messages.properties"); // English, always present
+        if (language == Language.ENGLISH) {
             return base;
         }
-        Properties p = new Properties(base); // anything missing falls back to Spanish
+        Properties p = new Properties(base); // anything missing falls back to English
         p.putAll(read("messages_" + language.locale().getLanguage() + ".properties"));
         return p;
     }

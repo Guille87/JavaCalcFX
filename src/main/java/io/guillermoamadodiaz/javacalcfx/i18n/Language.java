@@ -29,13 +29,13 @@ public enum Language {
         return label;
     }
 
-    /** The language whose tongue matches {@code locale}; {@link #SPANISH} if none. */
+    /** The language whose tongue matches {@code locale}; {@link #ENGLISH} if none. */
     public static Language from(Locale locale) {
         for (Language language : values()) {
             if (language.locale.getLanguage().equals(locale.getLanguage())) {
                 return language;
             }
         }
-        return SPANISH;
+        return ENGLISH;
     }
 }

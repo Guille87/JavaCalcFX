@@ -44,11 +44,11 @@ class MessagesTest {
     }
 
     @Test
-    void spanish_and_english_declare_exactly_the_same_keys() {
-        Properties es = read("messages.properties");
-        Properties en = read("messages_en.properties");
+    void english_and_spanish_declare_exactly_the_same_keys() {
+        Properties en = read("messages.properties");
+        Properties es = read("messages_es.properties");
         assertEquals(
-                es.stringPropertyNames(), en.stringPropertyNames(), "both language files must declare the same keys");
+                en.stringPropertyNames(), es.stringPropertyNames(), "both language files must declare the same keys");
     }
 
     @Test
@@ -64,9 +64,9 @@ class MessagesTest {
     }
 
     @Test
-    void an_unknown_language_falls_back_to_the_spanish_base() {
+    void an_unknown_language_falls_back_to_the_english_base() {
         Messages.useLocale(Locale.forLanguageTag("de"));
-        assertEquals("Volver", Messages.get("form.back"));
+        assertEquals("Back", Messages.get("form.back"));
     }
 
     /** Regression: asking for Spanish must yield Spanish even if the default locale is another. */
@@ -95,8 +95,8 @@ class MessagesTest {
     @Test
     void every_key_in_the_base_can_be_resolved() {
         Messages.useLocale(Locale.forLanguageTag("es"));
-        Properties es = read("messages.properties");
-        for (String key : es.stringPropertyNames()) {
+        Properties base = read("messages.properties");
+        for (String key : base.stringPropertyNames()) {
             assertTrue(Messages.get(key).length() >= 0, key);
         }
     }
@@ -109,7 +109,7 @@ class MessagesTest {
      * (typical failure: an un-doubled apostrophe stops substitution).
      */
     @ParameterizedTest
-    @ValueSource(strings = {"messages.properties", "messages_en.properties"})
+    @ValueSource(strings = {"messages.properties", "messages_es.properties"})
     void parametrized_values_are_valid_patterns(String file) {
         Properties p = read(file);
         for (String key : p.stringPropertyNames()) {
