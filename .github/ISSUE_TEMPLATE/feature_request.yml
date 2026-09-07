@@ -1,0 +1,29 @@
+name: Feature request or idea
+description: Suggest a new calculator, an option or an improvement
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ideas are tracked in the
+        [ROADMAP](https://github.com/Guille87/JavaCalcFX/blob/main/ROADMAP.md).
+        You can write in English or Spanish.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What's the problem or the need?
+      description: What are you trying to do that the app doesn't let you do well today?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: What would you like to see?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you've considered
+    validations:
+      required: false
