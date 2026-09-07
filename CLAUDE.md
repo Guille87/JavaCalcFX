@@ -28,8 +28,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   `useModulePath=false` so TestFX isn't on the module path). `mvn test -Pheaded` shows a
   window. No display or xvfb needed. It opens the stage large (the categorized menu is
   tall — small windows would scroll buttons out of TestFX's reach); it pins
-  `Messages.useLocale(ENGLISH)` and clicks the English labels, a `@BeforeEach` clears
-  `History` and `@AfterAll` clears the `WindowState`/`Theme`/`History` prefs it touched.
+  `Messages.useLocale(ENGLISH)` and clicks the English labels; a `@BeforeEach` resets
+  `History` + every `Settings` flag and `@AfterAll` clears the `WindowState`/`Theme`/
+  `History`/`Settings`/language prefs it touched. `every_calculator_computes_a_result` is a
+  parametrized case that opens all 15 calculators end to end — the coverage net for
+  `CalculatorApp`'s per-screen glue.
 - Package for Windows (profile `dist`): `mvn -Pdist -DskipTests clean javafx:jlink package`
   → portable app-image in `target/dist/JavaCalcFX/`. Add `,installer` for the `.msi`
   (needs WiX 3.x on PATH). `javafx:jlink` must run before `package`.
@@ -124,10 +127,12 @@ Single-module JavaFX desktop app in four packages: `calc` (pure domain), `i18n`
     fill) for `.root.dark-theme`; Modena derives the rest.
   - `History` — the last `Settings.historyMax()` (default 25) calculations (`Entry` = title
     + result + `Instant`, most recent first), persisted to a `java.util.prefs` subnode as
-    one string (results trimmed to `MAX_RESULT`=300 so a huge factorial can't overflow the
-    prefs limit; legacy 2-field entries load with a null `timestamp`). `record` collapses a
-    repeat of the current head into a timestamp refresh and is a no-op while
-    `Settings.historyEnabled()` is off. `FormBuilder` calls `History.record(title, text)`
+    one string that is **Base64-encoded** (the `RS`/`US` separators it uses are not valid
+    XML and `java.util.prefs` serializes values to XML on flush — breaks on Linux/macOS
+    otherwise; `decode` still reads a legacy unencoded value). Results are trimmed to
+    `MAX_RESULT`=300 so a huge factorial can't overflow the prefs limit; legacy 2-field
+    entries load with a null `timestamp`. `record` collapses a repeat of the current head
+    into a timestamp refresh and is a no-op while `Settings.historyEnabled()` is off. `FormBuilder` calls `History.record(title, text)`
     after every successful calc; `CalculatorApp.historyScreen()` renders it with the date;
     `CalculatorApp.stop()` clears it when `Settings.clearHistoryOnExit()`.
   - `LastCalculator` — `remember`/`remembered`/`forget` a calculator key in a
@@ -137,9 +142,10 @@ Single-module JavaFX desktop app in four packages: `calc` (pure domain), `i18n`
     `openCalculator(key)`. `UiTest.start()` clears it so each test begins on the menu.
   - `Settings` — user options in their own `java.util.prefs` subnode (`node("settings")`),
     each a getter/setter with a default: `rememberLastCalculator` (false), `rememberWindow`
-    (true), `historyEnabled` (true), `historyMax` (25), `clearHistoryOnExit` (false). The
-    settings screen (`CalculatorApp.settingsScreen()`, a ⚙ button in the top bar) is the UI;
-    `Theme`/`Messages` keep their own prefs and their own controls on that screen.
+    (true; `WindowState.restore`/save honor it), `historyEnabled` (true), `historyMax` (25),
+    `clearHistoryOnExit` (false). `restoreDefaults()` clears the subnode. The settings
+    screen is the UI; `Theme`/`Messages` keep their own prefs and their own controls there,
+    and a «Restore defaults» button also resets those plus `WindowState.reset(stage)`.
   - `{Quadratic,Pythagoras,Cylinder,Percentage,RuleOfThree}Steps` — pure, deterministic
     templates rendering a calculation step by step in linear notation. Each calls its
     `Calculator` method (for validation + values) then fills fixed templates. Unit-tested.
@@ -147,9 +153,12 @@ Single-module JavaFX desktop app in four packages: `calc` (pure domain), `i18n`
   `FormBuilder`, loads `styles.css` + window icons, calls `Theme.applyTo(scene)`, sets a
   minimum window size. `catalog()` is a `List<Category>` (`geometry`, `arithmetic`,
   `powers`, `proportions`, `other`), each a `menu.category.<key>` heading over a `FlowPane`
-  of `menuButton(key, action)`. The menu's top bar has a theme toggle + a language
-  `ComboBox` (both rebuild the menu). Each calculator is one `xScreen()` + one `MenuEntry`
-  in `catalog()`. `stop()` → `calculations.close()`.
+  of `menuButton(key, action)`. The menu's top bar has three buttons: History, a theme
+  quick-toggle and a **⚙ Settings** button. `settingsScreen()` holds language + theme
+  selectors and the `Settings` options; `aboutScreen()` (linked from it) shows the version
+  read from a Maven-filtered `app.properties` (`pom.xml` `<resources>`). Each calculator is
+  one `xScreen()` + one `MenuEntry` in `catalog()`. `stop()` clears the history when
+  `Settings.clearHistoryOnExit()`, then `calculations.close()`.
 
 To add a calculator: add a pure method to `calc/Calculator` that throws `CalculationError`
 on bad input (with a test); add its strings to both `messages.properties` and
@@ -177,3 +186,5 @@ living document: `## Next up` (committed shortlist), `## Ideas / backlog`
 (uncommitted), `## Done` (post-`0.1.0`), and the original phases 0–6 collapsed in
 a `<details>` block — move items between sections as they progress. `CHANGELOG`
 has an `## [Unreleased]` / `## [Sin publicar]` section to keep current. Version is `0.3.0`.
+`.github/ISSUE_TEMPLATE/` has GitHub issue-form YAML (`bug_report`, `feature_request`) +
+`config.yml` (blank issues off, security link).
