@@ -19,16 +19,16 @@ class SettingsTest {
     }
 
     @Test
-    void remember_last_calculator_defaults_to_true() {
-        assertTrue(Settings.rememberLastCalculator());
+    void remember_last_calculator_defaults_to_false() {
+        assertFalse(Settings.rememberLastCalculator());
     }
 
     @Test
-    void remember_last_calculator_can_be_turned_off_and_on() {
-        Settings.setRememberLastCalculator(false);
-        assertFalse(Settings.rememberLastCalculator());
-
+    void remember_last_calculator_can_be_turned_on_and_off() {
         Settings.setRememberLastCalculator(true);
         assertTrue(Settings.rememberLastCalculator());
+
+        Settings.setRememberLastCalculator(false);
+        assertFalse(Settings.rememberLastCalculator());
     }
 }

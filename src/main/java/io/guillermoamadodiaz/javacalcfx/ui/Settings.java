@@ -16,9 +16,9 @@ public final class Settings {
 
     private Settings() {}
 
-    /** Whether the app reopens the last calculator on start (default: {@code true}). */
+    /** Whether the app reopens the last calculator on start (default: {@code false}). */
     public static boolean rememberLastCalculator() {
-        return PREFS.getBoolean(REMEMBER_LAST_CALCULATOR, true);
+        return PREFS.getBoolean(REMEMBER_LAST_CALCULATOR, false);
     }
 
     public static void setRememberLastCalculator(boolean value) {

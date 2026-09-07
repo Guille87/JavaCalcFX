@@ -9,6 +9,17 @@ and the project follows [semantic versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- **Settings screen**: a ⚙ button in the menu's top bar opens a screen that
+  gathers the options. So far: language (moved off the top bar), theme, and a
+  «Reopen the last calculator on start» toggle.
+
+### Changed
+
+- The app no longer **reopens the last calculator on start** by default; it now
+  starts on the menu. Turn it back on in the settings screen.
+
 ## [0.2.0] - 2026-09-07
 
 ### Added

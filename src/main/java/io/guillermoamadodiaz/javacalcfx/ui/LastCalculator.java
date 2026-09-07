@@ -19,7 +19,7 @@ public final class LastCalculator {
 
     private LastCalculator() {}
 
-    /** Remembers the calculator {@code key}, unless the user turned that setting off. */
+    /** Remembers the calculator {@code key}, if that setting is on (off by default). */
     public static void remember(String key) {
         if (!Settings.rememberLastCalculator()) {
             return;

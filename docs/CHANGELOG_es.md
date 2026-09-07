@@ -9,6 +9,17 @@ y el proyecto sigue [versionado semántico](https://semver.org/lang/es/).
 
 ## [Sin publicar]
 
+### Añadido
+
+- **Pantalla de ajustes**: un botón ⚙ en la barra superior del menú abre una
+  pantalla que reúne las opciones. De momento: idioma (sale de la barra
+  superior), tema, y un interruptor «Reabrir la última calculadora al arrancar».
+
+### Cambiado
+
+- La app ya no **reabre la última calculadora al arrancar** por defecto; ahora
+  arranca en el menú. Se puede volver a activar en la pantalla de ajustes.
+
 ## [0.2.0] - 2026-09-07
 
 ### Añadido
