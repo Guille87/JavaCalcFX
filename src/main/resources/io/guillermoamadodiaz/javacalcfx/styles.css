@@ -51,6 +51,15 @@
     -fx-font-size: 14px;
 }
 
+/* Each calculation in the history is a subtle card so entries don't blur together. */
+.history-entry {
+    -fx-background-color: -fx-control-inner-background;
+    -fx-background-radius: 6;
+    -fx-border-color: derive(-fx-control-inner-background, -12%);
+    -fx-border-radius: 6;
+    -fx-padding: 8 12;
+}
+
 /* Title of each calculation on the history screen. */
 .history-title {
     -fx-font-weight: bold;

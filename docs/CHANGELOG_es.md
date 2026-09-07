@@ -24,6 +24,8 @@ y el proyecto sigue [versionado semántico](https://semver.org/lang/es/).
 
 - La app ya no **reabre la última calculadora al arrancar** por defecto; ahora
   arranca en el menú. Se puede volver a activar en la pantalla de ajustes.
+- La **pantalla de historial** muestra cada cálculo como una tarjeta, para que
+  las entradas ya no se confundan entre sí.
 
 ## [0.2.0] - 2026-09-07
 

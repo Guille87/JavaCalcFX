@@ -175,6 +175,7 @@ class UiTest extends ApplicationTest {
 
         verifyThat(".header", hasText("Calculation history"));
         assertEquals(1, lookup(".history-title").queryAll().size(), "the repeated calculation must not duplicate");
+        assertTrue(lookup(".history-entry").tryQuery().isPresent(), "each entry is shown as a card");
         assertTrue(lookup(".history-date").tryQuery().isPresent(), "each entry carries its date");
         String result = lookup(".result").nth(0).queryAs(Label.class).getText();
         assertTrue(result.contains("Hypotenuse: 5"), "was: " + result);

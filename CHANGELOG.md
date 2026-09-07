@@ -23,6 +23,8 @@ and the project follows [semantic versioning](https://semver.org/).
 
 - The app no longer **reopens the last calculator on start** by default; it now
   starts on the menu. Turn it back on in the settings screen.
+- The **history screen** shows each calculation as a card, so entries no longer
+  blur together.
 
 ## [0.2.0] - 2026-09-07
 

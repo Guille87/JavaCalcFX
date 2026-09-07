@@ -399,15 +399,19 @@ public class CalculatorApp extends Application {
             empty.getStyleClass().add("category");
             content.getChildren().add(empty);
         } else {
-            VBox list = new VBox(14);
+            VBox list = new VBox(10);
+            list.setMaxWidth(MENU_WIDTH);
             for (History.Entry entry : entries) {
                 Label title = new Label(entry.title());
                 title.getStyleClass().add("history-title");
                 Label result = new Label(entry.result());
                 result.setWrapText(true);
+                result.setMaxWidth(Double.MAX_VALUE);
                 result.getStyleClass().add("result");
 
                 VBox block = new VBox(2, title);
+                block.getStyleClass().add("history-entry"); // a card, so entries don't blur together
+                block.setMaxWidth(Double.MAX_VALUE);
                 if (entry.timestamp() != null) {
                     Label date = new Label(readableDate(entry.timestamp()));
                     date.getStyleClass().add("history-date");
