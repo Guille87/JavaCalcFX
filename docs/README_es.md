@@ -278,6 +278,7 @@ JavaCalcFX/
 ├── LICENSE                     MIT
 ├── CLAUDE.md                   guía para agentes
 ├── README.md · CONTRIBUTING.md · CHANGELOG.md · ROADMAP.md   inglés (principal)
+├── CODE_OF_CONDUCT.md · SECURITY.md   ficheros de comunidad
 ├── docs/                       *_es.md (docs en español) y capturas del README
 ├── .github/                    workflows de CI y release, badges y config de Dependabot
 └── src/

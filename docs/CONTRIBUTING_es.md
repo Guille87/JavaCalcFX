@@ -4,6 +4,10 @@
 
 Gracias por tu interés. El proyecto es pequeño; estas son las convenciones.
 
+Al participar aceptas el [Código de Conducta](CODE_OF_CONDUCT_es.md). Para
+problemas de seguridad, consulta [SECURITY_es.md](SECURITY_es.md) — no abras un
+*issue* público.
+
 ## Antes de empezar
 
 - **JDK 17 o superior.** Las dependencias (JavaFX 21, JUnit 5, TestFX…) las

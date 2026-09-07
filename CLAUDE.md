@@ -166,10 +166,11 @@ and that every parametrized value is a valid `MessageFormat` pattern.
 
 ## Docs
 
-Root `README.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `ROADMAP.md` are English (primary),
-each with a language-selector line linking to the Spanish version under `docs/`
-(`README_es.md`, `CONTRIBUTING_es.md`, `CHANGELOG_es.md`, `ROADMAP_es.md`). Keep both
-languages of a doc in sync when editing. README screenshots live in `docs/`
+Root `README.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `ROADMAP.md`, `CODE_OF_CONDUCT.md`
+and `SECURITY.md` are English (primary), each with a language-selector line linking to
+the Spanish version under `docs/` (`*_es.md`). Keep both languages of a doc in sync
+when editing. `CODE_OF_CONDUCT.md` is the Contributor Covenant 2.1 verbatim (contact
+`guillermo_amado@hotmail.es`); `SECURITY.md` is tailored and short. README screenshots live in `docs/`
 (`menu.png`, `pythagorean-theorem.png`) — from the root README the path is
 `docs/screenshots/*.png`, from `docs/README_es.md` it is `screenshots/*.png`. `ROADMAP` is a
 living document: `## Next up` (committed shortlist), `## Ideas / backlog`

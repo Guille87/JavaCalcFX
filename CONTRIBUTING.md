@@ -4,6 +4,9 @@
 
 Thanks for your interest. The project is small; these are the conventions.
 
+By taking part you agree to the [Code of Conduct](CODE_OF_CONDUCT.md). For
+security issues, see [SECURITY.md](SECURITY.md) — do not open a public issue.
+
 ## Before you start
 
 - **JDK 17 or newer.** The dependencies (JavaFX 21, JUnit 5, TestFX…) are
