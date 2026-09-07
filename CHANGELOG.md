@@ -9,6 +9,8 @@ and the project follows [semantic versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-07
+
 ### Added
 
 - **Calculation history**: a screen reachable from the menu bar with the last 25
@@ -72,5 +74,6 @@ First packaged version.
 - Continuous integration with Spotless, tests (JUnit 5 + headless TestFX) on JDK
   17 and 21, and a coverage report with JaCoCo.
 
-[Unreleased]: https://github.com/Guille87/JavaCalcFX/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/Guille87/JavaCalcFX/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/Guille87/JavaCalcFX/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/Guille87/JavaCalcFX/releases/tag/v0.1.0

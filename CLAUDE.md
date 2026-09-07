@@ -169,4 +169,4 @@ languages of a doc in sync when editing. README screenshots live in `docs/`
 living document: `## Next up` (committed shortlist), `## Ideas / backlog`
 (uncommitted), `## Done` (post-`0.1.0`), and the original phases 0–6 collapsed in
 a `<details>` block — move items between sections as they progress. `CHANGELOG`
-has an `## [Unreleased]` / `## [Sin publicar]` section to keep current. Version is `0.1.0`.
+has an `## [Unreleased]` / `## [Sin publicar]` section to keep current. Version is `0.2.0`.
