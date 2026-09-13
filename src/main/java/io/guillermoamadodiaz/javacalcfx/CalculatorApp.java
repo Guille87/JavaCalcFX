@@ -62,7 +62,7 @@ import javafx.stage.Stage;
  * and <em>what</em> is shown; the arithmetic lives in {@link Calculator} and the
  * text in {@link Messages}.
  */
-public class CalculatorApp extends Application {
+public final class CalculatorApp extends Application {
 
     private static final double MENU_BUTTON_WIDTH = 210;
     private static final double MENU_WIDTH = 690;

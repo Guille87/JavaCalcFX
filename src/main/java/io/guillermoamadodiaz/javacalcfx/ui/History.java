@@ -34,6 +34,7 @@ public final class History {
     private static final String ENTRY_SEPARATOR = "\u001e"; // RS: between entries
     private static final String FIELD_SEPARATOR = "\u001f"; // US: between fields
 
+    private static final Object LOCK = new Object();
     private static final List<Entry> entries = new ArrayList<>(load());
 
     private History() {}
@@ -45,31 +46,37 @@ public final class History {
     public record Entry(String title, String result, Instant timestamp) {}
 
     /** The saved calculations, most recent to oldest. */
-    public static synchronized List<Entry> recent() {
-        return List.copyOf(entries);
+    public static List<Entry> recent() {
+        synchronized (LOCK) {
+            return List.copyOf(entries);
+        }
     }
 
     /** Records a calculation (puts it first) and persists it, unless the history is off. */
-    public static synchronized void record(String title, String result) {
-        if (!Settings.historyEnabled()) {
-            return;
+    public static void record(String title, String result) {
+        synchronized (LOCK) {
+            if (!Settings.historyEnabled()) {
+                return;
+            }
+            Entry fresh = new Entry(title, trim(result), Instant.now());
+            if (!entries.isEmpty()
+                    && entries.get(0).title().equals(fresh.title())
+                    && entries.get(0).result().equals(fresh.result())) {
+                entries.set(0, fresh); // same calculation repeated: only the timestamp changes
+            } else {
+                entries.add(0, fresh);
+            }
+            trimToMax();
+            save();
         }
-        Entry fresh = new Entry(title, trim(result), Instant.now());
-        if (!entries.isEmpty()
-                && entries.get(0).title().equals(fresh.title())
-                && entries.get(0).result().equals(fresh.result())) {
-            entries.set(0, fresh); // same calculation repeated: only the timestamp changes
-        } else {
-            entries.add(0, fresh);
-        }
-        trimToMax();
-        save();
     }
 
     /** Clears the history. */
-    public static synchronized void clear() {
-        entries.clear();
-        save();
+    public static void clear() {
+        synchronized (LOCK) {
+            entries.clear();
+            save();
+        }
     }
 
     private static String trim(String text) {
