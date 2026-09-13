@@ -54,7 +54,7 @@ jobs:
         run: Copy-Item target/dist/*.msi artefactos/
 
       - name: Publicar el Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: JavaCalcFX ${{ github.ref_name }}
           draft: false
